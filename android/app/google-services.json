@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "800467409236",
+    "firebase_url": "https://trim-strength-245808.firebaseio.com",
+    "project_id": "trim-strength-245808",
+    "storage_bucket": "trim-strength-245808.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:800467409236:android:228d18d58daa87b72390c1",
+        "android_client_info": {
+          "package_name": "com.ohmconception.ujap"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "800467409236-c80kee5kvc4ehimo9je0d3jaeblnagfd.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDxKuYWc-4h3DWdc46tQ9SyAgdjEmo-Koc"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "800467409236-c80kee5kvc4ehimo9je0d3jaeblnagfd.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "800467409236-mpbuuh87qcsd67pc2jntk0g1slj162ep.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.ohmconception.ujap"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
