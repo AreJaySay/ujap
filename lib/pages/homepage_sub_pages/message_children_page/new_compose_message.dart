@@ -8,6 +8,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
 import 'package:page_transition/page_transition.dart';
 import 'package:pdf_flutter/pdf_flutter.dart';
+import 'package:ujap/globals/container_data.dart';
 import 'package:ujap/globals/user_data.dart';
 import 'package:ujap/globals/variables/home_sub_pages_variables.dart';
 import 'package:ujap/globals/variables/other_variables.dart';
@@ -187,7 +188,7 @@ class _NewComposeMessageState extends State<NewComposeMessage> {
   }
   Widget getImage(){
     if(memberIds.length == 1 || memberIds.length == 0){
-      if(userdetails['filename'] == null){
+      if(userdetails['filename'].toString() == "null" || userdetails['filename'].toString() == ""){
         return Image.asset("assets/messages_icon/no_profile.png",fit: BoxFit.contain,);
       }
       return Image.network("https://ujap.checkmy.dev/storage/clients/${userdetails['filename']}",fit: BoxFit.cover,);
@@ -315,6 +316,16 @@ class _NewComposeMessageState extends State<NewComposeMessage> {
               child: StreamBuilder<List>(
                 stream: chatListener.stream$,
                 builder: (context, snapshot) {
+                  List clientDetails;
+
+                  for(var x =snapshot.data.length -1;x>=0;x--){
+                    clientDetails = events_clients.where((s){
+                    return s['id'].toString() == snapshot.data[x]['sender_id'].toString();
+                    }).toList();
+                  }
+
+                  print(clientDetails.toString());
+
                   try{
                     if(snapshot.hasData){
                       return ListView(
@@ -326,7 +337,7 @@ class _NewComposeMessageState extends State<NewComposeMessage> {
 //                            messageContainer(snapshot.data[x])
 //                          },
                           for(var x =snapshot.data.length -1;x>=0;x--)...{
-                            messageContainer(snapshot.data[x]),
+                            messageContainer(snapshot.data[x],clientDetails),
                           },
                           Container(
                             child: Text("${channelDetail == null ? "" : "${StringFormatter().titlize(data: getChannelName())}"}",
@@ -526,7 +537,7 @@ class _NewComposeMessageState extends State<NewComposeMessage> {
     );
   }
 
-  messageContainer(Map data) => Container(
+  messageContainer(Map data, List currentclientData) => Container(
     padding: const EdgeInsets.symmetric(horizontal: 10,vertical: 5),
 //    alignment: data['sender_id'] == userdetails['id'] ? AlignmentDirectional.centerEnd : AlignmentDirectional.centerStart,
     child: Row(
@@ -535,7 +546,7 @@ class _NewComposeMessageState extends State<NewComposeMessage> {
       children: [
         data['sender_id'] == userdetails['id'] ? Container() : Container(
           margin: const EdgeInsets.only(right: 10),
-          child: senderImage(data),
+          child: senderImage(data,currentclientData),
         ),
         SizedBox(
           width: 10,
@@ -544,7 +555,7 @@ class _NewComposeMessageState extends State<NewComposeMessage> {
           mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
-            Text( data['sender_id'].toString() == userdetails['id'].toString() ? '' : '${StringFormatter().titlize(data: getChannelName())}',style: TextStyle(fontSize: screenwidth < 700 ? screenwidth/35 : screenwidth/40,color: Colors.grey[600]),),
+            Text( data['sender_id'].toString() == userdetails['id'].toString() ? '' :  currentclientData[0]['name'].toString(),style: TextStyle(fontSize: screenwidth < 700 ? screenwidth/35 : screenwidth/40,color: Colors.grey[600]),),
             Container(
 //          alignment: data['sender_id'] == userdetails['id'] ? AlignmentDirectional.centerEnd : AlignmentDirectional.centerStart,
 //           margin: data['sender_id'] == userdetails['id'] ? EdgeInsets.only(left: screenwidth/5) : EdgeInsets.only(right: 20),
@@ -639,12 +650,12 @@ class _NewComposeMessageState extends State<NewComposeMessage> {
         ),
         data['sender_id'] == userdetails['id'] ? Container(
           margin: const EdgeInsets.only(left: 10),
-          child: senderImage(data),
+          child: senderImage(data,currentclientData),
         ) : Container(),
       ],
     )
   );
-  Widget senderImage(Map senderData) {
+  Widget senderImage(Map senderData, List currentclientDetail) {
     return Container(
       width: screenwidth < 700 ? 40 : 60,
       height: screenwidth < 700 ? 40 : 60,
@@ -655,7 +666,7 @@ class _NewComposeMessageState extends State<NewComposeMessage> {
           fit: BoxFit.cover,
           image: senderData['sender_id'].toString() == userdetails['id'].toString() ?
           userdetails['filename'].toString() == "null" ||  userdetails['filename'].toString() == ""  ? AssetImage("assets/messages_icon/no_profile.png") : NetworkImage("https://ujap.checkmy.dev/storage/clients/${userdetails['filename']}") :
-          channelDetail['members'][1]['detail']['filename'].toString() == "null" ||  channelDetail['members'][1]['detail']['filename'].toString() == ""  ? AssetImage("assets/messages_icon/no_profile.png") : NetworkImage("https://ujap.checkmy.dev/storage/clients/${channelDetail['members'][1]['detail']['filename']}")
+          currentclientDetail[0]['filename'].toString() == "null" ||  currentclientDetail[0]['filename'].toString() == ""  ? AssetImage("assets/messages_icon/no_profile.png") : NetworkImage("https://ujap.checkmy.dev/storage/clients/${currentclientDetail[0]['filename']}")
         )
       ),
     );

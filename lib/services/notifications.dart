@@ -53,11 +53,9 @@ class _NotificationsState extends State<Notifications> {
     DatabaseHelper.instance.queryAllRows().then((value) {
       setState(() {
         value.forEach((element) {
-          localList.add(Todo(id: element['id'], itemid: element['item_id'].toString(), messageType: element["message_type"].toString()));
-           List _local = localList.where((s){
-             return s.itemid.toString() == Todo(itemid: element['item_id'].toString());
-           }).toList();
-          print('KANAN ADS INE'+_local.toString());
+          if (!taskList.toString().contains("itemid: ${element['item_id'].toString()}")){
+          taskList.add(Todo(id: element['id'], itemid: element['item_id'].toString(), messageType: element["message_type"].toString()));
+          }
         });
       });
     }).catchError((error) {
@@ -361,15 +359,15 @@ class _NotificationsState extends State<Notifications> {
                                         child: Row(
                                           children: [
                                           Container(
-                                            width: adverTisement[0]['filename'].toString() == "null" ? 50 : 60,
-                                            height: adverTisement[0]['filename'].toString() == "null" ? 50 : 60,
+                                            width: adverTisement[0]['filename'].toString() == "null" ? 60 : 70,
+                                            height: adverTisement[0]['filename'].toString() == "null" ? 60 : 70,
                                               decoration: BoxDecoration(
                                                 color: Colors.grey[300],
                                                   border: Border.all(color: Colors.grey),
                                                   borderRadius: BorderRadius.circular(10.0),
                                                   image: DecorationImage(
                                                       fit: BoxFit.cover,
-                                                      image: adverTisement[0]['filename'].toString() == "null" || adverTisement[0]['content'].toString() == "null" ?  NetworkImage('https://static.thenounproject.com/png/1529460-200.png') : NetworkImage(adverTisement[0]['content'])
+                                                      image: adverTisement[0]['filename'].toString() == "null" || adverTisement[0]['content'].toString() == "null" ?  NetworkImage('https://static.thenounproject.com/png/1529460-200.png') : NetworkImage('${StringFormatter().strToObj(adverTisement[0]['content'])['location']}')
                                                   ),
                                               ),
                                             ),
@@ -385,8 +383,8 @@ class _NotificationsState extends State<Notifications> {
                                                       mainAxisAlignment:  MainAxisAlignment.start,
                                                       crossAxisAlignment: CrossAxisAlignment.start,
                                                       children: [
-                                                        Text("Nom de la publicité: ",style: TextStyle(color: Colors.black54,fontWeight: FontWeight.w600,fontFamily: 'Google-Regular',fontSize: screenheight/55 ),overflow: TextOverflow.ellipsis,maxLines: 2,),
-                                                        Text(adverTisement[0]['name'].toString(),style: TextStyle(color: Colors.black54,fontFamily: 'Google-Medium',fontSize: screenheight/55 ),overflow: TextOverflow.ellipsis,maxLines: 2,),
+                                                        Text("Nom de la publicité: ".toUpperCase(),style: TextStyle(color: Colors.black54,fontWeight: FontWeight.w600,fontFamily: 'Google-Bold',fontSize: 14 ),overflow: TextOverflow.ellipsis,maxLines: 2,),
+                                                        Text(adverTisement[0]['name'].toString(),style: TextStyle(color: Colors.black54,fontFamily: 'Google-Medium',fontSize: 14 ),overflow: TextOverflow.ellipsis,maxLines: 2,),
                                                       ],
                                                     ),
                                                     SizedBox(
@@ -394,12 +392,25 @@ class _NotificationsState extends State<Notifications> {
                                                     ),
                                                     Row(
                                                       mainAxisAlignment:  MainAxisAlignment.start,
-                                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                                      crossAxisAlignment: CrossAxisAlignment.center,
                                                       children: [
-                                                        Text("Statut: ",style: TextStyle(color: Colors.black54,fontWeight: FontWeight.w600,fontFamily: 'Google-Regular',fontSize: screenheight/55 ),overflow: TextOverflow.ellipsis,maxLines: 2,),
-                                                        Text(adverTisement[0]['status'].toString() == '1' ? 'Active' : 'Inactive',style: TextStyle(color: Colors.black54,fontFamily: 'Google-Medium',fontSize: screenheight/55 ),overflow: TextOverflow.ellipsis,maxLines: 2,),
+                                                        Text("Description: ".toUpperCase(),style: TextStyle(color: Colors.black54,fontWeight: FontWeight.w600,fontFamily: 'Google-Bold',fontSize: 14 ),overflow: TextOverflow.ellipsis,maxLines: 1,),
+                                                        Container(
+                                                            width: screenwidth < 700 ? screenwidth/2.5 : 350,
+                                                            child: Text(adverTisement[0]['description'],style: TextStyle(color: Colors.black54,fontFamily: 'Google-Medium',fontSize: 14 ),overflow: TextOverflow.ellipsis,maxLines: 1,)),
                                                       ],
                                                     ),
+                                                    SizedBox(
+                                                      height: 5,
+                                                    ),
+                                                    Row(
+                                                      mainAxisAlignment: MainAxisAlignment.end,
+                                                      crossAxisAlignment: CrossAxisAlignment.end,
+                                                      children: [
+                                                        Text('Ouvrir le lien publicitaire',style: TextStyle(color: kPrimaryColor.withOpacity(0.7),fontFamily: 'Google-Medium',fontSize: 12 ),overflow: TextOverflow.ellipsis,maxLines: 1,),
+                                                        Icon(Icons.arrow_forward,color: kPrimaryColor.withOpacity(0.7),size: 15,)
+                                                      ],
+                                                    )
                                                   ],
                                                 ),
                                               ),
@@ -408,7 +419,7 @@ class _NotificationsState extends State<Notifications> {
                                         ),
                                       ),
                                       onTap: ()async{
-                                        String url = adverTisement[0]['content'].toString();
+                                        String url = "${StringFormatter().strToObj(adverTisement[0]['content'])['location']}";
                                         if (await canLaunch(url)) {
                                         await launch(url);
                                         } else {
@@ -435,8 +446,8 @@ class _NotificationsState extends State<Notifications> {
                                         child: Row(
                                           children: [
                                             Container(
-                                              width: eventDetails[0]['filename'].toString() == "null" ? 50 : 60,
-                                              height: eventDetails[0]['filename'].toString() == "null" ? 50 : 60,
+                                              width: eventDetails[0]['filename'].toString() == "null" ? 60 : 70,
+                                              height: eventDetails[0]['filename'].toString() == "null" ? 60 : 70,
                                               decoration: BoxDecoration(
                                                 color: Colors.grey[300],
                                                 borderRadius: BorderRadius.circular(10.0),
@@ -453,29 +464,31 @@ class _NotificationsState extends State<Notifications> {
                                               child: Container(
                                                 width: screenwidth,
                                                 child: Column(
+                                                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                                  crossAxisAlignment: CrossAxisAlignment.stretch,
                                                   children: <Widget>[
                                                     Row(
                                                       children: <Widget>[
-                                                        Text("Nom de l' évènement: ",style: TextStyle(color: Colors.black54,fontWeight: FontWeight.w600,fontFamily: 'Google-Regular',fontSize: screenheight/55 ),overflow: TextOverflow.ellipsis,maxLines: 2,),
-                                                        Text(eventDetails[0]['name'].toString(),style: TextStyle(color: Colors.black54,fontFamily: 'Google-Medium',fontSize: screenheight/55 ),overflow: TextOverflow.ellipsis,maxLines: 2,),
+                                                        Text("Nom de l' évènement: ".toUpperCase(),style: TextStyle(color: Colors.black54,fontWeight: FontWeight.w600,fontFamily: 'Google-Bold',fontSize: 14 ),overflow: TextOverflow.ellipsis,maxLines: 2,),
+                                                        Text(eventDetails[0]['name'].toString(),style: TextStyle(color: Colors.black54,fontFamily: 'Google-Medium',fontSize: 14 ),overflow: TextOverflow.ellipsis,maxLines: 2,),
                                                       ],
+                                                    ),
+                                                    SizedBox(
+                                                      height: 3,
                                                     ),
                                                     Row(
                                                       children: <Widget>[
-                                                        Text("Type d' évènement: ",style: TextStyle(color: Colors.black54,fontWeight: FontWeight.w600,fontFamily: 'Google-Regular',fontSize: screenheight/55 ),overflow: TextOverflow.ellipsis,maxLines: 2,),
-                                                        Text(eventDetails[0]['type'].toString(),style: TextStyle(color: Colors.black54,fontFamily: 'Google-Medium',fontSize: screenheight/55 ),overflow: TextOverflow.ellipsis,maxLines: 2,),
+                                                        Text("Date de l'évènement: ".toUpperCase(),style: TextStyle(color: Colors.black54,fontWeight: FontWeight.w600,fontFamily: 'Google-Regular',fontSize: 14 ),overflow: TextOverflow.ellipsis,maxLines: 3,),
+                                                        Text(DateFormat("d").format(DateTime.parse(eventDetails[0]['sched_date'])).toString().toUpperCase()+' '+monthDate[int.parse(DateFormat("MM").format(DateTime.parse(eventDetails[0]['sched_date'])).toString())].toString()+'.'+' '+DateFormat("yyyy").format(DateTime.parse(eventDetails[0]['sched_date'])).toString().toUpperCase(),style: TextStyle(color: Colors.black54,fontFamily: 'Google-Medium',fontSize: 14 ),overflow: TextOverflow.ellipsis,maxLines: 2,),
                                                       ],
+                                                    ),
+                                                    SizedBox(
+                                                      height: 3,
                                                     ),
                                                     Row(
                                                       children: <Widget>[
-                                                        Text("Date de l'évènement: ",style: TextStyle(color: Colors.black54,fontWeight: FontWeight.w600,fontFamily: 'Google-Regular',fontSize: screenheight/55 ),overflow: TextOverflow.ellipsis,maxLines: 3,),
-                                                        Text(DateFormat("d").format(DateTime.parse(eventDetails[0]['sched_date'])).toString().toUpperCase()+' '+monthDate[int.parse(DateFormat("MM").format(DateTime.parse(eventDetails[0]['sched_date'])).toString())].toString()+'.'+' '+DateFormat("yyyy").format(DateTime.parse(eventDetails[0]['sched_date'])).toString().toUpperCase(),style: TextStyle(color: Colors.black54,fontFamily: 'Google-Medium',fontSize: screenheight/55 ),overflow: TextOverflow.ellipsis,maxLines: 2,),
-                                                      ],
-                                                    ),
-                                                    Row(
-                                                      children: <Widget>[
-                                                        Text("Heure de début: ",style: TextStyle(color: Colors.black54,fontWeight: FontWeight.w600,fontFamily: 'Google-Regular',fontSize: screenheight/55 ),overflow: TextOverflow.ellipsis,maxLines: 2,),
-                                                        Text(eventDetails[0]['sched_time'].toString().substring(0,5),style: TextStyle(color: Colors.black54,fontFamily: 'Google-Medium',fontSize: screenheight/55 ),overflow: TextOverflow.ellipsis,maxLines: 2,),
+                                                        Text("Heure de début: ".toUpperCase(),style: TextStyle(color: Colors.black54,fontWeight: FontWeight.w600,fontFamily: 'Google-Regular',fontSize: 14 ),overflow: TextOverflow.ellipsis,maxLines: 2,),
+                                                        Text(eventDetails[0]['sched_time'].toString().substring(0,5),style: TextStyle(color: Colors.black54,fontFamily: 'Google-Medium',fontSize: 14 ),overflow: TextOverflow.ellipsis,maxLines: 2,),
                                                       ],
                                                     ),
                                                   ],
@@ -523,7 +536,7 @@ class _NotificationsState extends State<Notifications> {
                                                   ),
                                                 )),
                                             onTap: (){
-                                              _deleteTask(taskList[index].id);
+                                              _deleteTask(double.parse(taskList[index].itemid).toInt(),taskList[index].id);
                                               showSnackBar(context, 'Successfully deleted.');
                                             }
 //                      onTap: () => _showSnackBar('Delete'),
@@ -548,10 +561,10 @@ class _NotificationsState extends State<Notifications> {
       }
     );
   }
-  void _deleteTask(int id) async {
+  void _deleteTask(int id, int localID) async {
     await DatabaseHelper.instance.delete(id);
     setState(() {
-      taskList.removeWhere((element) => element.id == id);
+      taskList.removeWhere((element) => element.id == localID);
     });
   }
 }

@@ -189,7 +189,6 @@ class _Bottom_listview_dataState extends State<Bottom_listview_data> {
                       chewieController.pause();
                     }
                     adListener.update(false);
-
                     notifPage = false;
                   });
 //

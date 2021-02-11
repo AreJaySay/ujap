@@ -7,8 +7,10 @@ import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:ujap/controllers/login_controller.dart';
 import 'package:ujap/globals/user_data.dart';
+import 'package:ujap/globals/variables/home_sub_pages_variables.dart';
 import 'package:ujap/globals/widgets/show_snackbar.dart';
 import 'package:ujap/pages/client_profile_page/profile_information.dart';
+import 'package:ujap/pages/client_profile_page/profile_page.dart';
 import 'package:ujap/pages/homepage_sub_pages/home_children_page/download_pdf%202.dart';
 import 'package:ujap/services/image_uploader.dart';
 import '../../globals/variables/other_variables.dart';
@@ -37,6 +39,8 @@ class _UpdatePictureState extends State<UpdatePicture> {
         choice = 1;
         binaryImage = g;
       });
+    }else{
+      Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=>ProfilePage()));
     }
   }
 
@@ -50,6 +54,8 @@ class _UpdatePictureState extends State<UpdatePicture> {
         choice = 2;
         binaryImage = g;
       });
+    }else{
+      Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=>ProfilePage()));
     }
   }
   Future crop() async {
@@ -169,7 +175,9 @@ class _UpdatePictureState extends State<UpdatePicture> {
 //
                                 UploadImage().init(context,file: _file, id: userdetails['id']).then((value) {
                                   if(value){
-                                    print('IMAGE HERE');
+                                    setState(() {
+                                      currentindex = 1;
+                                    });
                                     login(user, pass, context, true);
                                     changeProfilePict = true;
                                   }else{

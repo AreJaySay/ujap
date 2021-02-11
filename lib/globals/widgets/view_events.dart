@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:ujap/controllers/home.dart';
 import 'package:ujap/globals/container_data.dart';
 import 'package:ujap/globals/user_data.dart';
+import 'package:ujap/globals/variables/home_sub_pages_variables.dart';
 import 'package:ujap/globals/variables/other_variables.dart';
 import 'package:ujap/globals/widgets/attend_meeting.dart';
 import 'package:ujap/globals/widgets/confirmation_attendance.dart';
@@ -16,6 +17,7 @@ import 'package:ujap/services/api.dart';
 import 'package:ujap/services/message_controller.dart';
 import 'package:ujap/services/notifications.dart';
 import 'package:ujap/services/presence.dart';
+import 'package:ujap/services/searches/search_service.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 List eventStatuscurrentEvent;
@@ -403,6 +405,7 @@ class _ViewEventState extends State<ViewEvent> with SingleTickerProviderStateMix
                         child: Icon(Icons.arrow_back, color: Colors.white,size: screenwidth < 700 ? screenwidth/13 : screenwidth/18,)),
                     onTap: (){
                       setState(() {
+                        filterSearchService.filter(past: pastTicketMatches);
                         if (notifPage){
                           Navigator.of(context).pop(null);
                         }else{

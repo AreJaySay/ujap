@@ -231,7 +231,7 @@ class _EventsListState extends State<EventsList> {
                                       GestureDetector(
                                         child: Container(
                                           margin: EdgeInsets.symmetric(
-                                              horizontal: screenwidth/20,vertical: screenwidth < 700 ? screenwidth/15: screenwidth/15),
+                                              horizontal: screenwidth/20,vertical: screenwidth < 700 ? screenwidth/15: screenwidth/10),
                                           decoration: BoxDecoration(
                                               color: Colors.white,
                                               borderRadius: BorderRadius.circular(10)

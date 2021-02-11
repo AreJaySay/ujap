@@ -111,6 +111,16 @@ class ConversationService{
       print('CANNOT REMOVE CONVO :'+e.toString());
     }
   }
+  Future deletegroupChannel(int id)async{
+    try{
+      final respo = await http.delete("$urlString/channel/delete?id=$id",headers: {
+        "accept" : "application/json",
+        HttpHeaders.authorizationHeader : "Bearer $accesstoken"
+      },);
+    }catch(e){
+
+    }
+  }
   Map checker(List<int> memberIds) {
     for(var convos in this.currentConvo){
       List<int> toCheck = [];

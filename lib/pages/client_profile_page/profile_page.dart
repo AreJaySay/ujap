@@ -20,6 +20,7 @@ import 'package:ujap/pages/homepage.dart';
 import 'package:ujap/pages/homepage_sub_pages/message_children_page/view_message_images.dart';
 import 'package:ujap/services/api.dart';
 import 'package:ujap/services/conversation_listener.dart';
+import 'package:ujap/services/pushnotification.dart';
 import 'package:ujap/services/searches/search_service.dart';
 
 import '../../globals/variables/other_variables.dart';
@@ -62,6 +63,7 @@ class _ProfilePageState extends State<ProfilePage> {
       accesstoken = null;
     });
     conversationService.updateAll(data: []);
+    PushNotification().unsubscribe(userdetails['id']);
   }
 
   @override

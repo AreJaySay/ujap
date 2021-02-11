@@ -142,7 +142,7 @@ class _View_events_tabbarState extends State<View_events_tabbar>  {
                           children: [
                             Container(
                               width: screenwidth,
-                              height: screenwidth < 700 ? screenheight/10 : screenheight/14,
+                              height: screenwidth < 700 ? screenheight/10 : screenheight/11,
                               child: Column(
                                 children: [
                                   Container(

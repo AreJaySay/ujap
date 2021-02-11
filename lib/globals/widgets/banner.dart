@@ -78,6 +78,8 @@ class BannerDisplay {
                                 fit: BoxFit.cover,
                                 colorFilter: ColorFilter.mode(Colors.black54.withOpacity(0.3),BlendMode.srcOver),
                                 image: _.data['content'].toString() == "null" || _.data['content'].toString() == ""  ? NetworkImage('https://static.thenounproject.com/png/1529460-200.png'): NetworkImage('${StringFormatter().strToObj(_.data['content'])['location']}')
+
+                              // image: _.data['content'].toString() == "null" || _.data['content'].toString() == ""  ? NetworkImage('https://static.thenounproject.com/png/1529460-200.png'): NetworkImage('${StringFormatter().strToObj(_.data['content'])['location']}')
                             )
                         ),
                         child: Column(
@@ -144,7 +146,7 @@ class BannerDisplay {
     }else if(screenwidth < 700){
       h = 400;
     }else{
-      h = 540;
+      h = screenwidth/1.5;
     }
 //    if(get_ads[0]['ad_type'] == 1){
 //      adh = 80;

@@ -114,8 +114,8 @@ class _NewMessageState extends State<NewMessage> {
                         child: Row(
                           children: [
                             Container(
-                              width: 25,
-                              height: 25,
+                              width: screenwidth < 700 ? 25 : 40,
+                              height: screenwidth < 700 ? 25 : 40,
                               child: Image.asset("assets/messages_icon/add_group.png"),
                             ),
                             const SizedBox(
@@ -124,7 +124,7 @@ class _NewMessageState extends State<NewMessage> {
                             Expanded(
                               child: Text("Créer un nouveau groupe",style: TextStyle(
                                 fontFamily: "Google-Bold",
-                                fontSize: screenwidth/30
+                                fontSize: screenwidth < 700 ? screenwidth/30 : screenwidth/35
                               ),),
                             )
                           ],
@@ -160,8 +160,8 @@ class _NewMessageState extends State<NewMessage> {
                           child: Row(
                             children: [
                               Container(
-                                width: 40,
-                                height: 40,
+                                width: screenwidth < 700 ? 40 : 60,
+                                height: screenwidth < 700 ? 40 : 60,
                                 decoration: BoxDecoration(
                                   color: Colors.grey[200],
                                   borderRadius: BorderRadius.circular(1000),
@@ -184,7 +184,7 @@ class _NewMessageState extends State<NewMessage> {
                               Expanded(
                                 child: Text("${contacts['name']}",style: TextStyle(
                                   fontFamily: "Google-Bold",
-                                  fontSize: screenwidth/30
+                                  fontSize: screenwidth < 700 ? screenwidth/30 : screenwidth/40
                                 ),),
                               )
                             ],

@@ -183,7 +183,7 @@ class _Message_homepage_homepageState extends State<Message_homepage>
                                     alignment: Alignment.bottomCenter,
                                     child: Container(
                                       width: screenwidth,
-                                      height: screenheight/1.4,
+                                      height: screenwidth < 700 ? screenheight/1.4 : screenheight/1.3,
                                       color: Colors.white,
                                     ),
                                   ),
@@ -192,12 +192,25 @@ class _Message_homepage_homepageState extends State<Message_homepage>
                                     child: Column(
                                       children: [
                                         SizedBox(
-                                          height: 90,
+                                          height: screenwidth < 700 ? 70 : screenwidth/10,
                                         ),
                                         Expanded(
                                           child: StreamBuilder<List>(
                                           stream: conversationService.convo,
                                           builder: (context, snapshot) {
+                                            List<String> currentMessage = List<String>();
+
+                                            if (snapshot.data.toString() == "null" || snapshot.data.toString() == "[]"){
+                                            }else{
+                                              for(var x =0;x<snapshot.data.length;x++){
+                                                if (snapshot.data[x]['messages'].toString() == "[]" && snapshot.data[x]['members'].length == 2 ){
+                                                }else{
+                                                  currentMessage.add(snapshot.data[x]['messages'].toString());
+                                                }
+                                              }
+                                            }
+
+
                                             try{
 //                                              List data = snapshot.data.where((element) => selectedButton == 0 ? element['members'].length <= 2 : element['members'].length > 2).toList();
                                               if(snapshot.data.length == 0){
@@ -221,8 +234,8 @@ class _Message_homepage_homepageState extends State<Message_homepage>
                                                                     color: Colors.grey[300],
                                                                     borderRadius: BorderRadius.circular(1000),
                                                                     image: DecorationImage(
-                                                                      fit: userdetails['filename'] == null ? BoxFit.contain : BoxFit.cover,
-                                                                        image: userdetails['filename'] == null ? AssetImage("assets/messages_icon/no_profile.png") : NetworkImage("https://ujap.checkmy.dev/storage/clients/${userdetails['filename']}")
+                                                                      fit: userdetails['filename'].toString() == "null" || userdetails['filename'].toString() == "" ? BoxFit.contain : BoxFit.cover,
+                                                                        image: userdetails['filename'].toString() == "null" || userdetails['filename'].toString() == "" ? AssetImage("assets/messages_icon/no_profile.png") : NetworkImage("https://ujap.checkmy.dev/storage/clients/${userdetails['filename']}")
                                                                     )
                                                                 ),
                                                               ),
@@ -248,7 +261,7 @@ class _Message_homepage_homepageState extends State<Message_homepage>
                                                                       borderRadius: BorderRadius.circular(1000)
                                                                   ),
                                                                   child: Center(
-                                                                    child: Icon(Icons.add,color: kPrimaryColor,),
+                                                                    child: Icon(Icons.add,color: kPrimaryColor,size: screenwidth < 700 ? 25: 40,),
                                                                   ),
                                                                 ),
                                                               )
@@ -291,8 +304,8 @@ class _Message_homepage_homepageState extends State<Message_homepage>
                                                                   color: Colors.white,
                                                                   borderRadius: BorderRadius.circular(1000),
                                                                   image: DecorationImage(
-                                                                    fit: userdetails['filename'] == null ? BoxFit.contain : BoxFit.cover,
-                                                                    image: userdetails['filename'] == null ? AssetImage("assets/messages_icon/no_profile.png") : NetworkImage("https://ujap.checkmy.dev/storage/clients/${userdetails['filename']}")
+                                                                    fit: userdetails['filename'].toString() == "null" || userdetails['filename'].toString() == "" ? BoxFit.contain : BoxFit.cover,
+                                                                    image: userdetails['filename'].toString() == "null" || userdetails['filename'].toString() == "" ? AssetImage("assets/messages_icon/no_profile.png") : NetworkImage("https://ujap.checkmy.dev/storage/clients/${userdetails['filename']}")
                                                                   )
                                                                 ),
                                                               ),
@@ -311,14 +324,14 @@ class _Message_homepage_homepageState extends State<Message_homepage>
                                                               GestureDetector(
                                                                 onTap: ()=>Navigator.push(context, PageTransition(child: NewMessage(), type: PageTransitionType.leftToRightWithFade)),
                                                                 child: Container(
-                                                                  width: 25,
-                                                                  height: 25,
+                                                                  width: screenwidth < 700 ? 30 : 40,
+                                                                  height: screenwidth < 700 ? 30 : 40,
                                                                   decoration: BoxDecoration(
                                                                     color: Colors.white54,
                                                                     borderRadius: BorderRadius.circular(1000)
                                                                   ),
                                                                   child: Center(
-                                                                    child: Icon(Icons.add,color: kPrimaryColor,),
+                                                                    child: Icon(Icons.add,color: kPrimaryColor,size: screenwidth < 700 ? 30 : 40,),
                                                                   ),
                                                                 ),
                                                               )
@@ -326,6 +339,7 @@ class _Message_homepage_homepageState extends State<Message_homepage>
                                                           ),
                                                         ),
                                                       ),
+
 //                                                       SliverAppBar(
 //                                                         automaticallyImplyLeading: false,
 //                                                        pinned: false,
@@ -375,34 +389,50 @@ class _Message_homepage_homepageState extends State<Message_homepage>
 //                                                          ),
 //                                                        ),
 //                                                      ),
-                                                      if(snapshot.data.length > 0)...{
-                                                        SliverList(
-                                                          delegate: SliverChildListDelegate(
-                                                            [
-                                                              for(var x =0;x<snapshot.data.length;x++)...{
-                                                              //   if (snapshot.data[x]['last_convo'] == null && snapshot.data[x]['members'].length == 2)...{
-                                                              //        // conversationService.deleteChannelLoc(snapshot.data[x]['id']),
-                                                              //   }else...{
-                                                                  MySlider(
-                                                                    id: snapshot.data[x]['id'],
-                                                                    index: x,
-                                                                    data: snapshot.data[x],
-                                                                    slidableController: _slidableController,
-                                                                  ),
-                                                                // }
-                                                              }
-                                                            ]
-                                                          ),
-                                                        )
-                                                      }else...{
-                                                        SliverToBoxAdapter(
-                                                          child: Container(
-                                                            width: double.infinity,
-                                                            height: screenheight - 120,
-                                                            color: Colors.white54,
-                                                          ),
-                                                        )
-                                                      }
+                                                       if(snapshot.data.length > 0)...{
+                                                         SliverList(
+                                                           delegate: SliverChildListDelegate(
+                                                               [
+                                                                 if (!currentMessage.toString().contains("message"))...{
+                                                                   Expanded(
+                                                                     child: Container(
+                                                                       decoration: BoxDecoration(
+                                                                           color: Colors.white,
+                                                                           borderRadius: BorderRadius.vertical(top: Radius.circular(20))
+                                                                       ),
+                                                                       child: noData("PAS ENCORE DE MESSAGES"),
+                                                                       padding: EdgeInsets.symmetric(vertical: screenwidth/2),
+                                                                     ),
+                                                                   )
+                                                                 }else...{
+                                                                   for(var x =0;x<snapshot.data.length;x++)...{
+                                                                     if (snapshot.data[x]['last_convo'] == null && snapshot.data[x]['members'].length == 2 && snapshot.data[x]['messages'].toString() == "[]")...{
+                                                                       // conversationScervice.deleteChannelLoc(snapshot.data[x]['id']),
+                                                                     }else...{
+                                                                       if (snapshot.data[x]['messages'].toString() != "[]" || snapshot.data[x]['members'].length > 2 && snapshot.data[x]['members'][0]['detail']['id'].toString() == userdetails['id'].toString())...{
+                                                                         MySlider(
+                                                                           id: snapshot.data[x]['id'],
+                                                                           index: x,
+                                                                           data: snapshot.data[x],
+                                                                           slidableController: _slidableController,
+                                                                         ),
+                                                                       }
+                                                                     }
+                                                                   }
+                                                                 }
+
+                                                               ]
+                                                           ),
+                                                         )
+                                                       }else...{
+                                                         SliverToBoxAdapter(
+                                                           child: Container(
+                                                             width: double.infinity,
+                                                             height: screenheight - 120,
+                                                             color: Colors.white54,
+                                                           ),
+                                                         )
+                                                       }
                                                     ],
                                                   )
                                               );

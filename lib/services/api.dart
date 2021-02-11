@@ -345,7 +345,6 @@ getPersonMessage()async{
           privateMessages = ownMessages;
         }
         conversationService.updateAll(data: jsonData);
-        print('MESSAGE RETURN :'+ownMessages.toString());
       }
       else {
         print("TITS");
@@ -646,7 +645,10 @@ List backupAds;
           return s['status'].toString().contains('1');
         }).toList();
         if (get_ads.toString() != "[]"){
-           addToDb(itemid: get_ads[0]['id'].toString(),messageTypes: 'Advertisement');
+          _deleteTask(int.parse(get_ads[0]['id'].toString()));
+          Future.delayed(const Duration(milliseconds: 500), () {
+            addToDb(itemid: get_ads[0]['id'].toString(),messageTypes: 'Advertisement');
+          });
            bannerDisplay.update(get_ads[0]);
         }
       }
@@ -657,4 +659,8 @@ List backupAds;
   return null;
 }
 
+void _deleteTask(int id) async {
+  await DatabaseHelper.instance.delete(id);
+    taskList.removeWhere((element) => element.itemid == id);
+}
 

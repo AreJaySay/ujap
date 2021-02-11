@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:ujap/globals/container_data.dart';
 import 'package:ujap/globals/user_data.dart';
@@ -9,6 +10,7 @@ import 'package:http/http.dart' as http;
 import 'package:ujap/globals/variables/messages_sub_pages_variables.dart';
 import 'package:ujap/globals/widgets/banner.dart';
 import 'package:ujap/globals/widgets/show_flushbar.dart';
+import 'package:ujap/pages/drawer_page.dart';
 import 'package:ujap/pages/homepage.dart';
 import 'package:ujap/services/ad_listener.dart';
 import 'package:ujap/services/api.dart';
@@ -38,6 +40,10 @@ class PushNotification {
     print('subscribed to : Subscription$id');
     firebaseMessaging.subscribeToTopic('Subscription$id');
   }
+  void unsubscribe(int id) {
+    print('subscribed to : Subscription$id');
+    firebaseMessaging.unsubscribeFromTopic('Subscription$id');
+  }
   Future initListen(context) async {
     firebaseMessaging.configure(
       onMessage: (Map message) async {
@@ -47,12 +53,18 @@ class PushNotification {
             print("Android MESSAGE : $message");
             if(message['data']['type'] == "message"){
               if(message['data']['refresh'] == 'false'){
-                var mappedData = json.decode(message['data']['data']);
-                messagecontroller.messagechecker(context, mappedData);
+                if (message['data']['sender'].toString() == userdetails['name'].toString()){
+                }else{
+                  var mappedData = json.decode(message['data']['data']);
+                  messagecontroller.messagechecker(context, mappedData);
+                }
               }else{
-                messagecontroller.messageHandler(message['data'],context);
-                getPersonMessage();
+                if (message['data']['sender'].toString() == userdetails['name'].toString()){
+                }else{
+                  messagecontroller.messageHandler(message['data'],context);
+                }
               }
+              getPersonMessage();
             }else if(message['data']['type'] == "event"){
               var mappedData = json.decode(message['data']['data']);
 
@@ -67,7 +79,6 @@ class PushNotification {
               bannerDisplay.update(mappedData);
               AdListener().showAd(context,mappedData);
             }
-            print('MESSAGE RETURN :'+message.toString());
 
           }else{
             print("IOS MESSAGE : $message");
@@ -75,6 +86,7 @@ class PushNotification {
               if(message['refresh'] == 'false'){
                 var mappedData = json.decode(message['data']);
                 messagecontroller.messagechecker(context, mappedData);
+                getPersonMessage();
               }else{
                 messagecontroller.messageHandler(message['data'],context);
                 getPersonMessage();
@@ -98,6 +110,10 @@ class PushNotification {
         }catch(e){
           Messagecontroller().printWrapped("onMessage Error : $e");
         }
+        // Navigator.pushReplacement(
+        //   context,
+        //   PageRouteBuilder(pageBuilder: (_, __, ___) => MainScreen(false)),
+        // );
       },
       onLaunch: (Map<String, dynamic> message) async {
         try{

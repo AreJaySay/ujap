@@ -17,6 +17,7 @@ import 'package:ujap/services/api.dart';
 import 'package:ujap/services/message_controller.dart';
 import 'package:ujap/services/notifications.dart';
 import 'package:ujap/services/presence.dart';
+import 'package:ujap/services/searches/search_service.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 List eventStatuscurrentMeeting;
@@ -416,6 +417,7 @@ class _ViewEventDetailsState extends State<ViewEventDetails> with SingleTickerPr
                         child: Icon(Icons.arrow_back, color: Colors.white,size: screenwidth < 700 ? screenwidth/13 : screenwidth/18,)),
                     onTap: (){
                       setState(() {
+                        filterSearchService.filter(past: pastTicketMatches);
                         if (notifPage){
                           Navigator.of(context).pop(null);
                         }else{

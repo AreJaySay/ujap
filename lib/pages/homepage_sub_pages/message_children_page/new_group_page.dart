@@ -97,7 +97,7 @@ class _NewGroupPageState extends State<NewGroupPage> {
                 }
               } : null,
               child: Text(widget.toAdd ? "Ajouter" : "Créer",style: TextStyle(
-                color: widget.toAdd ? _toAdd.length > 0 ? Colors.white : Colors.white54  : _selectedParticipants.length >= 2 ? Colors.white : Colors.white54
+                color: widget.toAdd ? _toAdd.length > 0 ? Colors.white : Colors.white54  : _selectedParticipants.length >= 2 ? Colors.white : Colors.white54,fontSize: screenwidth < 700 ? screenwidth/27 : screenwidth/45
                 ),
               )
             )
@@ -122,22 +122,23 @@ class _NewGroupPageState extends State<NewGroupPage> {
                   cursorColor: kPrimaryColor,
                   decoration: InputDecoration(
 //                contentPadding: EdgeInsets.all(0),
-                      prefixIcon: Icon(Icons.search),
+                      prefixIcon: Icon(Icons.search,size: screenwidth < 700 ? 20 : 35,),
                       border: InputBorder.none,
-                    hintText: "Chercher"
+                    hintText: "Chercher",
+                    hintStyle: TextStyle(fontSize: screenwidth < 700 ? 20 : 25)
                   ),
                 ),
               )
             ),
             _selectedParticipants.length == 0 ? Container() : Container(
               width: double.infinity,
-              height: screenheight/13,
+              height: screenheight/10,
               child: ListView(
                 scrollDirection: Axis.horizontal,
                 children: [
                   for(var selected in _selectedParticipants)...{
                     Container(
-                      width: 50,
+                      width: screenwidth < 700 ? 50 : 60,
                       height: double.infinity,
                       margin: const EdgeInsets.only(left: 20),
                       child: Stack(
@@ -147,8 +148,8 @@ class _NewGroupPageState extends State<NewGroupPage> {
                             child: Column(
                               children: [
                                 Container(
-                                  width: 45,
-                                  height: 45,
+                                  width: screenwidth < 700 ? 45 : 60,
+                                  height: screenwidth < 700 ? 45 : 60,
                                   decoration: BoxDecoration(
                                     color: Colors.white,
                                       boxShadow: [
@@ -302,8 +303,8 @@ class _NewGroupPageState extends State<NewGroupPage> {
                         child: Row(
                           children: [
                             Container(
-                              width: 40,
-                              height: 40,
+                              width: screenwidth < 700 ? 40 : 60,
+                              height: screenwidth < 700 ? 40 : 60,
                               decoration: BoxDecoration(
                                   color: Colors.white,
                                   boxShadow: [
@@ -326,13 +327,13 @@ class _NewGroupPageState extends State<NewGroupPage> {
                             Expanded(
                               child: Text("${client['name']}",style: TextStyle(
                                   fontFamily: "Google-Bold",
-                                  fontSize: screenwidth/30
+                                  fontSize: screenwidth < 700 ? screenwidth/30 : screenwidth/35
                               ),),
                             ),
                             const SizedBox(
                               width: 10,
                             ),
-                            Icon(checkifExist(int.parse(client['id'].toString())) || checkifExistToAdd(int.parse(client['id'].toString())) ? Icons.check_circle : Icons.check_circle_outline, color: checkifExist(int.parse(client['id'].toString())) ||checkifExistToAdd(int.parse(client['id'].toString())) ? Colors.green : Colors.black54,)
+                            Icon(checkifExist(int.parse(client['id'].toString())) || checkifExistToAdd(int.parse(client['id'].toString())) ? Icons.check_circle : Icons.check_circle_outline, color: checkifExist(int.parse(client['id'].toString())) ||checkifExistToAdd(int.parse(client['id'].toString())) ? Colors.green : Colors.black54,size: screenwidth < 700 ? 25 : 35,)
                           ],
                         ),
                       ),

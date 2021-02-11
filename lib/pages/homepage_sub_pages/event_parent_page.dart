@@ -180,7 +180,7 @@ class _Event_parentState extends State<Event_parent> {
                                 ),
                                 GestureDetector(
                                   child: Container(
-                                    width:  screenwidth < 700 ? 200 : 400,
+                                    width:  screenwidth < 700 ? screenwidth/1.7 : 400,
                                     padding: const EdgeInsets.all(10),
                                     child: Text('Evènements et matchs auxquels vous allez assister.',style: TextStyle(fontFamily: 'Google-Bold',color:  history_eventsmatches ? Colors.white.withOpacity(0.3) :  Colors.white,fontSize: screenwidth < 700 ?  history_eventsmatches ? screenheight/60 : screenheight/55 : 23),
                                     textAlign: TextAlign.center,

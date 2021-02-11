@@ -22,6 +22,7 @@ import 'package:ujap/services/api.dart';
 import 'package:ujap/services/conversation_chats_listener.dart';
 import 'package:ujap/services/conversation_listener.dart';
 import 'package:ujap/services/member_traversal.dart';
+import 'package:ujap/services/message_data.dart';
 import 'package:ujap/services/navigate_match_events.dart';
 
 class GlobalSearchPage extends StatefulWidget {
@@ -330,45 +331,108 @@ class _GlobalSearchPageState extends State<GlobalSearchPage> {
                   )),
             ],
           ),
-        ) : ListView.builder(
+        ) :
+        ListView.builder(
           itemCount: currentindex == 0 ? attendedEventMatch.length : currentindex == 1 ? eventsData.length : ownMessages.length,
           itemBuilder: (context, index){
-            return GestureDetector(
-              child: currentindex == 0 ? MyAttendedHomepage(attendedEventMatch,index) : currentindex == 1 ? EventsHomepage(eventsData,index) : MessageHomepage(ownMessages,index),
-              onTap: (){
-                setState(() {
-                  if (currentindex == 2){
-                    conversationService.readMessage(on: ownMessages[index]['id']);
-                    chatListener.updateChannelID(id: ownMessages[index]['id']);
-                    if(Platform.isIOS){
-                      conversationService.checkConvoMembersExist(memberIds: MemberTraverser().getIds(from:ownMessages[index]['members'])).then((value) {
-                        Navigator.push(context, PageTransition(child: NewComposeMessage(value), type: PageTransitionType.topToBottom));
-                      });
-                    }else{
-                      Future.delayed(Duration.zero, () async{
-                        Map dd = await conversationService.checkConvoMembersExist(memberIds: MemberTraverser().getIds(from: ownMessages[index]['members']));
-                        Navigator.push(context, PageTransition(child: NewComposeMessage(dd), type: PageTransitionType.topToBottom));
-                      });
-                    }
-                  }else{
-                    if (eventsData[index]['type'].toString().toLowerCase() == 'match'){
-                      navigateMatch(index,context,eventsData[index]);
-                    }else{
-                      Navigator.push(context, PageTransition(
-                          child: eventsData[index]['type'].toString() != "meeting" ? ViewEvent(
-                            eventDetail: eventsData[index],
-                            pastEvent: false,
-                          ) : ViewEventDetails(
-                            eventDetail: eventsData[index],
-                            pastEvent: false,
-                          ),
-                          type: PageTransitionType.topToBottom
-                      ));
-                    }
-                  }
-                });
-              },
-            );
+            List<String> currentMessage = List<String>();
+
+            if (ownMessages != null){
+              for(var x =0;x<ownMessages.length;x++){
+                if (ownMessages[index]['messages'].toString() == "[]" && ownMessages[index]['members'].length == 2){
+                }else{
+                  currentMessage.add(ownMessages[index]['messages'].toString());
+                }
+              }
+            }
+
+            if (currentMessage.toString() == "[]" && currentindex == 2){
+                return Container();
+               }else{
+                 for(var x =0;x<ownMessages.length;x++){
+                   if (ownMessages[index]['last_convo'] == null && ownMessages[index]['members'].length == 2 && currentindex == 2){
+                     // conversationService.deleteChannelLoc(snapshot.data[x]['id']),
+                   }else{
+                     if (currentindex == 2){
+                       if (ownMessages[index]['messages'].toString() != "[]" || ownMessages[index]['members'].length > 2){
+                         return GestureDetector(
+                           child: currentindex == 0 ? MyAttendedHomepage(attendedEventMatch,index) : currentindex == 1 ? EventsHomepage(eventsData,index) : MessageHomepage(ownMessages,index),
+                           onTap: (){
+                             setState(() {
+                               if (currentindex == 2){
+                                 conversationService.readMessage(on: ownMessages[index]['id']);
+                                 chatListener.updateChannelID(id: ownMessages[index]['id']);
+                                 if(Platform.isIOS){
+                                   conversationService.checkConvoMembersExist(memberIds: MemberTraverser().getIds(from:ownMessages[index]['members'])).then((value) {
+                                     Navigator.push(context, PageTransition(child: NewComposeMessage(value), type: PageTransitionType.topToBottom));
+                                   });
+                                 }else{
+                                   Future.delayed(Duration.zero, () async{
+                                     Map dd = await conversationService.checkConvoMembersExist(memberIds: MemberTraverser().getIds(from: ownMessages[index]['members']));
+                                     Navigator.push(context, PageTransition(child: NewComposeMessage(dd), type: PageTransitionType.topToBottom));
+                                   });
+                                 }
+                               }else{
+                                 if (eventsData[index]['type'].toString().toLowerCase() == 'match'){
+                                   navigateMatch(index,context,eventsData[index]);
+                                 }else{
+                                   Navigator.push(context, PageTransition(
+                                       child: eventsData[index]['type'].toString() != "meeting" ? ViewEvent(
+                                         eventDetail: eventsData[index],
+                                         pastEvent: false,
+                                       ) : ViewEventDetails(
+                                         eventDetail: eventsData[index],
+                                         pastEvent: false,
+                                       ),
+                                       type: PageTransitionType.topToBottom
+                                   ));
+                                 }
+                               }
+                             });
+                           },
+                         );
+                       }
+                     }else{
+                       return GestureDetector(
+                         child: currentindex == 0 ? MyAttendedHomepage(attendedEventMatch,index) : currentindex == 1 ? EventsHomepage(eventsData,index) : MessageHomepage(ownMessages,index),
+                         onTap: (){
+                           setState(() {
+                             if (currentindex == 2){
+                               conversationService.readMessage(on: ownMessages[index]['id']);
+                               chatListener.updateChannelID(id: ownMessages[index]['id']);
+                               if(Platform.isIOS){
+                                 conversationService.checkConvoMembersExist(memberIds: MemberTraverser().getIds(from:ownMessages[index]['members'])).then((value) {
+                                   Navigator.push(context, PageTransition(child: NewComposeMessage(value), type: PageTransitionType.topToBottom));
+                                 });
+                               }else{
+                                 Future.delayed(Duration.zero, () async{
+                                   Map dd = await conversationService.checkConvoMembersExist(memberIds: MemberTraverser().getIds(from: ownMessages[index]['members']));
+                                   Navigator.push(context, PageTransition(child: NewComposeMessage(dd), type: PageTransitionType.topToBottom));
+                                 });
+                               }
+                             }else{
+                               if (eventsData[index]['type'].toString().toLowerCase() == 'match'){
+                                 navigateMatch(index,context,eventsData[index]);
+                               }else{
+                                 Navigator.push(context, PageTransition(
+                                     child: eventsData[index]['type'].toString() != "meeting" ? ViewEvent(
+                                       eventDetail: eventsData[index],
+                                       pastEvent: false,
+                                     ) : ViewEventDetails(
+                                       eventDetail: eventsData[index],
+                                       pastEvent: false,
+                                     ),
+                                     type: PageTransitionType.topToBottom
+                                 ));
+                               }
+                             }
+                           });
+                         },
+                       );
+                     }
+                   }
+                 }
+               }
           },
         ),
       ),
