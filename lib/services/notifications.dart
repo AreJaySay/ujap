@@ -10,6 +10,7 @@ import 'package:ujap/globals/container_data.dart';
 import 'package:ujap/globals/user_data.dart';
 import 'package:ujap/globals/variables/other_variables.dart';
 import 'package:ujap/globals/variables/video.dart';
+import 'package:ujap/globals/widgets/appbar_icons.dart';
 import 'package:ujap/globals/widgets/curve_containers.dart';
 import 'package:ujap/globals/widgets/show_snackbar.dart';
 import 'package:ujap/pages/homepage.dart';
@@ -41,6 +42,7 @@ class _NotificationsState extends State<Notifications> {
   List<Map> dataToSearch = new List();
   List<Todo> localList = new List();
 
+
   @override
   void initState() {
     // TODO: implement initState
@@ -53,8 +55,8 @@ class _NotificationsState extends State<Notifications> {
     DatabaseHelper.instance.queryAllRows().then((value) {
       setState(() {
         value.forEach((element) {
-          if (!taskList.toString().contains("itemid: ${element['item_id'].toString()}")){
-          taskList.add(Todo(id: element['id'], itemid: element['item_id'].toString(), messageType: element["message_type"].toString()));
+          if (!taskList.contains(Todo(itemid: element['item_id'].toString(), messageType: element["message_type"].toString()))){
+            taskList.add(Todo(id: element['id'], itemid: element['item_id'].toString(), messageType: element["message_type"].toString()));
           }
         });
       });
@@ -112,7 +114,7 @@ class _NotificationsState extends State<Notifications> {
                                     decoration: BoxDecoration(
                                         image: DecorationImage(
 
-                                          image: AssetImage("assets/logo.png"),
+                                          image: AssetImage("assets/new_app_icon.png"),
 
                                         )
                                     ),
@@ -127,7 +129,7 @@ class _NotificationsState extends State<Notifications> {
                                 child:ClipPath(
                                   clipper: CurvedTop(),
                                   child: Container(
-                                    color: Color.fromRGBO(5, 93, 157, 0.9),
+                                    color: kPrimaryColor,
                                     width: MediaQuery
                                         .of(context)
                                         .size
@@ -383,8 +385,8 @@ class _NotificationsState extends State<Notifications> {
                                                       mainAxisAlignment:  MainAxisAlignment.start,
                                                       crossAxisAlignment: CrossAxisAlignment.start,
                                                       children: [
-                                                        Text("Nom de la publicité: ".toUpperCase(),style: TextStyle(color: Colors.black54,fontWeight: FontWeight.w600,fontFamily: 'Google-Bold',fontSize: 14 ),overflow: TextOverflow.ellipsis,maxLines: 2,),
-                                                        Text(adverTisement[0]['name'].toString(),style: TextStyle(color: Colors.black54,fontFamily: 'Google-Medium',fontSize: 14 ),overflow: TextOverflow.ellipsis,maxLines: 2,),
+                                                        Text("Nom de la publicité: ".toUpperCase(),style: TextStyle(color: Colors.black54,fontWeight: FontWeight.w600,fontFamily: 'Google-Bold',fontSize: 14 ),overflow: TextOverflow.ellipsis,maxLines: 1,),
+                                                        Expanded(child: Text(adverTisement[0]['name'].toString(),style: TextStyle(color: Colors.black54,fontFamily: 'Google-Medium',fontSize: 14 ),overflow: TextOverflow.ellipsis,maxLines: 1,)),
                                                       ],
                                                     ),
                                                     SizedBox(
@@ -395,9 +397,11 @@ class _NotificationsState extends State<Notifications> {
                                                       crossAxisAlignment: CrossAxisAlignment.center,
                                                       children: [
                                                         Text("Description: ".toUpperCase(),style: TextStyle(color: Colors.black54,fontWeight: FontWeight.w600,fontFamily: 'Google-Bold',fontSize: 14 ),overflow: TextOverflow.ellipsis,maxLines: 1,),
-                                                        Container(
-                                                            width: screenwidth < 700 ? screenwidth/2.5 : 350,
-                                                            child: Text(adverTisement[0]['description'],style: TextStyle(color: Colors.black54,fontFamily: 'Google-Medium',fontSize: 14 ),overflow: TextOverflow.ellipsis,maxLines: 1,)),
+                                                        Expanded(
+                                                          child: Container(
+                                                              width: screenwidth < 700 ? screenwidth/2.5 : 350,
+                                                              child: Text(adverTisement[0]['description'],style: TextStyle(color: Colors.black54,fontFamily: 'Google-Medium',fontSize: 14 ),overflow: TextOverflow.ellipsis,maxLines: 1,)),
+                                                        ),
                                                       ],
                                                     ),
                                                     SizedBox(
@@ -453,7 +457,7 @@ class _NotificationsState extends State<Notifications> {
                                                 borderRadius: BorderRadius.circular(10.0),
                                                 image: DecorationImage(
                                                   fit: BoxFit.cover,
-                                                  image: eventDetails[0]['filename'].toString() == "null" ? AssetImage('assets/logo.png') : NetworkImage('https://ujap.checkmy.dev/storage/events/'+eventDetails[0]['id'].toString()+'/'+eventDetails[0]['filename'].toString())
+                                                  image: eventDetails[0]['filename'].toString() == "null" ? AssetImage('assets/new_app_icon.png') : NetworkImage('https://ujap.checkmy.dev/storage/events/'+eventDetails[0]['id'].toString()+'/'+eventDetails[0]['filename'].toString())
                                                 )
                                               ),
                                             ),
@@ -467,12 +471,15 @@ class _NotificationsState extends State<Notifications> {
                                                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                                                   crossAxisAlignment: CrossAxisAlignment.stretch,
                                                   children: <Widget>[
-                                                    Row(
-                                                      children: <Widget>[
-                                                        Text("Nom de l' évènement: ".toUpperCase(),style: TextStyle(color: Colors.black54,fontWeight: FontWeight.w600,fontFamily: 'Google-Bold',fontSize: 14 ),overflow: TextOverflow.ellipsis,maxLines: 2,),
-                                                        Text(eventDetails[0]['name'].toString(),style: TextStyle(color: Colors.black54,fontFamily: 'Google-Medium',fontSize: 14 ),overflow: TextOverflow.ellipsis,maxLines: 2,),
-                                                      ],
-                                                    ),
+                                                   Container(
+                                                     child: Row(
+                                                       children: <Widget>[
+                                                         Text("Nom de l' évènement: ".toUpperCase(),style: TextStyle(color: Colors.black54,fontWeight: FontWeight.w600,fontFamily: 'Google-Bold',fontSize: 14 ),overflow: TextOverflow.ellipsis,maxLines: 1,),
+                                                         Expanded(
+                                                             child: Text(eventDetails[0]['name'].toString(),style: TextStyle(color: Colors.black54,fontFamily: 'Google-Medium',fontSize: 14 ),overflow: TextOverflow.ellipsis,maxLines: 1,)),
+                                                       ],
+                                                     ),
+                                                   ),
                                                     SizedBox(
                                                       height: 3,
                                                     ),

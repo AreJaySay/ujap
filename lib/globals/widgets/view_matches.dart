@@ -38,8 +38,8 @@ List eventStatusmatch;
 
 class View_matches extends StatefulWidget {
   final Map eventDetail;
-  final String _matchID,_image,_visitorID,_courtID,_ticketID,_type, matchName;
-  View_matches(this.eventDetail,this._matchID,this._image,this._visitorID,this._courtID,this._ticketID,this._type, this.matchName);
+  final String _matchID,_image,_visitorID,_homeID,_courtID,_ticketID,_type, matchName;
+  View_matches(this.eventDetail,this._matchID,this._image,this._visitorID,this._homeID,this._courtID,this._ticketID,this._type, this.matchName);
 
   @override
   _View_matchesState createState() => _View_matchesState();
@@ -50,36 +50,11 @@ class _View_matchesState extends State<View_matches> {
     ""
   ];
   List _teamNameandlogo;
+  List _homeNameandlogo;
   var _attend_pass = "No";
   var _matchCourt = "";
   List _local;
   bool _isLoading = false;
-
-  // getclientsAttend(){
-  //   showloader(context);
-  //    _local = events_status.where((s){
-  //     return s['event_id'].toString() == widget._matchID.toString();
-  //   }).toList();
-  //
-  //    print('RETURN :'+_local.toString());
-  //
-  //   ticket_allocation = _local[0]['allocation'];
-  //   ticket_accepted_client = _local[0]['accepted'];
-  //
-  //   if (_local != null){
-  //     Future.delayed(Duration(seconds: 5)).then((_) {
-  //       print('ALLOCATION :'+ticket_allocation.toString());
-  //       print('ACCEPTED :'+ticket_accepted_client.toString());
-  //       Navigator.of(context).pop(null);
-  //       showDialog(
-  //           context: context,
-  //           builder: (_) => RequestTicket(
-  //             widget._ticketID
-  //           )
-  //       );
-  //     } );
-  //   }
-  // }
 
    getMatchStatus(){
     setState(() {
@@ -87,11 +62,17 @@ class _View_matchesState extends State<View_matches> {
           return s['id'].toString().toLowerCase() == widget._visitorID.toString().toLowerCase();
         }).toList();
 
+        print('VISITOR :'+_teamNameandlogo.toString());
+
+        _homeNameandlogo = teamNameData.where((s){
+          return s['id'].toString().toLowerCase() == widget._homeID.toString().toLowerCase();
+        }).toList();
+
         eventStatusmatch = events_status.where((s) {
           return s['event_id'].toString().toLowerCase() == widget._matchID.toString().toLowerCase();
         }).toList();
 
-        events_attendedmatch = double.parse( eventStatusmatch[0]['accepted_clients'].length.toString());
+        events_attendedmatch = double.parse(eventStatusmatch[0]['accepted_clients'].length.toString());
         events_allocationmatch = double.parse(eventStatusmatch[0]['allocation'].toString());
         eventsAttended_clientmatch =  eventStatusmatch[0]['declined_clients'];
 
@@ -99,24 +80,6 @@ class _View_matchesState extends State<View_matches> {
         print('ATTENDED ALLOCATION :'+eventStatusmatch.toString());
     });
   }
-
-  // _get_ticket_request(){
-  //   setState(() {
-  //    if (ticket_requests != null){
-  //      List _ticketrequest = ticket_requests.where((s){
-  //        return s['ticket_id'].toString() == widget._ticketID.toString();
-  //      }).toList();
-  //
-  //      _myTicketrequest = _ticketrequest.where((s){
-  //        return s['client_id'].toString() == userdetails['id'].toString();
-  //      }).toList();
-  //
-  //      print('MY TICKET '+_myTicketrequest.toString());
-  //    }
-  //   });
-  // }
-
-//  "64158 D'Amore Stream\nLindgrenton, AL 65635"
 
   @override
   void initState() {
@@ -206,22 +169,19 @@ class _View_matchesState extends State<View_matches> {
                                               child: Column(
                                                 mainAxisAlignment: MainAxisAlignment.start,
                                                 children: [
-                                                  SizedBox(
-                                                    height: 10,
-                                                  ),
                                                   Container(
-                                                    width : screenwidth/4.5,
-                                                    height: screenheight/12,
-                                                    child: Image(
-                                                        fit: BoxFit.contain,
-                                                        image: AssetImage('assets/logo.png')
-                                                    ),
+                                                    width : screenwidth/4,
+                                                    height: screenheight/9,
+                                                    child: _homeNameandlogo == null ? Container() :
+                                                    Image(
+                                                    fit: BoxFit.contain ,
+                                                    image: NetworkImage('https://ujap.checkmy.dev/storage/teams/'+_homeNameandlogo[0]['logo'].toString()),
+                                                  )
                                                   ),
-                                                  SizedBox(
-                                                    height: screenheight/60,
-                                                  ),
+
                                                   Container(
-                                                      child: Text('UJAP Quimper',style: TextStyle(fontFamily: 'Google-Bold',color: Colors.black,fontSize: screenwidth < 700 ? screenheight/60 : 20 ),textAlign: TextAlign.center,)),
+                                                     margin: EdgeInsets.symmetric(horizontal: 15),
+                                                      child: Text(_homeNameandlogo[0]['name'].toString().toUpperCase(),style: TextStyle(fontSize: screenwidth < 700 ? screenheight/70  : 20,fontFamily: 'Google-Bold',color: Colors.grey[800]),textAlign: TextAlign.center,)),
                                                 ],
                                               ),
                                             ),
@@ -240,31 +200,23 @@ class _View_matchesState extends State<View_matches> {
                                           ),
                                           Expanded(
                                             child: Container(
-                                              width: screenwidth,
-                                              height: screenheight,
-                                              margin: EdgeInsets.only(right: 10),
+                                              width: 300,
                                               child: Column(
                                                 mainAxisAlignment: MainAxisAlignment.start,
                                                 children: [
-                                                  _teamNameandlogo == null ? Container() : Container(
-                                                    margin: EdgeInsets.only(top: 10),
-                                                    width : screenwidth/4.5,
-                                                    height: screenheight/12,
-                                                    child: Image(
-                                                      fit: BoxFit.contain,
-                                                      image: NetworkImage('https://ujap.checkmy.dev/storage/teams/'+_teamNameandlogo[0]['logo'].toString()),
-                                                    ),
-
-                                                  ),
-                                                  SizedBox(
-                                                    height: screenheight/60,
-                                                  ),
-                                                  Expanded(
-                                                    child:  _teamNameandlogo == null ? Container() :  Container(
-                                                        width: screenwidth,
-                                                        child: Text( _teamNameandlogo[0]['name'].toString(),style: TextStyle(fontFamily: 'Google-Bold',color: Colors.black,fontSize: screenwidth < 700 ? screenheight/60 : 20 ),textAlign: TextAlign.center,)),
+                                                  Container(
+                                                      width : screenwidth/6,
+                                                      height: screenheight/9,
+                                                      child: _teamNameandlogo == null ? Container() :
+                                                      Image(
+                                                        fit: BoxFit.contain ,
+                                                        image: NetworkImage('https://ujap.checkmy.dev/storage/teams/'+_teamNameandlogo[0]['logo'].toString()),
+                                                      )
                                                   ),
 
+                                                  Container(
+                                                      margin: EdgeInsets.symmetric(horizontal: 15),
+                                                      child: Text(_teamNameandlogo[0]['name'].toString().toUpperCase(),style: TextStyle(fontSize: screenwidth < 700 ? screenheight/70  : 20,fontFamily: 'Google-Bold',color: Colors.grey[800]),textAlign: TextAlign.center,)),
                                                 ],
                                               ),
                                             ),
@@ -354,7 +306,7 @@ class _View_matchesState extends State<View_matches> {
                                 alignment: Alignment.bottomCenter,
                                 child: ConfirmAttendance(widget.eventDetail,null,eventStatusmatch)
                             ) :
-                            events_attendedmatch == events_allocationmatch ?
+                            events_attendedmatch >= events_allocationmatch ?
                               Container(
                                 padding: EdgeInsets.symmetric(horizontal: 20,vertical: 20),
                                 height: screenheight,
@@ -399,6 +351,7 @@ class _View_matchesState extends State<View_matches> {
                                   pastTicketMatches = false;
                                   filterSearchService.filter(past: pastTicketMatches);
                                   indexListener.update(data: 1);
+                                  currentindex = 1;
                                   if (notifPage){
                                     Navigator.of(context).pop(null);
                                   }else{

@@ -255,7 +255,7 @@ class _SearchNotificationsState extends State<SearchNotifications> {
                                       borderRadius: BorderRadius.circular(10.0),
                                       image: DecorationImage(
                                           fit: BoxFit.cover,
-                                          image: widget.datatoSearchEvents[index]['filename'].toString() == "null" ? AssetImage('assets/logo.png') : NetworkImage('https://ujap.checkmy.dev/storage/events/'+widget.datatoSearchEvents[index]['id'].toString()+'/'+widget.datatoSearchEvents[index]['filename'].toString())
+                                          image: widget.datatoSearchEvents[index]['filename'].toString() == "null" ? AssetImage('assets/new_app_icon.png') : NetworkImage('https://ujap.checkmy.dev/storage/events/'+widget.datatoSearchEvents[index]['id'].toString()+'/'+widget.datatoSearchEvents[index]['filename'].toString())
                                       )
                                   ),
                                 ),

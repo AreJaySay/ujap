@@ -133,7 +133,7 @@ class _GlobalSearchPageState extends State<GlobalSearchPage> {
                               onChanged: (text){
                                 setState(() {
                                   if (currentindex == 0){
-                                    attendedEventMatch = backup_attendedEventMatch.where((s){
+                                    eventsData = eventsfirstData.where((s){
                                       return s['name'].toString().toLowerCase().contains(text.toString().toLowerCase()) || (s['type'].toString().toLowerCase()+'s').contains(text.toString().toLowerCase()) ||
                                           DateFormat("MMMM d,yyyy").format(DateTime.parse(s['sched_date'])).toString().toLowerCase().contains(text.toString().toLowerCase());
                                     }).toList();
@@ -184,7 +184,7 @@ class _GlobalSearchPageState extends State<GlobalSearchPage> {
                                     navIndex = index;
                                     if (index == 1){
                                       if (currentindex == 0){
-                                        attendedEventMatch = backup_attendedEventMatch.where((s){
+                                        eventsData = eventsfirstData.where((s){
                                           return s['type'].toString().toLowerCase() == 'event';
                                         }).toList();
                                       }
@@ -199,7 +199,7 @@ class _GlobalSearchPageState extends State<GlobalSearchPage> {
                                       }
                                     }else if(index == 2){
                                       if (currentindex == 0){
-                                        attendedEventMatch = backup_attendedEventMatch.where((s){
+                                        eventsData = eventsfirstData.where((s){
                                           return s['type'].toString().toLowerCase() == 'meeting';
                                         }).toList();
                                       }
@@ -214,7 +214,7 @@ class _GlobalSearchPageState extends State<GlobalSearchPage> {
                                       }
                                     }else if(index == 3){
                                       if (currentindex == 0){
-                                        attendedEventMatch = backup_attendedEventMatch.where((s){
+                                        eventsData = eventsfirstData.where((s){
                                           return s['type'].toString().toLowerCase() == 'match';
                                         }).toList();
                                       }
@@ -236,55 +236,6 @@ class _GlobalSearchPageState extends State<GlobalSearchPage> {
                             },
                           ),
                         ),
-                        navIndex != 0 || currentindex == 2 ? Container() : PopupMenuButton<int>(
-                          icon: Icon(Icons.arrow_drop_down,size: screenwidth < 700 ? screenwidth/12 : 40,color: Colors.white,),
-                          itemBuilder: (context)=>[
-                            PopupMenuItem(
-                              value: 1,
-                              child: Text(
-                                 "Événements/matchs passés",
-                                style: TextStyle(
-                                    color: Colors.black,
-                                    fontWeight: FontWeight.w700),
-                              ),
-                            ),
-                            PopupMenuItem(
-                              value: 2,
-                              child: Text(
-                                "En cours  évènements/matchs",
-                                style: TextStyle(
-                                    color: Colors.black,
-                                    fontWeight: FontWeight.w700),
-                              ),
-                            ),
-                          ],
-                          onSelected: (index){
-                            setState(() {
-                              print(index.toString());
-                              if (currentindex == 0){
-                                if (index == 1){
-                                  attendedEventMatch = backup_attendedEventMatch.where((s){
-                                    return int.parse(DateFormat("yyyyMMdd").format(DateTime.parse(s['sched_date'].toString().replaceAll(new RegExp(r'[^\w\s]+'),'')))) <= int.parse(DateFormat("yyyyMMdd").format(DateTime.now()));
-                                  }).toList();
-                                }else{
-                                  attendedEventMatch = backup_attendedEventMatch.where((s){
-                                    return int.parse(DateFormat("yyyyMMdd").format(DateTime.parse(s['sched_date'].toString().replaceAll(new RegExp(r'[^\w\s]+'),'')))) > int.parse(DateFormat("yyyyMMdd").format(DateTime.now()));
-                                  }).toList();
-                                }
-                              }else{
-                                  if (index == 1){
-                                    eventsData = eventsfirstData.where((s){
-                                      return int.parse(DateFormat("yyyyMMdd").format(DateTime.parse(s['sched_date'].toString().replaceAll(new RegExp(r'[^\w\s]+'),'')))) <= int.parse(DateFormat("yyyyMMdd").format(DateTime.now()));
-                                    }).toList();
-                                  }else{
-                                    eventsData = eventsfirstData.where((s){
-                                      return int.parse(DateFormat("yyyyMMdd").format(DateTime.parse(s['sched_date'].toString().replaceAll(new RegExp(r'[^\w\s]+'),'')))) > int.parse(DateFormat("yyyyMMdd").format(DateTime.now()));
-                                    }).toList();
-                                }
-                              }
-                            });
-                          },
-                        )
                       ],
                     ),
                   ),
@@ -332,108 +283,93 @@ class _GlobalSearchPageState extends State<GlobalSearchPage> {
             ],
           ),
         ) :
-        ListView.builder(
-          itemCount: currentindex == 0 ? attendedEventMatch.length : currentindex == 1 ? eventsData.length : ownMessages.length,
-          itemBuilder: (context, index){
-            List<String> currentMessage = List<String>();
+        ListView(
+            children: [
+              Column(
+              children: [
+                if (currentindex == 2)...{
+                  for(var x =0;x<ownMessages.length;x++)...{
+                    if (ownMessages[x]['last_convo'] == null && ownMessages[x]['members'].length == 2 && ownMessages[x]['messages'].toString() == "[]")...{
+                      // conversationScervice.deleteChannelLoc(ownMessages[x]['id']),
+                    }else if(ownMessages[x]['members'].length > 2 && ownMessages[x]['messages'].toString().contains('${userdetails['name'].toString()+" "+userdetails['lastname']} a quitté le groupe.'))...{
 
-            if (ownMessages != null){
-              for(var x =0;x<ownMessages.length;x++){
-                if (ownMessages[index]['messages'].toString() == "[]" && ownMessages[index]['members'].length == 2){
-                }else{
-                  currentMessage.add(ownMessages[index]['messages'].toString());
+                    }else...{
+                      if (ownMessages[x]['messages'].toString() != "[]" || ownMessages[x]['members'].length > 2 && ownMessages[x]['members'][0]['detail']['id'].toString() == userdetails['id'].toString())...{
+                        GestureDetector(
+                          child: MessageHomepage(ownMessages,x),
+                          onTap: (){
+                            setState(() {
+                              conversationService.readMessage(on:ownMessages[x]['id']);
+                              chatListener.updateChannelID(id: ownMessages[x]['id']);
+                            });
+                            if(Platform.isIOS){
+                              conversationService.checkConvoMembersExist(memberIds: MemberTraverser().getIds(from: ownMessages[x]['members'])).then((value) {
+                                Navigator.push(context, PageTransition(child: NewComposeMessage(value, ownMessages[x] == null? null :ownMessages[x]), type: PageTransitionType.topToBottom));
+                              });
+                            }else{
+                              Future.delayed(Duration.zero, () async{
+                                Map dd = await conversationService.checkConvoMembersExist(memberIds: MemberTraverser().getIds(from: ownMessages[x]['members']));
+                                Navigator.push(context, PageTransition(child: NewComposeMessage(dd, ownMessages[x] == null? null : ownMessages[x]), type: PageTransitionType.topToBottom));
+                              });
+                            }
+                          },
+                        )
+                      }
+                    }
+                  }
+                }else if (currentindex == 1)...{
+                  for(var x = 0; x < eventsData.length; x++)...{
+                    GestureDetector(
+                      child: EventsHomepage(eventsData,x),
+                      onTap: (){
+                        setState(() {
+                          if (eventsData[x]['type'].toString() != "match"){
+                            Navigator.push(context, PageTransition(
+                                child: eventsData[x]['type'].toString() != "meeting" ? ViewEvent(
+                                  eventDetail: eventsData[x],
+                                  pastEvent: false,
+                                ) : ViewEventDetails(
+                                  eventDetail: eventsData[x],
+                                  pastEvent: false,
+                                ),
+                                type: PageTransitionType.topToBottom
+                            ));
+                          }else{
+                            navigateMatch(x,context,eventsData[x]);
+                          }
+                        });
+                      },
+                    )
+                  }
+                }else...{
+                  for(var x = 0; x < eventsData.length; x++)...{
+                  GestureDetector(
+                    child: !myAttended_events.toString().contains('ticket_id: '+eventsData[x]['ticket']['id'].toString()) && !attended_Meeting.toString().contains(eventsData[x]['id'].toString()+userdetails.toString()) && !attended_Meeting.toString().contains(eventsData[x]['id'].toString()+userdetails['name'].toString())? Container() :
+                    MyAttendedHomepage(eventsData,x),
+                    onTap: (){
+                      setState(() {
+                        if (eventsData[x]['type'].toString() != "match"){
+                          Navigator.push(context, PageTransition(
+                              child: eventsData[x]['type'].toString() != "meeting" ? ViewEvent(
+                                eventDetail: eventsData[x],
+                                pastEvent: false,
+                              ) : ViewEventDetails(
+                                eventDetail: eventsData[x],
+                                pastEvent: false,
+                              ),
+                              type: PageTransitionType.topToBottom
+                          ));
+                        }else{
+                          navigateMatch(x,context,eventsData[x]);
+                        }
+                      });
+                    },
+                  )
                 }
-              }
-            }
-
-            if (currentMessage.toString() == "[]" && currentindex == 2){
-                return Container();
-               }else{
-                 for(var x =0;x<ownMessages.length;x++){
-                   if (ownMessages[index]['last_convo'] == null && ownMessages[index]['members'].length == 2 && currentindex == 2){
-                     // conversationService.deleteChannelLoc(snapshot.data[x]['id']),
-                   }else{
-                     if (currentindex == 2){
-                       if (ownMessages[index]['messages'].toString() != "[]" || ownMessages[index]['members'].length > 2){
-                         return GestureDetector(
-                           child: currentindex == 0 ? MyAttendedHomepage(attendedEventMatch,index) : currentindex == 1 ? EventsHomepage(eventsData,index) : MessageHomepage(ownMessages,index),
-                           onTap: (){
-                             setState(() {
-                               if (currentindex == 2){
-                                 conversationService.readMessage(on: ownMessages[index]['id']);
-                                 chatListener.updateChannelID(id: ownMessages[index]['id']);
-                                 if(Platform.isIOS){
-                                   conversationService.checkConvoMembersExist(memberIds: MemberTraverser().getIds(from:ownMessages[index]['members'])).then((value) {
-                                     Navigator.push(context, PageTransition(child: NewComposeMessage(value), type: PageTransitionType.topToBottom));
-                                   });
-                                 }else{
-                                   Future.delayed(Duration.zero, () async{
-                                     Map dd = await conversationService.checkConvoMembersExist(memberIds: MemberTraverser().getIds(from: ownMessages[index]['members']));
-                                     Navigator.push(context, PageTransition(child: NewComposeMessage(dd), type: PageTransitionType.topToBottom));
-                                   });
-                                 }
-                               }else{
-                                 if (eventsData[index]['type'].toString().toLowerCase() == 'match'){
-                                   navigateMatch(index,context,eventsData[index]);
-                                 }else{
-                                   Navigator.push(context, PageTransition(
-                                       child: eventsData[index]['type'].toString() != "meeting" ? ViewEvent(
-                                         eventDetail: eventsData[index],
-                                         pastEvent: false,
-                                       ) : ViewEventDetails(
-                                         eventDetail: eventsData[index],
-                                         pastEvent: false,
-                                       ),
-                                       type: PageTransitionType.topToBottom
-                                   ));
-                                 }
-                               }
-                             });
-                           },
-                         );
-                       }
-                     }else{
-                       return GestureDetector(
-                         child: currentindex == 0 ? MyAttendedHomepage(attendedEventMatch,index) : currentindex == 1 ? EventsHomepage(eventsData,index) : MessageHomepage(ownMessages,index),
-                         onTap: (){
-                           setState(() {
-                             if (currentindex == 2){
-                               conversationService.readMessage(on: ownMessages[index]['id']);
-                               chatListener.updateChannelID(id: ownMessages[index]['id']);
-                               if(Platform.isIOS){
-                                 conversationService.checkConvoMembersExist(memberIds: MemberTraverser().getIds(from:ownMessages[index]['members'])).then((value) {
-                                   Navigator.push(context, PageTransition(child: NewComposeMessage(value), type: PageTransitionType.topToBottom));
-                                 });
-                               }else{
-                                 Future.delayed(Duration.zero, () async{
-                                   Map dd = await conversationService.checkConvoMembersExist(memberIds: MemberTraverser().getIds(from: ownMessages[index]['members']));
-                                   Navigator.push(context, PageTransition(child: NewComposeMessage(dd), type: PageTransitionType.topToBottom));
-                                 });
-                               }
-                             }else{
-                               if (eventsData[index]['type'].toString().toLowerCase() == 'match'){
-                                 navigateMatch(index,context,eventsData[index]);
-                               }else{
-                                 Navigator.push(context, PageTransition(
-                                     child: eventsData[index]['type'].toString() != "meeting" ? ViewEvent(
-                                       eventDetail: eventsData[index],
-                                       pastEvent: false,
-                                     ) : ViewEventDetails(
-                                       eventDetail: eventsData[index],
-                                       pastEvent: false,
-                                     ),
-                                     type: PageTransitionType.topToBottom
-                                 ));
-                               }
-                             }
-                           });
-                         },
-                       );
-                     }
-                   }
-                 }
-               }
-          },
+                }
+              ],
+            ),
+            ],
         ),
       ),
     );

@@ -202,7 +202,7 @@ class _No_events_dataState extends State<No_events_data> {
               height: screenwidth < 700 ? screenwidth/7 : screenwidth/12,
               child: FloatingActionButton(
                 heroTag: 'btn4',
-                backgroundColor: Color.fromRGBO(5, 93, 157, 0.9),
+                backgroundColor: kPrimaryColor,
                 onPressed:  _scrollToTop,
                 child: Icon(Icons.arrow_upward,size: screenwidth < 700 ? screenwidth/20 : screenwidth/30,),
               ),

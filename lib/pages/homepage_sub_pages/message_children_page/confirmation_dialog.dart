@@ -1,14 +1,50 @@
+import 'dart:convert';
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:ujap/globals/user_data.dart';
 import 'package:ujap/globals/variables/home_sub_pages_variables.dart';
 import 'package:ujap/globals/variables/other_variables.dart';
 import 'package:http/http.dart'as http;
 import 'package:ujap/pages/drawer_page.dart';
 import 'package:ujap/services/conversation_listener.dart';
+import 'package:ujap/services/message_controller.dart';
 import 'package:ujap/services/navigate_match_events.dart';
 import 'package:ujap/services/searches/search_service.dart';
 
-confirmaction({context, int channelID, String type = ""}){
+Future leaveGroup({int channelID, String message = "", List<int> receiverIds, String reason = "", Map channelDetails})async {
+  try {
+    Map body;
+    body = {
+      "channel_id": "${channelID.toString()}",
+      "sender_id": "${userdetails['id'].toString()}",
+      "message": "$message",
+      "date_sent": "${DateTime.now()}"
+    };
+    await http.post(
+        "${conversationService.urlString}/channel/send", headers: {
+      HttpHeaders.authorizationHeader: "Bearer $accesstoken",
+      "accept": "application/json"
+    }, body: body).then((respo) {
+      var data = json.decode(respo.body);
+      if (respo.statusCode == 200) {
+        print('LEAVE CONVO SUCCESS');
+        // for(var id in receiverIds){
+        //   if(id != int.parse(userdetails['id'].toString())){
+        //     messagecontroller.sendmessage(data['result'],message, id,false, 'leavegroup',receiverIds);
+        //   }
+        // }
+      } else {
+        print('ERROR sss :' + respo.body.toString());
+      }
+    });
+  } catch (e) {
+    print('SENDING ERROR :' + e.toString());
+  }
+}
+
+confirmaction({context, int channelID, String type = "", List<int> receiverIds}){
   showDialog(
       context: context,
       builder: (BuildContext context) {
@@ -29,7 +65,7 @@ confirmaction({context, int channelID, String type = ""}){
                     },
                     child: CircleAvatar(
                       child: Icon(Icons.close,size: screenwidth < 700 ? 30 : 40,),
-                      backgroundColor: Color.fromRGBO(5, 93, 157, 0.9),
+                      backgroundColor: kPrimaryColor,
                     ),
                   ),
                 ),
@@ -84,8 +120,8 @@ confirmaction({context, int channelID, String type = ""}){
                                         alignment: Alignment.center,
                                         child: Text('Confirmer',style: TextStyle(fontFamily: 'Google-Medium',color: Colors.white,fontSize: screenwidth < 700 ? screenheight/53 : 25 )),
                                         decoration: BoxDecoration(
-                                            color:  Color.fromRGBO(5, 93, 157, 0.9),
-                                            border: Border.all(color:  Color.fromRGBO(5, 93, 157, 0.9)),
+                                            color:  kPrimaryColor,
+                                            border: Border.all(color:  kPrimaryColor),
                                             borderRadius: BorderRadius.circular(screenwidth/40)
                                         ),
                                       ),
@@ -93,12 +129,20 @@ confirmaction({context, int channelID, String type = ""}){
                                         if (type.toString() == 'groupleader'){
                                           conversationService.deletegroupChannel(channelID);
                                           Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=>MainScreen(false)));
+                                          for(var id in receiverIds){
+                                            Messagecontroller().sendmessage('', 'Le chat de groupe créé par ${userdetails['name'].toString()+' '+userdetails['lastname'].toString()} a été supprimé', id, true, 'deletegroup',null);
+                                          }
                                         }else if (type.toString() == 'groupmember'){
+                                          print('MEMBER CLIENT ');
                                           conversationService.deleteChannelLoc(channelID);
-                                          Navigator.of(context).pop(null);
+                                          leaveGroup(channelID: channelID,message: '${userdetails['name'].toString()+" "+userdetails['lastname']} a quitté le groupe.',receiverIds: receiverIds);
+                                          for(var id in receiverIds){
+                                            Messagecontroller().sendmessage('', 'La conversation avec ${userdetails['name'].toString()+' '+userdetails['lastname'].toString()} a été supprimée', id, true, 'deletegroup',null);
+                                          }
+                                          Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=>MainScreen(false)));
                                         }else{
                                           conversationService.deleteChannelLoc(channelID);
-                                          Navigator.of(context).pop(null);
+                                          Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=>MainScreen(false)));
                                         }
                                       }
                                   ),

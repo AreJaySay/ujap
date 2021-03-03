@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:ujap/globals/container_data.dart';
 import 'package:ujap/globals/variables/other_variables.dart';
+import 'package:ujap/pages/homepage_sub_pages/home_children_page/matches.dart';
 import 'package:ujap/services/conversation_listener.dart';
 import 'package:ujap/services/string_formatter.dart';
 
@@ -71,62 +73,68 @@ class _SearchConversationPageState extends State<SearchConversationPage> {
                       return ListView.builder(
                         itemCount: data.length,
                         padding: const EdgeInsets.symmetric(horizontal: 20,vertical: 15),
-                        itemBuilder: (context, index) => Container(
-                          width: double.infinity,
-                          padding: const EdgeInsets.symmetric(vertical: 10),
-                          child: Row(
-                            children: [
-                              Container(
-                                width: 40,
-                                height: 40,
-                                margin: const EdgeInsets.only(right: 10),
-                                decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(1000),
-                                    color: Colors.grey[300],
-                                  image: DecorationImage(
-                                    fit: BoxFit.cover,
-                                    image: data[index]['client']['filename'].toString() == "null" ? AssetImage('assets/messages_icon/no_profile.png') : NetworkImage('https://ujap.checkmy.dev/storage/clients/${data[index]['client']['filename']}')
+                        itemBuilder: (context, index){
+                          List _detailClient = events_clients.where((s){
+                            return s['id'].toString() == data[index]['sender_id'].toString();
+                          }).toList();
+                          return Container(
+                            width: double.infinity,
+                            padding: const EdgeInsets.symmetric(vertical: 10),
+                            child: Row(
+                              children: [
+                                Container(
+                                  width: 40,
+                                  height: 40,
+                                  margin: const EdgeInsets.only(right: 10),
+                                  decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(1000),
+                                      color: Colors.grey[300],
+                                    image: DecorationImage(
+                                      fit: BoxFit.cover,
+                                      image: _detailClient[0]['filename'].toString() == "null" ? AssetImage('assets/messages_icon/no_profile.png') : NetworkImage('https://ujap.checkmy.dev/storage/clients/${ _detailClient[0]['filename']}')
+                                    )
+                                  ),
+                                ),
+                                Expanded(
+                                  child: RichText(
+                                    text: TextSpan(
+                                      text:  _detailClient[0]['name'],
+                                      style: TextStyle(
+                                        fontWeight: FontWeight.bold,
+                                        color: kPrimaryColor
+                                      ),
+                                      children: <TextSpan>[
+                                        TextSpan(
+                                          text: "${data[index]['message']}",
+                                          style: TextStyle(
+                                            fontWeight: FontWeight.w500,
+                                            color: Colors.black
+                                          )
+                                        )
+                                      ]
+                                    ),
                                   )
                                 ),
-                              ),
-                              Expanded(
-                                child: RichText(
+                                RichText(
+                                  textAlign: TextAlign.right,
                                   text: TextSpan(
-                                    text: "${StringFormatter().titlize(data: data[index]['client']['name'])}\n",
-                                    style: TextStyle(
-                                      fontWeight: FontWeight.bold,
-                                      color: kPrimaryColor
-                                    ),
-                                    children: <TextSpan>[
-                                      TextSpan(
-                                        text: "${data[index]['message']}",
-                                        style: TextStyle(
-                                          fontWeight: FontWeight.w500,
-                                          color: Colors.black
+                                      text: "${DateFormat("d").format(DateTime.parse(data[index]['date_sent'])).toString().toUpperCase()+' '+monthDate[int.parse(DateFormat("MM").format(DateTime.parse(data[index]['date_sent'])).toString())].toString()+'.'+' '+DateFormat("yyyy").format(DateTime.parse(data[index]['date_sent'])).toString().toUpperCase()}",
+                                      style: TextStyle(
+                                          color: Colors.black54,
+                                          fontSize: 13.5
+                                      ),
+                                      children: <TextSpan>[
+                                        TextSpan(
+                                            text: "\n${DateFormat('kk:mm').format(DateTime.parse(data[index]['date_sent']))}"
                                         )
-                                      )
-                                    ]
+                                      ]
                                   ),
                                 )
-                              ),
-                              RichText(
-                                textAlign: TextAlign.right,
-                                text: TextSpan(
-                                    text: "${DateFormat('yyyy/MM/dd').format(DateTime.parse(data[index]['date_sent'].toString().split(' ')[0]))}",
-                                    style: TextStyle(
-                                        color: Colors.black54,
-                                        fontSize: 13.5
-                                    ),
-                                    children: <TextSpan>[
-                                      TextSpan(
-                                          text: "\n${DateFormat().add_jms().format(DateTime.parse(data[index]['date_sent']))}"
-                                      )
-                                    ]
-                                ),
-                              )
-                            ],
-                          ),
-                        ),
+                              ],
+                            ),
+                          );
+                        }
+
                       );
                     }else{
                       return Center(

@@ -43,7 +43,8 @@ class _EventsListState extends State<EventsList> {
   int _finalTimeEvent;
   var _dateConvertedString = "";
   var _dateConvertedDayYear = "";
-  List _teamName;
+  List _AwayteamName;
+  List _HometeamName;
   List _eventStatus;
   var _ticketID = "";
   List eventsAttended_client;
@@ -80,15 +81,15 @@ class _EventsListState extends State<EventsList> {
                     alignment: Alignment.bottomCenter,
                     children: [
                       Container(
-                        padding: const EdgeInsets.all(25),
                         child: Image(
-                          image: AssetImage('assets/logo.png'),
+                          fit: BoxFit.cover,
+                          image: AssetImage('assets/new_app_icon.png'),
                         ),
                       ),
                       Container(
                        width: double.infinity,
                        height: screenheight,
-                        color: Color.fromRGBO(5, 93, 157, 0.9),
+                        color: kPrimaryColor,
                         child: snapshot.data == null || teamNameData == null ?
                         No_events_data_yet() :
                         Container(
@@ -178,9 +179,14 @@ class _EventsListState extends State<EventsList> {
                                   }
 
                                   if (snapshot.data[index]['match'].toString() != '[]'.toString()) {
-                                    _teamName = teamNameData.where((s) {
+                                    _AwayteamName = teamNameData.where((s) {
                                       return s['id'].toString().toLowerCase() == snapshot.data[index]['match']['visitor_team_id'].toString().toLowerCase();
                                     }).toList();
+
+                                    _HometeamName = teamNameData.where((s) {
+                                      return s['id'].toString().toLowerCase() == snapshot.data[index]['match']['home_team_id'].toString().toLowerCase();
+                                    }).toList();
+
                                   }
 
                                   // DATE AND TIME
@@ -249,7 +255,7 @@ class _EventsListState extends State<EventsList> {
                                                 child: Column(
                                                   children: [
                                                     Container(
-                                                      padding: EdgeInsets.symmetric(horizontal: 25),
+                                                      padding: EdgeInsets.symmetric(horizontal: 20),
                                                       width: screenwidth,
                                                       child: Row(
                                                         mainAxisAlignment: MainAxisAlignment.center,
@@ -268,7 +274,7 @@ class _EventsListState extends State<EventsList> {
                                                       height: 3,
                                                     ),
                                                     Container(
-                                                      padding: EdgeInsets.symmetric(horizontal: 25),
+                                                      padding: EdgeInsets.symmetric(horizontal: 20),
                                                       width: screenwidth,
                                                       child: Row(
                                                         mainAxisAlignment: MainAxisAlignment.start,
@@ -312,13 +318,20 @@ class _EventsListState extends State<EventsList> {
                                                               width: screenwidth/7,
                                                               child: Image(
                                                                   fit: BoxFit.cover,
-                                                                  image: AssetImage('assets/logo.png')
+                                                                  image:  _HometeamName == null ?
+                                                                  AssetImage('assets/no_image_available.png') :
+                                                                  NetworkImage('https://ujap.checkmy.dev/storage/teams/'+ _HometeamName[0]['logo'])
                                                               ),
                                                             ),
                                                             SizedBox(
                                                               height:  screenwidth/50,
                                                             ),
-                                                            Text('UJAP Quimper',style: TextStyle(fontSize: screenwidth < 700 ? screenheight/80  : 20,fontFamily: 'Google-Bold'),),
+                                                            Container(
+                                                              margin: EdgeInsets.symmetric(horizontal: 15),
+                                                              alignment: Alignment.center,
+                                                              child: Text(_HometeamName[0]['name'].toString().toUpperCase(),style: TextStyle(fontSize: screenwidth < 700 ? screenheight/78  : 20,fontFamily: 'Google-Bold',color: Colors.grey[800]),textAlign: TextAlign.center,
+                                                              ),
+                                                            ),
                                                           ],
                                                         ),
                                                       ),
@@ -355,9 +368,9 @@ class _EventsListState extends State<EventsList> {
                                                                   Center(
                                                                     child: Image(
                                                                         fit: BoxFit.contain,
-                                                                        image:  _teamName == null ?
+                                                                        image:  _AwayteamName == null ?
                                                                         AssetImage('assets/no_image_available.png') :
-                                                                        NetworkImage('https://ujap.checkmy.dev/storage/teams/'+ _teamName[0]['logo'])
+                                                                        NetworkImage('https://ujap.checkmy.dev/storage/teams/'+ _AwayteamName[0]['logo'])
                                                                     ),
                                                                   ),
                                                                 ],
@@ -369,7 +382,7 @@ class _EventsListState extends State<EventsList> {
                                                             Container(
                                                               width: screenwidth/4,
                                                               alignment: Alignment.center,
-                                                              child: Text( _teamName[0]['name'].toString(),style: TextStyle(fontSize: screenwidth < 700 ? screenheight/80  : 20,fontFamily: 'Google-Bold'),textAlign: TextAlign.center,
+                                                              child: Text( _AwayteamName[0]['name'].toString().toUpperCase(),style: TextStyle(fontSize: screenwidth < 700 ? screenheight/78  : 20,fontFamily: 'Google-Bold',color: Colors.grey[800]),textAlign: TextAlign.center,
 
                                                               ),
                                                             ),
@@ -413,7 +426,7 @@ class _EventsListState extends State<EventsList> {
                                                 color: Colors.green.withOpacity(0.9),
                                                 image:  AssetImage('assets/home_icons/green_ticket.png')
                                               ) : Image(
-                                                color:  Color.fromRGBO(5, 93, 157, 0.9),
+                                                color:  kPrimaryColor,
                                                 image: AssetImage('assets/home_icons/ticket.png'),
                                               ),
                                               decoration: BoxDecoration(
@@ -433,7 +446,6 @@ class _EventsListState extends State<EventsList> {
                                           ),
                                           onTap: (){
                                             setState(() {
-                                              // showSnackBar_Ads(context,'https://images.unsplash.com/photo-1537731121640-bc1c4aba9b80?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=500&q=60');
                                               getTicketData(snapshot.data[index]['ticket']['id'].toString());
                                               navigateTicket(index,context,snapshot.data[index]);
                                             });

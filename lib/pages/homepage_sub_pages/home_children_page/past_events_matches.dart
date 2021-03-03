@@ -64,7 +64,7 @@ class _Past_events_matchesState extends State<Past_events_matches> {
                 decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(screenwidth < 700 ? 10 : 15),
                     gradient: LinearGradient(
-                      colors: [Color.fromRGBO(5, 93, 157, 0.9),Color.fromRGBO(30, 139, 195, 0.8)],
+                      colors: [kPrimaryColor,Color.fromRGBO(30, 139, 195, 0.8)],
                       begin: Alignment.topLeft,
                       end: Alignment.bottomRight,
                     )
@@ -178,8 +178,6 @@ class _Past_events_matchesState extends State<Past_events_matches> {
                         snapshot.data[index]['type'].toString() == 'match' ?
                         GestureDetector(
                           child: Container(
-                            width: screenwidth < 700 ? int.parse(snapshot.data[index]['match']['visitor_score'].toString()) == int.parse(snapshot.data[index]['match']['home_score'].toString()) ?
-                            screenwidth/3  : screenwidth/3.5 : screenwidth/4,
                             margin: EdgeInsets.only(left: screenwidth < 700 ? 15 : 25),
                             child: Column(
                               mainAxisAlignment: MainAxisAlignment.center,
@@ -191,7 +189,6 @@ class _Past_events_matchesState extends State<Past_events_matches> {
                                   height: screenwidth/50,
                                 ),
                                 Container(
-                                  width: screenwidth/2,
                                   decoration: BoxDecoration(
                                     color: Colors.white,
                                     boxShadow: [
@@ -224,23 +221,28 @@ class _Past_events_matchesState extends State<Past_events_matches> {
                                           crossAxisAlignment: CrossAxisAlignment.start,
                                           children: [
                                             Container(
-                                              width: screenwidth/7,
                                               child: Text(_hometeamName[0]['name'].toString(),style: TextStyle(fontFamily: 'Google-Bold',color: Colors.black,fontSize: screenwidth < 700 ? screenheight/90 : 15 ),
                                                 overflow: TextOverflow.ellipsis,
                                               maxLines: 1,),
                                             ),
                                             snapshot.data[index]['match']['home_score'].toString() == 'null' ? Container(
-                                              child: Text('TBA',style: TextStyle(fontFamily: 'Google-Bold',color: Color.fromRGBO(5, 93, 157, 0.9),fontSize: screenwidth < 700 ?  screenheight/90 : 14 ),),
+                                              child: Text('TBA',style: TextStyle(fontFamily: 'Google-Bold',color: kPrimaryColor,fontSize: screenwidth < 700 ?  screenheight/90 : 14 ),),
 
                                             ) :   Row(
                                               children: [
-                                                Text(snapshot.data[index]['match']['home_score'].toString(),style: TextStyle(fontFamily: 'Google-Bold',color: Color.fromRGBO(5, 93, 157, 0.9),fontSize: screenwidth < 700 ?  screenheight/90 : 14 ),),
+                                                int.parse(snapshot.data[index]['match']['visitor_score'].toString()) == 0 && int.parse(snapshot.data[index]['match']['home_score'].toString()) == 0 ?
+                                                Container() :
+                                                Text(snapshot.data[index]['match']['home_score'].toString(),style: TextStyle(fontFamily: 'Google-Bold',color: kPrimaryColor,fontSize: screenwidth < 700 ?  screenheight/90 : 14 ),),
                                                 SizedBox(
                                                   width: screenwidth < 700 ? 2 : 5,
                                                 ),
-                                                int.parse(snapshot.data[index]['match']['visitor_score'].toString()) == int.parse(snapshot.data[index]['match']['home_score'].toString()) ?
-                                                Text('tirage au sort'.toUpperCase(),style: TextStyle(fontFamily: 'Google-Bold',color: Color.fromRGBO(104, 204, 46, 0.9),fontSize: screenwidth < 700 ?  screenheight/90 : 14 )) :
-                                                int.parse(snapshot.data[index]['match']['visitor_score'].toString()) > int.parse(snapshot.data[index]['match']['home_score'].toString()) ? Container() : Text('Victoire'.toUpperCase(),style: TextStyle(fontFamily: 'Google-Bold',color: Color.fromRGBO(104, 204, 46, 0.9),fontSize: screenwidth < 700 ?  screenheight/90 : 14 ),),
+                                                int.parse(snapshot.data[index]['match']['visitor_score'].toString()) == 0 && int.parse(snapshot.data[index]['match']['home_score'].toString()) == 0  ?
+                                                Text('Le match a été annulé'.toUpperCase(),style: TextStyle(fontFamily: 'Google-Bold',color: Color.fromRGBO(104, 204, 46, 0.9),fontSize: screenwidth < 700 ?  screenheight/90 : 14 )) :
+                                                int.parse(snapshot.data[index]['match']['visitor_score'].toString()) == int.parse(snapshot.data[index]['match']['home_score'].toString()) && int.parse(snapshot.data[index]['match']['visitor_score'].toString()) > 0 && int.parse(snapshot.data[index]['match']['home_score'].toString()) > 0 ?
+                                                Text('Match nul') :
+                                                int.parse(snapshot.data[index]['match']['visitor_score'].toString()) > int.parse(snapshot.data[index]['match']['home_score'].toString()) ? Container() :
+                                                Text('Victoire'.toUpperCase(),style: TextStyle(fontFamily: 'Google-Bold',color: Color.fromRGBO(104, 204, 46, 0.9),fontSize: screenwidth < 700 ?  screenheight/90 : 14 ),),
+
                                               ],
                                             )
                                           ],
@@ -248,16 +250,15 @@ class _Past_events_matchesState extends State<Past_events_matches> {
                                       )
                                     ],
                                   ),
-                                  padding: EdgeInsets.all(3),
-                                  height: screenwidth < 700 ? screenwidth/12.5 : screenwidth/14.5,
+                                  padding: EdgeInsets.symmetric(horizontal: 5),
+                                  height: screenwidth < 700 ? screenwidth/10.5 : screenwidth/14.5,
                                 ),
                                 SizedBox(
                                   height: 5,
                                 ),
                                 Container(
-                                  height: screenwidth < 700 ? screenwidth/12.5 : screenwidth/14.5,
-                                  padding: EdgeInsets.all(3),
-                                  width: screenwidth/2,
+                                  height: screenwidth < 700 ? screenwidth/10.5 : screenwidth/14.5,
+                                  padding: EdgeInsets.symmetric(horizontal: 5),
                                   decoration: BoxDecoration(
                                     color: Color.fromRGBO(244, 241, 241, 0.9),
                                     boxShadow: [
@@ -290,22 +291,28 @@ class _Past_events_matchesState extends State<Past_events_matches> {
                                           crossAxisAlignment: CrossAxisAlignment.start,
                                           children: [
                                             Container(
-                                              width: screenwidth/7,
                                               child: Text(_teamName[0]['name'].toString(),style: TextStyle(fontFamily: 'Google-Bold',color: Colors.black,fontSize: screenwidth < 700 ? screenheight/90 : 15 ),
                                                 overflow: TextOverflow.ellipsis,),
                                             ),
                                             snapshot.data[index]['match']['visitor_score'].toString() == 'null' ? Container(
-                                              child: Text('TBA',style: TextStyle(fontFamily: 'Google-Bold',color: Color.fromRGBO(5, 93, 157, 0.9),fontSize: screenwidth < 700 ?  screenheight/90 : 14 ),),
+                                              child: Text('TBA',style: TextStyle(fontFamily: 'Google-Bold',color: kPrimaryColor,fontSize: screenwidth < 700 ?  screenheight/90 : 14 ),),
 
                                             ) :   Row(
                                               children: [
-                                                Text(snapshot.data[index]['match']['visitor_score'].toString(),style: TextStyle(fontFamily: 'Google-Bold',color: Color.fromRGBO(5, 93, 157, 0.9),fontSize: screenwidth < 700 ?  screenheight/90 : 14 ),),
+                                                int.parse(snapshot.data[index]['match']['visitor_score'].toString()) == 0 && int.parse(snapshot.data[index]['match']['home_score'].toString()) == 0  ?
+                                                Container() :
+                                                Text(snapshot.data[index]['match']['visitor_score'].toString(),style: TextStyle(fontFamily: 'Google-Bold',color: kPrimaryColor,fontSize: screenwidth < 700 ?  screenheight/90 : 14 ),),
                                                 SizedBox(
                                                   width: screenwidth < 700 ? 2 : 5,
                                                 ),
-                                                int.parse(snapshot.data[index]['match']['visitor_score'].toString()) == int.parse(snapshot.data[index]['match']['home_score'].toString()) ?
-                                                Text('tirage au sort'.toUpperCase(),style: TextStyle(fontFamily: 'Google-Bold',color: Color.fromRGBO(104, 204, 46, 0.9),fontSize: screenwidth < 700 ?  screenheight/90 : 14 )) :
-                                                int.parse(snapshot.data[index]['match']['visitor_score'].toString()) < int.parse(snapshot.data[index]['match']['home_score'].toString()) ? Container() : Text('Victoire'.toUpperCase(),style: TextStyle(fontFamily: 'Google-Bold',color: Color.fromRGBO(104, 204, 46, 0.9),fontSize: screenwidth < 700 ?  screenheight/90 : 14 ),),
+                                                int.parse(snapshot.data[index]['match']['visitor_score'].toString()) == 0 && int.parse(snapshot.data[index]['match']['home_score'].toString()) == 0 ?
+                                                Text('Le match a été annulé'.toUpperCase(),style: TextStyle(fontFamily: 'Google-Bold',color: Color.fromRGBO(104, 204, 46, 0.9),fontSize: screenwidth < 700 ?  screenheight/90 : 14 )) :
+                                                int.parse(snapshot.data[index]['match']['visitor_score'].toString()) == int.parse(snapshot.data[index]['match']['home_score'].toString()) &&  int.parse(snapshot.data[index]['match']['visitor_score'].toString()) > 0 && int.parse(snapshot.data[index]['match']['home_score'].toString()) > 0  ?
+                                                Text('Match nul') :
+                                                int.parse(snapshot.data[index]['match']['visitor_score'].toString()) < int.parse(snapshot.data[index]['match']['home_score'].toString()) ? Container() :
+                                                Container(
+                                                    child: Text('Victoire'.toUpperCase(),style: TextStyle(fontFamily: 'Google-Bold',color: Color.fromRGBO(104, 204, 46, 0.9),fontSize: screenwidth < 700 ?  screenheight/90 : 14 ),),
+                                                ),
                                               ],
                                             )
                                           ],
@@ -313,7 +320,6 @@ class _Past_events_matchesState extends State<Past_events_matches> {
                                       )
                                     ],
                                   ),
-
                                 )
                               ],
                             ),

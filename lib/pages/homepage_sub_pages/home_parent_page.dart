@@ -55,7 +55,7 @@ class _Home_parentState extends State<Home_parent> {
                              Container(
                               width: double.infinity,
                               height: bannerDisplay.position == 1 && snapshot.hasData && snapshot.data ? 60 : 50,
-                              color: kPrimaryColor.withOpacity(0.83),
+                              color: kPrimaryColor,
                             ),
                             Expanded(
                               child: CustomScrollView(

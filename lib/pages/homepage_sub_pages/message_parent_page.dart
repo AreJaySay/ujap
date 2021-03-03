@@ -95,7 +95,10 @@ class _Message_homepage_homepageState extends State<Message_homepage>
         .animate(_controller);
     _controller.forward();
     _controller.reverse();
-    _controller.addListener(() {});
+    _scrollControllerMessage.addListener(() {
+      print(_scrollControllerMessage.position.maxScrollExtent.toString());
+    });
+
     SystemChannels.textInput.invokeMethod('TextInput.hide');
   }
   Stream searchBox()async*{
@@ -150,7 +153,7 @@ class _Message_homepage_homepageState extends State<Message_homepage>
                                                           decoration: BoxDecoration(
                                                               image: DecorationImage(
                                                             image:
-                                                                AssetImage("assets/logo.png"),
+                                                                AssetImage("assets/new_app_icon.png"),
                                                           )),
                                                         ),
                                                       ))),
@@ -163,7 +166,7 @@ class _Message_homepage_homepageState extends State<Message_homepage>
                                                         clipper: CurvedTop(),
                                                         child: Container(
                                                           color:
-                                                              Color.fromRGBO(5, 93, 157, 0.9),
+                                                              kPrimaryColor,
                                                           width:
                                                               MediaQuery.of(context).size.width,
                                                           height: screenwidth < 700
@@ -188,40 +191,35 @@ class _Message_homepage_homepageState extends State<Message_homepage>
                                     ),
                                   ),
                                   Container(
+                                    margin: EdgeInsets.only(top: screenheight/9),
                                     width: double.infinity,
                                     child: Column(
                                       children: [
-                                        SizedBox(
-                                          height: screenwidth < 700 ? 70 : screenwidth/10,
-                                        ),
                                         Expanded(
                                           child: StreamBuilder<List>(
                                           stream: conversationService.convo,
                                           builder: (context, snapshot) {
-                                            List<String> currentMessage = List<String>();
-
-                                            if (snapshot.data.toString() == "null" || snapshot.data.toString() == "[]"){
-                                            }else{
+                                            List<String> locallistChecker = List<String>();
+                                            if (snapshot.data != null){
                                               for(var x =0;x<snapshot.data.length;x++){
-                                                if (snapshot.data[x]['messages'].toString() == "[]" && snapshot.data[x]['members'].length == 2 ){
+                                                if (snapshot.data[x]['last_convo'] == null && snapshot.data[x]['members'].length == 2 && snapshot.data[x]['messages'].toString() == "[]"){
+                                                }else if(snapshot.data[x]['members'].length > 2 && snapshot.data[x]['messages'].toString().contains('${userdetails['name'].toString()+" "+userdetails['lastname']} a quitté le groupe.')){
                                                 }else{
-                                                  currentMessage.add(snapshot.data[x]['messages'].toString());
+                                                  if (snapshot.data[x]['messages'].toString() != "[]" || snapshot.data[x]['members'].length > 2 && snapshot.data[x]['members'][0]['detail']['id'].toString() == userdetails['id'].toString()){
+                                                    locallistChecker.add(snapshot.data[x].toString());
+                                                  }
                                                 }
                                               }
                                             }
 
-
                                             try{
-//                                              List data = snapshot.data.where((element) => selectedButton == 0 ? element['members'].length <= 2 : element['members'].length > 2).toList();
                                               if(snapshot.data.length == 0){
                                                 return Column(
                                                   children: [
                                                    StreamBuilder(
                                                      stream: searchBox(),
                                                      builder: (context, snapshots) {
-                                                       return showsearchBox ? Container(
-                                                         height: 60,
-                                                       ) : Container(
+                                                       return Container(
                                                           margin: const EdgeInsets.only(bottom: 10),
                                                           width: double.infinity,
                                                           padding: const EdgeInsets.symmetric(horizontal: 20),
@@ -252,7 +250,11 @@ class _Message_homepage_homepageState extends State<Message_homepage>
                                                                   )
                                                               ),
                                                               GestureDetector(
-                                                                onTap: ()=>Navigator.push(context, PageTransition(child: NewMessage(), type: PageTransitionType.leftToRightWithFade)),
+                                                                onTap: (){
+                                                                  WidgetsBinding.instance.addPostFrameCallback((_) {
+                                                                    Navigator.pushReplacement(context, MaterialPageRoute(builder: (_) => NewMessage()));
+                                                                  });
+                                                                },
                                                                 child: Container(
                                                                   width: 25,
                                                                   height: 25,
@@ -287,12 +289,13 @@ class _Message_homepage_homepageState extends State<Message_homepage>
                                               return Container(
                                                   width: double.infinity,
                                                   child: CustomScrollView(
+                                                    physics: locallistChecker.length <= 10 ? NeverScrollableScrollPhysics() : null,
                                                     shrinkWrap: true,
                                                     controller: _scrollControllerMessage,
                                                     slivers: [
                                                       SliverToBoxAdapter(
                                                         child: Container(
-                                                          margin: const EdgeInsets.only(bottom: 10),
+                                                          margin: const EdgeInsets.only(bottom: 20),
                                                           width: double.infinity,
                                                           padding: const EdgeInsets.symmetric(horizontal: 20),
                                                           child: Row(
@@ -339,88 +342,46 @@ class _Message_homepage_homepageState extends State<Message_homepage>
                                                           ),
                                                         ),
                                                       ),
-
-//                                                       SliverAppBar(
-//                                                         automaticallyImplyLeading: false,
-//                                                        pinned: false,
-////                                                        elevation: 0,
-//                                                        backgroundColor: Colors.transparent,
-//                                                        expandedHeight: snapshot.data.length == 0 ? 0 : screenheight/16,
-//                                                        titleSpacing: 0,
-//                                                        centerTitle: false,
-//                                                        flexibleSpace: FlexibleSpaceBar(
-//                                                          background: Container(
-//                                                            width: double.infinity,
-//                                                            padding: const EdgeInsets.symmetric(vertical: 10),
-//                                                            decoration: BoxDecoration(
-//                                                                color: Colors.white,
-//                                                                borderRadius: BorderRadius.vertical(top: Radius.circular(20))
-//                                                            ),
-//                                                            child: snapshot.data.length == 0 ? Container() : ListView.builder(
-//                                                              scrollDirection: Axis.horizontal,
-//                                                              itemCount: snapshot.data.length,
-//                                                              itemBuilder: (context, index) => Container(
-//                                                                width: 60,
-//                                                                height: double.infinity,
-//                                                                margin: const EdgeInsets.only(left: 15),
-//                                                                child: Column(
-//                                                                  mainAxisAlignment: MainAxisAlignment.center,
-//                                                                  children: [
-//                                                                    Container(
-//                                                                      width: 50,
-//                                                                      height: 50,
-//                                                                      decoration : BoxDecoration(
-//                                                                        borderRadius: BorderRadius.circular(1000),
-//                                                                        image: DecorationImage(
-//                                                                          image: chatImage(snapshot.data[index]['members'])
-//                                                                        ),
-//                                                                      ),
-//                                                                      margin: const EdgeInsets.only(bottom: 2),
-//                                                                    ),
-//                                                                    Text("${StringFormatter().titlize(data: contactName(snapshot.data[index]['members'], snapshot.data[index]['name']))}",style: TextStyle(
-////                                                                                    fontFamily: 'Google-Bold',
-//                                                                        fontWeight: FontWeight.w600,
-//                                                                        fontSize: screenheight > 700 ? screenwidth/33 : screenwidth/35
-//                                                                    ),textAlign: TextAlign.center,maxLines: 2,overflow: TextOverflow.ellipsis,),
-//                                                                  ],
-//                                                                ),
-//                                                              ),
-//                                                            )
-//                                                          ),
-//                                                        ),
-//                                                      ),
                                                        if(snapshot.data.length > 0)...{
                                                          SliverList(
                                                            delegate: SliverChildListDelegate(
                                                                [
-                                                                 if (!currentMessage.toString().contains("message"))...{
-                                                                   Expanded(
-                                                                     child: Container(
-                                                                       decoration: BoxDecoration(
-                                                                           color: Colors.white,
-                                                                           borderRadius: BorderRadius.vertical(top: Radius.circular(20))
-                                                                       ),
-                                                                       child: noData("PAS ENCORE DE MESSAGES"),
-                                                                       padding: EdgeInsets.symmetric(vertical: screenwidth/2),
-                                                                     ),
-                                                                   )
-                                                                 }else...{
-                                                                   for(var x =0;x<snapshot.data.length;x++)...{
-                                                                     if (snapshot.data[x]['last_convo'] == null && snapshot.data[x]['members'].length == 2 && snapshot.data[x]['messages'].toString() == "[]")...{
-                                                                       // conversationScervice.deleteChannelLoc(snapshot.data[x]['id']),
-                                                                     }else...{
-                                                                       if (snapshot.data[x]['messages'].toString() != "[]" || snapshot.data[x]['members'].length > 2 && snapshot.data[x]['members'][0]['detail']['id'].toString() == userdetails['id'].toString())...{
-                                                                         MySlider(
-                                                                           id: snapshot.data[x]['id'],
-                                                                           index: x,
-                                                                           data: snapshot.data[x],
-                                                                           slidableController: _slidableController,
+                                                                   Stack(
+                                                                     children: [
+                                                                       Container(
+                                                                         decoration: BoxDecoration(
+                                                                             color: Colors.white,
+                                                                             borderRadius: BorderRadius.vertical(top: Radius.circular(20))
                                                                          ),
-                                                                       }
-                                                                     }
-                                                                   }
-                                                                 }
+                                                                         child: noData("PAS ENCORE DE MESSAGES"),
+                                                                         padding: EdgeInsets.symmetric(vertical: screenwidth/2),
+                                                                       ),
+                                                                       Container(
+                                                                         color: Colors.white,
+                                                                         height: screenheight,
+                                                                         child: Column(
+                                                                           children: [
+                                                                             for(var x =0;x<snapshot.data.length;x++)...{
+                                                                               if (snapshot.data[x]['last_convo'] == null && snapshot.data[x]['members'].length == 2 && snapshot.data[x]['messages'].toString() == "[]")...{
 
+                                                                               }else if(snapshot.data[x]['members'].length > 2 && snapshot.data[x]['messages'].toString().contains('${userdetails['name'].toString()+" "+userdetails['lastname']} a quitté le groupe.'))...{
+
+                                                                               }else...{
+                                                                                 if (snapshot.data[x]['messages'].toString() != "[]" || snapshot.data[x]['members'].length > 2 && snapshot.data[x]['members'][0]['detail']['id'].toString() == userdetails['id'].toString())...{
+                                                                                   MySlider(
+                                                                                     id: snapshot.data[x]['id'],
+                                                                                     index: x,
+                                                                                     data: snapshot.data[x],
+                                                                                     slidableController: _slidableController,
+                                                                                   ),
+                                                                                 }
+                                                                               }
+                                                                             }
+                                                                           ],
+                                                                         ),
+                                                                       ),
+                                                                     ],
+                                                                   )
                                                                ]
                                                            ),
                                                          )
@@ -438,7 +399,12 @@ class _Message_homepage_homepageState extends State<Message_homepage>
                                               );
                                             }catch(e){
                                               return Center(
-                                                child: Text("Oups! quelque chose s'est mal passé\n $e",textAlign: TextAlign.center,),
+                                                child: Container(
+                                                  width: 50,
+                                                  height: 50,
+                                                  child: CircularProgressIndicator(
+                                                  ),
+                                                )
                                               );
                                             }
                                           },
@@ -458,7 +424,7 @@ class _Message_homepage_homepageState extends State<Message_homepage>
   }
   ImageProvider chatImage(List members){
     if(members.length > 2 || members.length == 0){
-      return AssetImage("assets/logo.png");
+      return AssetImage("assets/new_app_icon.png");
     }else if(members.length == 1 || members.length == 0){
       if(members[0]['detail']['filename'].toString() == 'null')
       {

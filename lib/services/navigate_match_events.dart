@@ -62,81 +62,17 @@ navigateMatch(index,context,Map _pastMatchsList){
   String _matchID = _pastMatchsList['id'].toString();
   String _image = 'https://ujap.checkmy.dev/storage/events/'+_pastMatchsList['id'].toString()+'/'+_pastMatchsList['filename'].toString();
   String _visitorID = _pastMatchsList['match']['visitor_team_id'].toString();
+  String _homeID = _pastMatchsList['match']['home_team_id'].toString();
   String _courtID  = _pastMatchsList['match']['home_court'].toString();
   ticketID = _pastMatchsList['ticket']['id'].toString();
   type = _pastMatchsList['type'].toString();
 
   Navigator.push(context, PageTransition(child: View_matches(
-      _pastMatchsList,_matchID,_image,_visitorID,_courtID,ticketID,type,_pastMatchsList['name']
+      _pastMatchsList,_matchID,_image,_visitorID,_homeID,_courtID,ticketID,type,_pastMatchsList['name']
   ),type: PageTransitionType.topToBottom,alignment: Alignment.center, curve: Curves.easeIn,));
 
 
 }
-
-
-
-
-
-//
-// navigateEvents(index,context,Map _pastEventsList){
-//   print("NAVIGATE");
-//   if (_pastEventsList['sched_time'].toString() != 'null'){
-//     var _text =  _pastEventsList['sched_time'].toString();
-//     _finaleventsTime = _text.substring(0,5);
-//     _timeConverted = int.parse(_finaleventsTime.substring(0,2));
-//     var timeConvertedString = _text.substring(3,5);
-//     var _timetopass;
-//
-//     if (_timeConverted > 12){
-//       _timetopass = _timeConverted-12;
-//     }
-//     else{
-//       _timetopass = int.parse(_finaleventsTime.substring(0,2));
-//     }
-//
-//     matchTime = _timeConverted.toString()+':'+timeConvertedString.toString();
-//     hideFloatingbutton = false;
-//   }
-//   else{
-//     matchTime = 'TBA';
-//   }
-//
-//   // THIS IS FOR THE DATE
-//   if (_pastEventsList['sched_date'].toString() != 'null'){
-//     var dateFormate = DateFormat("MM").format(DateTime.parse(_pastEventsList['sched_date']));
-//     var dateFormateDay_year = DateFormat("yyyy").format(DateTime.parse(_pastEventsList['sched_date']));
-//     var dayFormateDay_year = DateFormat("d").format(DateTime.parse(_pastEventsList['sched_date']));
-//
-//     var _dateConvertedString = dateFormate;
-//     var _dateConvertedDayYear = dateFormateDay_year;
-//
-//     matchDate = dayFormateDay_year.toString()+' '+monthDate[int.parse(_dateConvertedString.toString())].toString()+'.'+' '+_dateConvertedDayYear.toString();
-//
-//   }
-//   else{
-//     matchDate = 'TBA';
-//   }
-//
-//   String _image = 'https://ujap.checkmy.dev/storage/events/'+_pastEventsList['id'].toString()+'/'+_pastEventsList['filename'].toString();
-//   String _eventID =  _pastEventsList['id'].toString();
-//   String _eventName = _pastEventsList['name'].toString();
-//   String _eventAddress = _pastEventsList['address'].toString();
-//   String _eventCity = _pastEventsList['city'].toString();
-//   String _eventState = _pastEventsList['state'].toString();
-//   String _eventCountry = _pastEventsList['country'].toString();
-//   ticketID = _pastEventsList['ticket']['id'].toString();
-//   type = _pastEventsList['type'].toString();
-//   pastTicketEvents = pastTicketEvents;
-//
-//   Navigator.push(context, PageTransition(child:  View_events(
-//       _image,_eventID,_eventName,_eventAddress,_eventCity,_eventState,_eventCountry,ticketID,pastTicketEvents,type
-//   ),type: PageTransitionType.bottomToTop,alignment: Alignment.center, curve: Curves.easeIn,duration: Duration(milliseconds: 500)));
-//
-// }
-
-
-
-
 
 navigateTicket(index,context,Map _tikcetDatas){
   // MATCH
@@ -179,10 +115,11 @@ navigateTicket(index,context,Map _tikcetDatas){
   String _matchID = _tikcetDatas['id'].toString();
   String _image = 'https://ujap.checkmy.dev/storage/events/'+_tikcetDatas['id'].toString()+'/'+_tikcetDatas['filename'].toString();
   String _visitorID = _tikcetDatas['match']['visitor_team_id'].toString();
+  String _homeID = _tikcetDatas['match']['home_team_id'].toString();
   ticketID = _tikcetDatas['ticket']['id'].toString();
 
   Navigator.push(context, PageTransition(child:  Ticket_homepage(
-      _matchID,_image,_visitorID,ticketID,_tikcetDatas['name']
+      _matchID,_image,_visitorID,_homeID,ticketID,_tikcetDatas['name']
   ),type: PageTransitionType.rightToLeftWithFade,alignment: Alignment.center, curve: Curves.easeIn,duration: Duration(milliseconds: 500)));
 
 

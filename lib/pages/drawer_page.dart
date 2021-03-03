@@ -26,7 +26,7 @@ class MainScreen extends StatefulWidget {
 }
 
 class _MainScreenState extends State<MainScreen> with SingleTickerProviderStateMixin {
-  final Duration duration = const Duration(milliseconds: 500);
+  final Duration duration = const Duration(milliseconds: 200);
 
   AppBar appBar = AppBar();
 
@@ -134,11 +134,9 @@ class _MainScreenState extends State<MainScreen> with SingleTickerProviderStateM
                 width: screenwidth,
                 alignment: Alignment.center,
                 child: Container(
-                  width: screenwidth < 700 ? screenwidth/1.2 : screenwidth/1.7,
-                  height: screenwidth < 700 ? screenwidth/1.2 : screenwidth/1.7,
                   decoration: BoxDecoration(
                     image: DecorationImage(
-                        image: AssetImage('assets/logo.png')
+                        image: AssetImage('assets/new_app_icon.png')
 
                     ),
                   ),
@@ -212,8 +210,8 @@ class _MainScreenState extends State<MainScreen> with SingleTickerProviderStateM
                               ),
                               onPressed: (){
                                 setState(() {
-                                  indexListener.update(data: 1);
                                   currentindex = 1;
+                                  indexListener.update(data: 1);
                                   if (isCollapsed) {
                                     drawerController.forward();
 
@@ -264,8 +262,8 @@ class _MainScreenState extends State<MainScreen> with SingleTickerProviderStateM
                               ),
                               onPressed: (){
                                 setState(() {
-                                  indexListener.update(data: 0);
                                   currentindex = 0;
+                                  indexListener.update(data: 0);
                                   if (isCollapsed) {
                                     drawerController.forward();
 
@@ -327,6 +325,7 @@ class _MainScreenState extends State<MainScreen> with SingleTickerProviderStateM
 
                                     borderRadius = 0.0;
                                   }
+                                  currentindex = 2;
                                   indexListener.update(data: 2);
                                   showcalendar = false;
                                   events_filter_open = false;
@@ -335,7 +334,6 @@ class _MainScreenState extends State<MainScreen> with SingleTickerProviderStateM
                                   floating_action = false;
                                   attend_pass = "";
                                   showticket = false;
-                                  currentindex = 2;
                                   isCollapsed = !isCollapsed;
                                 });
                               },
@@ -455,6 +453,7 @@ class _MainScreenState extends State<MainScreen> with SingleTickerProviderStateM
                                   ),
                                   onPressed: () {
                                     setState(() {
+                                      adListener.update(false);
                                       if (isCollapsed) {
                                         drawerController.forward();
                                         showparameters = false;
@@ -464,13 +463,11 @@ class _MainScreenState extends State<MainScreen> with SingleTickerProviderStateM
 
                                         borderRadius = 0.0;
                                       }
-
                                       isCollapsed = !isCollapsed;
                                       if(videoPlayerController != null && chewieController != null && chewieController.isPlaying){
                                         videoPlayerController.pause();
                                         chewieController.pause();
                                       }
-                                      adListener.update(false);
                                     });
                                   }),
                             ),

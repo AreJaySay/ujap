@@ -108,7 +108,7 @@ class _ProfileInformationState extends State<ProfileInformation> {
                                           width: MediaQuery.of(context).size.width,
                                           decoration: BoxDecoration(
                                               image: DecorationImage(
-                                                image: AssetImage("assets/logo.png"),
+                                                image: AssetImage("assets/new_app_icon.png"),
                                               )),
                                         ),
                                       ))),
@@ -120,7 +120,7 @@ class _ProfileInformationState extends State<ProfileInformation> {
                                     child: Container(
                                       padding: EdgeInsets.all(10),
                                       alignment: Alignment.topLeft,
-                                      color: Color.fromRGBO(5, 93, 157, 0.9),
+                                      color: kPrimaryColor,
                                       width: MediaQuery.of(context).size.width,
                                       height: screenheight,
                                       child: SafeArea(

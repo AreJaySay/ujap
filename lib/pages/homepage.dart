@@ -88,7 +88,7 @@ class _HomepageState extends State<Homepage> {
   ];
   getAds() async {
      if ( backupAds.toString() != "[]" && widget.showAds && currentindex == 1){
-//       print('YES NASULOD');
+      print('YES NASULOD');
        await getall_Ads().then((value) async {
          if(value != null && value.length > 0){
            if(value[0]['ad_type'] != 1){
@@ -187,8 +187,6 @@ class _HomepageState extends State<Homepage> {
       DeviceOrientation.portraitDown,
     ]);
 
-//    NMessageCounter cc = NMessageCounter();
-
     SystemChrome.setEnabledSystemUIOverlays([]);
     return StreamBuilder(
       stream: indexListener.stream,
@@ -213,7 +211,7 @@ class _HomepageState extends State<Homepage> {
                           child: StreamBuilder<bool>(
                             stream: adListener.stream$,
                             builder: (context, snapshot) => snapshot.hasData && snapshot.data ? Container(
-                              height: 100,
+                              height: 400,
                               alignment: Alignment.bottomCenter,
                               child: bannerDisplay.showBanner(context, position: 3),
                             ) : Container(),
@@ -368,10 +366,10 @@ class _HomepageState extends State<Homepage> {
                       });
                     },
                     child: new Container(
-                      width: screenwidth < 700 ? screenwidth/11 : screenwidth/17,
-                      height: screenwidth < 700 ?  screenwidth/11 :  screenwidth/17,
+                      padding: EdgeInsets.all(10),
                       child: Image(
-                          image: AssetImage('assets/logo.png')
+                        fit: BoxFit.cover,
+                          image: AssetImage('assets/new_app_icon.png')
                       ),
                     ),
                   ),

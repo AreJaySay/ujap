@@ -27,25 +27,25 @@
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
 	<key>NSAppleMusicUsageDescription</key>
-	<string>Play using while you are exploring</string>
+	<string>Ujap veut accéder à votre musique pour jouer tout en explorant</string>
 	<key>NSCalendarsUsageDescription</key>
-	<string>Ujap would like to access your calender</string>
+	<string>Ujap souhaite accéder à votre calendrier et l'utiliser sur l'application</string>
 	<key>NSCameraUsageDescription</key>
-	<string>overlay feature</string>
+	<string>Ujap veut accéder à votre pellicule pour télécharger une image et l'utiliser dans l'application</string>
 	<key>NSContactsUsageDescription</key>
-	<string>This app requires contacts access to function properly.</string>
+	<string>Cette application nécessite un accès aux contacts pour fonctionner correctement.</string>
 	<key>NSLocationAlwaysUsageDescription</key>
-	<string>Ujap location use.</string>
+	<string>Ujap souhaite accéder à votre position et l'utiliser sur l'application.</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
-	<string>Ujap location use.</string>
+	<string>Ujap souhaite accéder à votre position et l'utiliser sur l'application.</string>
 	<key>NSMicrophoneUsageDescription</key>
-	<string>This application needs to access your microphone</string>
+	<string>Ujap veut accéder à votre microphone et l'utiliser sur l'application</string>
 	<key>NSMotionUsageDescription</key>
 	<string>Ujap motion use.</string>
 	<key>NSPhotoLibraryUsageDescription</key>
-	<string>Saving selected wallpaper</string>
+	<string>Ujap veut accéder à votre galerie de photos pour choisir une image et l'utiliser dans l'application</string>
 	<key>NSSpeechRecognitionUsageDescription</key>
-	<string>This application needs the speech recognition permission</string>
+	<string>Cette application a besoin de l'autorisation de reconnaissance vocale</string>
 	<key>UIBackgroundModes</key>
 	<array>
 		<string>fetch</string>

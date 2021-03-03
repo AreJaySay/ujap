@@ -7,6 +7,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:page_transition/page_transition.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:ujap/controllers/home.dart';
 import 'package:ujap/globals/container_data.dart';
 import 'package:ujap/globals/user_data.dart';
 import 'package:ujap/globals/variables/home_sub_pages_variables.dart';
@@ -93,7 +94,7 @@ class _CreateNewGroupState extends State<CreateNewGroup> {
             children: <Widget>[
               Scaffold(
                   appBar:  AppBar(
-                    backgroundColor: Color.fromRGBO(5, 93, 157, 0.9),
+                    backgroundColor: kPrimaryColor,
                     automaticallyImplyLeading: false,
                     actions: [
                       Expanded(
@@ -498,6 +499,7 @@ class _CreateNewGroupState extends State<CreateNewGroup> {
                           onTap: (){
                             setState(() {
                               currentindex = 2;
+                              indexListener.update(data: 2);
                               Navigator.pushReplacement(context,PageTransition(child: MainScreen(false),type: PageTransitionType.fade));
                             });
                           },

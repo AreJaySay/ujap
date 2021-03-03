@@ -62,7 +62,7 @@ class _Clients_listState extends State<Clients_list> {
               body: Stack(children: [
             Scaffold(
                 appBar: AppBar(
-                  backgroundColor: Color.fromRGBO(5, 93, 157, 0.9),
+                  backgroundColor: kPrimaryColor,
                   automaticallyImplyLeading: false,
                   actions: [
                     Expanded(
@@ -176,7 +176,7 @@ class _Clients_listState extends State<Clients_list> {
                             decoration: BoxDecoration(
                                 image: DecorationImage(
                               fit: BoxFit.contain,
-                              image: AssetImage("assets/logo.png"),
+                              image: AssetImage("assets/new_app_icon.png"),
                             )),
                           ),
                         ),
@@ -184,7 +184,7 @@ class _Clients_listState extends State<Clients_list> {
                       Container(
                         width: screenwidth,
                         height: screenheight,
-                        color: Color.fromRGBO(5, 93, 157, 0.9),
+                        color: kPrimaryColor,
                       ),
                       Container(
                         width: screenwidth,
@@ -233,7 +233,7 @@ class _Clients_listState extends State<Clients_list> {
                                             vertical: screenwidth / 50),
                                         decoration: BoxDecoration(
                                             color:
-                                                Color.fromRGBO(5, 93, 157, 0.9),
+                                                kPrimaryColor,
                                             borderRadius:
                                                 BorderRadius.circular(10)),
                                         child: Text(

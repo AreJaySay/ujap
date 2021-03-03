@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:page_transition/page_transition.dart';
+import 'package:ujap/controllers/home.dart';
 import 'package:ujap/globals/variables/events_sub_pages_variables.dart';
 import 'package:ujap/globals/variables/home_sub_pages_variables.dart';
 import 'package:ujap/globals/variables/messages_sub_pages_variables.dart';
@@ -137,6 +138,7 @@ class _TicketActionsState extends State<TicketActions> {
                               print(ticketFilename.toString());
                               uploadPDF();
                               currentindex = 2;
+                              indexListener.update(data: 2);
                               Navigator.push(context, PageTransition(child: NewMessage(), type: PageTransitionType.leftToRightWithFade));
                             });
                           },

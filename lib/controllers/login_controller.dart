@@ -33,6 +33,7 @@ Future login(String username, String password,context,bool loader)async{
   var data = json.decode(response.body);
   print('RETURN '+response.statusCode.toString());
   if(response.statusCode == 200){
+    currentindex = 1;
     indexListener.update(data: 1);
     pass = password;
     user = username;

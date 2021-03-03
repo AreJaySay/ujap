@@ -22,23 +22,27 @@ class AdListener{
     _ad.add(adState);
   }
 
-  showAd(context,Map data) async {
+  showAd(context, data) async {
     VideoPlayerController _videoController;
     ChewieController _chewieController;
-    print('DATA ADS'+data['content'].toString());
-    if(data['type'] != 'image' && data['ad_type'] != 1 && data['content'] != "null"){
-      _videoController = VideoPlayerController.network('${StringFormatter().cleaner(StringFormatter().strToObj(data['content'])['location'])}');
-      await _videoController.initialize();
-      _chewieController = ChewieController(
-        videoPlayerController: _videoController,
-        autoPlay: true,
-        looping: false,
-        showControls: false,
-        showControlsOnInitialize: false,
-      );
+    try{
+      if(data['type'] != 'image' && data['ad_type'] != 1 && data['content'].toString() != "null"){
+        print('NASULOD GAD HIYA DIDI');
+        _videoController = VideoPlayerController.network('${StringFormatter().cleaner(StringFormatter().strToObj(data['content'])['location'])}');
+        await _videoController.initialize();
+        _chewieController = ChewieController(
+          videoPlayerController: _videoController,
+          autoPlay: true,
+          looping: false,
+          showControls: false,
+          showControlsOnInitialize: false,
+        );
+      }
+    }catch(e){
+      print('ERROR :'+e.toString());
     }
-    print('showing');
-    if(chatListener.getChannelID() == 0 && data['ad_type'] != 1 && data['content'] != "null"){
+    if(chatListener.getChannelID() == 0 && data['ad_type'] != 1 && data['content'].toString() != "null"){
+      print('showingASDADASDASDASD');
       return showGeneralDialog(
           barrierColor: Colors.black.withOpacity(0.5),
           transitionBuilder: (context, a1, a2, widget) {
@@ -65,70 +69,70 @@ class AdListener{
                           Container(
                             width: double.infinity,
                             decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(16)
+                                borderRadius: BorderRadius.circular(16)
                             ),
                             child: GestureDetector(
-                              onTap: () async {
-                                String url = '${StringFormatter().cleaner(StringFormatter().strToObj(data['content'])['location'])}';
-                                if (await canLaunch(url)) {
-                                await launch(url);
-                                } else {
-                                throw 'Could not launch $url';
-                                }
-                              },
+                                onTap: () async {
+                                  String url = '${StringFormatter().cleaner(StringFormatter().strToObj(data['content'])['location'])}';
+                                  if (await canLaunch(url)) {
+                                    await launch(url);
+                                  } else {
+                                    throw 'Could not launch $url';
+                                  }
+                                },
                                 child: Image.network('${StringFormatter().cleaner(StringFormatter().strToObj(data['content'])['location'])}',fit: BoxFit.cover,)
                             ),
                           ),
                         ],
                       ),
                     ) : Container(
-                      width: double.infinity,
-                      height: MediaQuery.of(context).size.height/2,
-                      child: Stack(
-                        children: [
-                          GestureDetector(
-                            onTap: () async {
-                              String url = '${StringFormatter().cleaner(StringFormatter().strToObj(data['content'])['location'])}';
-                              if (await canLaunch(url)) {
-                              await launch(url);
-                              } else {
-                              throw 'Could not launch $url';
-                              }
-                            },
-                            child: Chewie(
-                              controller: _chewieController,
-                            ),
-                          ),
-                          Positioned(
-                            right: 0,
-                            child: Container(
-                              width: 25,
-                              height: 25,
-                              decoration: BoxDecoration(
-                                color: Colors.white54,
-                                borderRadius: BorderRadius.circular(1000)
+                        width: double.infinity,
+                        height: MediaQuery.of(context).size.height/2,
+                        child: Stack(
+                          children: [
+                            GestureDetector(
+                              onTap: () async {
+                                String url = '${StringFormatter().cleaner(StringFormatter().strToObj(data['content'])['location'])}';
+                                if (await canLaunch(url)) {
+                                  await launch(url);
+                                } else {
+                                  throw 'Could not launch $url';
+                                }
+                              },
+                              child: Chewie(
+                                controller: _chewieController,
                               ),
-                              child: FlatButton(
-                                onPressed: (){
-                                  Navigator.of(context).pop(null);
-                                  if(_videoController != null && _chewieController != null && _chewieController.isPlaying){
-                                    try{
-                                      _videoController?.pause();
-                                      _chewieController?.dispose();
-                                    }catch(e){
-                                      print("asda");
+                            ),
+                            Positioned(
+                              right: 0,
+                              child: Container(
+                                width: 25,
+                                height: 25,
+                                decoration: BoxDecoration(
+                                    color: Colors.white54,
+                                    borderRadius: BorderRadius.circular(1000)
+                                ),
+                                child: FlatButton(
+                                  onPressed: (){
+                                    Navigator.of(context).pop(null);
+                                    if(_videoController != null && _chewieController != null && _chewieController.isPlaying){
+                                      try{
+                                        _videoController?.pause();
+                                        _chewieController?.dispose();
+                                      }catch(e){
+                                        print("asda");
+                                      }
                                     }
-                                  }
-                                },
-                                padding: const EdgeInsets.all(0),
-                                child: Center(
-                                  child: Icon(Icons.close,size: 15,color: Colors.grey[700],),
+                                  },
+                                  padding: const EdgeInsets.all(0),
+                                  child: Center(
+                                    child: Icon(Icons.close,size: 15,color: Colors.grey[700],),
+                                  ),
                                 ),
                               ),
-                            ),
-                          )
-                        ],
-                      )
+                            )
+                          ],
+                        )
                     ),
                   ),
                 ),

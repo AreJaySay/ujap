@@ -70,7 +70,7 @@ class _NewGroupPageState extends State<NewGroupPage> {
 
                 for(var add in _toAdd){
                   conversationService.addMember(widget.channelId, add['id']);
-                  Messagecontroller().sendmessage("", "Vous avez été ajouté à un groupe", add['id'], true, "add as member");
+                  Messagecontroller().sendmessage("", "Vous avez été ajouté à un groupe", add['id'], true, "add as member",null);
                   for(var member in _selectedParticipants){
                     Messagecontroller().updateMembers(int.parse(member['id'].toString()), add);
                   }
@@ -89,11 +89,13 @@ class _NewGroupPageState extends State<NewGroupPage> {
                 dd.add(userdetails['id']);
                 dd.sort();
                 await conversationService.checkConvoMembersExist(memberIds: dd).then((value) {
-                  Navigator.push(context, PageTransition(child: NewComposeMessage(value), type: PageTransitionType.leftToRightWithFade));
+                   WidgetsBinding.instance.addPostFrameCallback((_) {
+                     Navigator.pushReplacement(context, MaterialPageRoute(builder: (_) => NewComposeMessage(value,null)));
+                   });
                 });
 
                 for(var selected in _selectedParticipants){
-                  Messagecontroller().sendmessage("", "Vous avez été ajouté à un groupe", selected['id'], true, "add as member");
+                  Messagecontroller().sendmessage("", "Vous avez été ajouté à un groupe", selected['id'], true, "add as member",null);
                 }
               } : null,
               child: Text(widget.toAdd ? "Ajouter" : "Créer",style: TextStyle(
@@ -125,7 +127,7 @@ class _NewGroupPageState extends State<NewGroupPage> {
                       prefixIcon: Icon(Icons.search,size: screenwidth < 700 ? 20 : 35,),
                       border: InputBorder.none,
                     hintText: "Chercher",
-                    hintStyle: TextStyle(fontSize: screenwidth < 700 ? 20 : 25)
+                    hintStyle: TextStyle(fontSize: screenwidth < 700 ? 17 : 25)
                   ),
                 ),
               )
@@ -166,7 +168,7 @@ class _NewGroupPageState extends State<NewGroupPage> {
                                     )
                                   ),
                                 ),
-                                Text("${selected['name']}",
+                                Text("${selected['name']} "+" ${selected['lastname']}",
                                   style: TextStyle(),
                                   maxLines: 1,
                                   textAlign: TextAlign.center,
@@ -229,7 +231,7 @@ class _NewGroupPageState extends State<NewGroupPage> {
                                         )
                                     ),
                                   ),
-                                  Text("${add['name']}",
+                                  Text("${add['name']} "+" ${add['lastname']}",
                                     style: TextStyle(),
                                     maxLines: 1,
                                     textAlign: TextAlign.center,
@@ -325,7 +327,7 @@ class _NewGroupPageState extends State<NewGroupPage> {
                               width: 10,
                             ),
                             Expanded(
-                              child: Text("${client['name']}",style: TextStyle(
+                              child: Text("${client['name']} "+" ${client['lastname']}",style: TextStyle(
                                   fontFamily: "Google-Bold",
                                   fontSize: screenwidth < 700 ? screenwidth/30 : screenwidth/35
                               ),),

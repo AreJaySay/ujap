@@ -12,10 +12,12 @@ import 'package:ujap/pages/homepage.dart';
 import 'package:ujap/services/ad_listener.dart';
 import 'package:ujap/services/api.dart';
 import 'package:ujap/services/notifications.dart';
+import 'package:ujap/services/pushnotification.dart';
 import 'package:ujap/services/searches/search_service.dart';
 
 bool showsearchBox = false;
-List<String> notification_to_pass = [];
+String notificID = "";
+String notificType = "";
 
 class Appbar_icons extends StatefulWidget {
   @override
@@ -78,12 +80,9 @@ class _Appbar_iconsState extends State<Appbar_icons> {
                         ],
                       ),
                       onPressed: (){
-                        print(notificationsBackup.toString());
+                        addToDb(itemid: notificID.toString(),messageTypes: notificType.toString());
                         notificationIndicator = false;
                         adListener.update(false);
-//                        setState(() {
-//                          show_ads = false;
-//                        });
                         Navigator.push(context, PageTransition(child:  Notifications(
                         ),type: PageTransitionType.leftToRightWithFade,alignment: Alignment.center, curve: Curves.easeIn,duration: Duration(milliseconds: 500)));
                       },

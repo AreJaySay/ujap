@@ -4,6 +4,7 @@ bool showcalendar = false;
 bool events_filter_open = false;
 double scrollPosition;
 bool hideFloatingbutton = false;
+bool myEventFloatingbutton = false;
 bool eventsSearch = false;
 TextEditingController searchfilter = new TextEditingController();
 var events_tabbarview_index = "";

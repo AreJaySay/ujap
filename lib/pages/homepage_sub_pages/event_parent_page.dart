@@ -108,8 +108,7 @@ class _Event_parentState extends State<Event_parent> {
                                       height: screenwidth < 700 ? screenheight/2.5 :   screenheight/2.7,
                                       decoration: BoxDecoration(
                                           image: DecorationImage(
-
-                                            image: AssetImage("assets/logo.png"),
+                                            image: AssetImage("assets/new_app_icon.png"),
 
                                           )
                                       ),
@@ -124,7 +123,7 @@ class _Event_parentState extends State<Event_parent> {
                                   child:ClipPath(
                                     clipper: CurvedTop(),
                                     child: Container(
-                                      color: Color.fromRGBO(5, 93, 157, 0.9),
+                                      color: kPrimaryColor,
                                       width: MediaQuery
                                           .of(context)
                                           .size
@@ -155,9 +154,7 @@ class _Event_parentState extends State<Event_parent> {
                     StreamBuilder(
                       stream: hideTop(),
                       builder: (context, snapshot) {
-                        return
-                          hideFloatingbutton ? Container () :
-                        Container(
+                        return Container(
                           width: screenwidth,
                           height: screenheight,
                           alignment: Alignment.topCenter,

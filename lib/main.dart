@@ -78,16 +78,12 @@ class _SplashScreenState extends State<SplashScreen> {
       body: Container(
         width: screenwidth,
         height: screenheight,
-        color: Color.fromRGBO(5, 93, 157, 0.9),
+        color: Colors.white,
         child: Center(
           child: Container(
-            width: screenwidth < 700 ? screenwidth/1.6 : screenwidth/2.5,
-            decoration: BoxDecoration(
-              image: DecorationImage(
-                  fit: BoxFit.contain,
-                  image: AssetImage('assets/logo_shadow.png')
-
-              ),
+            width: screenwidth < 700 ? screenwidth/1.9 : screenwidth/2.5,
+            child: Image(
+              image: AssetImage('assets/logo_shadow.png'),
             ),
           ),
         ),
@@ -106,7 +102,6 @@ class _SplashScreenState extends State<SplashScreen> {
 
     SharedPreferences notifications = await SharedPreferences.getInstance();
     notificationsBackup = notifications.getStringList('notificationsData');
-    print('NOTIFICATION :'+notificationsBackup.toString());
 
     SharedPreferences prefs_deleted = await SharedPreferences.getInstance();
     messageDeleted = prefs_deleted.getStringList('messageToDelete');
@@ -117,7 +112,6 @@ class _SplashScreenState extends State<SplashScreen> {
     attended_Meeting = prefs_deleted.getStringList('clientmeetingAttend');
 
     if(( user == null && pass == null)){
-      currentindex = 1;
       await Future.delayed(Duration(milliseconds: 1500));
       Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=>Loginpage()));
     }

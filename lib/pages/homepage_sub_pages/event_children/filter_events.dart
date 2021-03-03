@@ -317,7 +317,7 @@ class _Events_filterState extends State<Events_filter> {
                       alignment: Alignment.center,
                       margin: EdgeInsets.symmetric(horizontal:  screenwidth/50),
                       decoration: BoxDecoration(
-                          color: status[index].toString() == status_data_filter.toString() ? Color.fromRGBO(5, 93, 157, 0.9) : Colors.white,
+                          color: status[index].toString() == status_data_filter.toString() ? kPrimaryColor : Colors.white,
                           border: Border.all(color: Colors.grey[300]),
                           borderRadius: BorderRadius.circular(10)
                       ),
@@ -368,7 +368,7 @@ class _Events_filterState extends State<Events_filter> {
                       alignment: Alignment.center,
                       margin: EdgeInsets.symmetric(horizontal: screenwidth/50),
                       decoration: BoxDecoration(
-                          color: searchView[index].toString() == viewSearch.toString() ? Color.fromRGBO(5, 93, 157, 0.9) : Colors.white,
+                          color: searchView[index].toString() == viewSearch.toString() ? kPrimaryColor : Colors.white,
                           border: Border.all(color: Colors.grey[300]),
                           borderRadius: BorderRadius.circular(10)
                       ),

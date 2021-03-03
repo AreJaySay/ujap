@@ -41,6 +41,7 @@ attedCurrentMeeting({context,eventID,clientID,status,Map data})async{
       messagecontroller.sendmessagetoServer(jsonData);
     getEvents_status(eventID: eventID.toString());
     indexListener.update(data: 1);
+    currentindex = 1;
     newConfirmed = data;
     if (data['type'].toString() == 'match'){
       navigateMatch(indexmatch,context,data);
@@ -79,7 +80,7 @@ confirmMeeting(Map data,{context,String eventID,String clientID,status, String l
                     },
                     child: CircleAvatar(
                       child: Icon(Icons.close,size: screenwidth < 700 ? 30 : 40,),
-                      backgroundColor: Color.fromRGBO(5, 93, 157, 0.9),
+                      backgroundColor: kPrimaryColor,
                     ),
                   ),
                 ),
@@ -131,8 +132,8 @@ confirmMeeting(Map data,{context,String eventID,String clientID,status, String l
                                       alignment: Alignment.center,
                                       child: Text('Confirmer',style: TextStyle(fontFamily: 'Google-Medium',color: Colors.white,fontSize: screenwidth < 700 ? screenheight/53 : 25 )),
                                       decoration: BoxDecoration(
-                                          color:  Color.fromRGBO(5, 93, 157, 0.9),
-                                          border: Border.all(color:  Color.fromRGBO(5, 93, 157, 0.9)),
+                                          color:  kPrimaryColor,
+                                          border: Border.all(color:  kPrimaryColor),
                                           borderRadius: BorderRadius.circular(screenwidth/40)
                                       ),
                                     ),

@@ -91,7 +91,7 @@ class _Enter_new_credentialsState extends State<Enter_new_credentials> {
                           width: screenwidth < 700 ? screenwidth/5 : screenwidth/7,
                           height: screenheight,
                           child: Image(
-                            color: Color.fromRGBO(5, 93, 157, 0.9) ,
+                            color: kPrimaryColor ,
                             image: AssetImage('assets/login_icons/change_password.png'),
                           ),
                         )
@@ -187,9 +187,9 @@ class _Enter_new_credentialsState extends State<Enter_new_credentials> {
                         alignment: Alignment.center,
                         margin: EdgeInsets.symmetric(horizontal: screenwidth/10),
                         decoration: BoxDecoration(
-                            color: Color.fromRGBO(5, 93, 157, 0.9) ,
+                            color: kPrimaryColor ,
                             borderRadius: BorderRadius.circular(10.0),
-                            border: Border.all(color:  Color.fromRGBO(5, 93, 157, 0.9))
+                            border: Border.all(color:  kPrimaryColor)
                         ),
                         child: Text('ENVOYER',style: TextStyle(fontFamily: 'Google-Bold',color: Colors.white,fontSize: screenwidth < 700 ? screenheight/55 : 23),)
                     ),
@@ -216,7 +216,7 @@ class _Enter_new_credentialsState extends State<Enter_new_credentials> {
                         decoration: BoxDecoration(
                             color: Colors.white ,
                             borderRadius: BorderRadius.circular(10.0),
-                            border: Border.all(color:  Color.fromRGBO(5, 93, 157, 0.9))
+                            border: Border.all(color:  kPrimaryColor)
                         ),
                         child: Text('ANNULER',style: TextStyle(fontFamily: 'Google-Bold',color: kPrimaryColor,fontSize: screenwidth < 700 ? screenheight/55 : 23),)
                     ),

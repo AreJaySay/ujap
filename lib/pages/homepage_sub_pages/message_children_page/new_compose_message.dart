@@ -1,13 +1,18 @@
 import 'dart:convert';
 import 'dart:io';
+import 'dart:typed_data';
+import 'dart:ui';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_keyboard_visibility/flutter_keyboard_visibility.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
 import 'package:page_transition/page_transition.dart';
 import 'package:pdf_flutter/pdf_flutter.dart';
+import 'package:ujap/controllers/home.dart';
 import 'package:ujap/globals/container_data.dart';
 import 'package:ujap/globals/user_data.dart';
 import 'package:ujap/globals/variables/home_sub_pages_variables.dart';
@@ -18,10 +23,13 @@ import 'package:ujap/pages/homepage.dart';
 import 'package:ujap/pages/homepage_sub_pages/home_children_page/download_pdf%202.dart';
 import 'package:ujap/pages/homepage_sub_pages/home_children_page/matches.dart';
 import 'package:ujap/pages/homepage_sub_pages/message_children_page/convo_settings_page.dart';
+import 'package:ujap/pages/homepage_sub_pages/message_children_page/message_children/image_to_send.dart';
+import 'package:ujap/pages/homepage_sub_pages/message_children_page/slider.dart';
 import 'package:ujap/pages/homepage_sub_pages/message_children_page/view_message_images.dart';
 import 'package:ujap/services/api.dart';
 import 'package:ujap/services/conversation_chats_listener.dart';
 import 'package:ujap/services/conversation_listener.dart';
+import 'package:ujap/services/member_traversal.dart';
 import 'package:ujap/services/message_controller.dart';
 import 'package:ujap/services/string_formatter.dart';
 import 'package:http/http.dart' as http;
@@ -29,19 +37,22 @@ import 'package:http/http.dart' as http;
 bool hasData = false;
 
 class NewComposeMessage extends StatefulWidget {
-  final Map channelDetail;
-  NewComposeMessage(this.channelDetail);
+  Map channelDetail, senderDetail;
+  NewComposeMessage(this.channelDetail,this.senderDetail);
   @override
   _NewComposeMessageState createState() => _NewComposeMessageState();
 }
 
 class _NewComposeMessageState extends State<NewComposeMessage> {
   bool _isKeyboardActive = false;
-//  List<File> _file = [];
-//  List<File> _rawFiles = [];
+  bool _imagetoSend = false;
+  bool _filetoSend = false;
+
   List<int> memberIds = [];
   List _imageExtensions = ['jpg','png','jpeg','gif','tiff','eps',];
   String b64;
+  String b64ImagetoSend = "";
+  String b64FiletoSend = "";
   String extension;
   Map channelDetail;
   int dateBetween;
@@ -59,7 +70,6 @@ class _NewComposeMessageState extends State<NewComposeMessage> {
   }
 
   Future send({int channelID, String message = "", String b64, String ext, List<int> receiverIds, String reason = "", Map channelDetails, context}) async {
-    print('CHANNEL :'+hasData.toString());
     try{
       Map body;
       if(b64 == null){
@@ -84,17 +94,20 @@ class _NewComposeMessageState extends State<NewComposeMessage> {
       }, body: body).then((respo) {
         var data = json.decode(respo.body);
         if(respo.statusCode == 200){
-          // getPersonMessage();
           setState(() {
             conversationService.updateLastConvo(onId: channelID,data: data['result']);
             chatListener.append(data: data['result']);
             chatListener.updateChannelID(id: channelID);
+            print('DIDI NASULOD'+receiverIds.toString());
             for(var id in receiverIds){
               if(id != int.parse(userdetails['id'].toString())){
-                print('DIDI NASULOD'+hasData.toString());
-                messagecontroller.sendmessage(data['result'],message, id,false, reason);
+                messagecontroller.sendmessage(data['result'],message, id,false, reason,receiverIds);
               }
             }
+            b64ImagetoSend = "";
+            _imagetoSend = false;
+            b64FiletoSend = "";
+            _filetoSend = false;
           });
         }else{
           print('ERROR sss :'+respo.body.toString());
@@ -107,10 +120,11 @@ class _NewComposeMessageState extends State<NewComposeMessage> {
 
   @override
   void initState() {
-    // TODO: implement initState
+    // TODO: implement initStatess
       super.initState();
     if (pdfFile != null){
       b64 = base64.encode(pdfFile.readAsBytesSync());
+      b64ImagetoSend = b64;
       extension = pdfFile.toString().split('/')[pdfFile.toString().split('/').length - 1].split('.')[1];
     }
     _keyboardVisibilityController.onChange.listen((event) {
@@ -131,35 +145,46 @@ class _NewComposeMessageState extends State<NewComposeMessage> {
     chatListener.updateAll(data: null);
   }
   getFromGallery() async {
-    await ImagePicker().getImage(source: ImageSource.gallery).then((value) {
-      if(value != null){
-        setState(() {
-          b64 = base64.encode(new File(value.path).readAsBytesSync());
-          extension = value.path.split('/')[value.path.split('/').length - 1].split('.')[1];
-        });
-        print("EXTENSION : $extension");
-      }
-    });
+    try{
+      await ImagePicker().getImage(source: ImageSource.gallery).then((value) {
+        if(value != null){
+          setState(() {
+            b64 = base64.encode(new File(value.path).readAsBytesSync());
+            b64ImagetoSend = b64;
+            extension = value.path.split('/')[value.path.split('/').length - 1].split('.')[1];
+          });
+          print("EXTENSION : $extension");
+        }
+      });
+    }catch(e){
+      print('IMAGE PICKER ERROR :'+e.toString());
+    }
   }
   getFromCamera() async {
-    await ImagePicker().getImage(source: ImageSource.camera).then((value) {
-      if(value != null){
-        setState(() {
-          b64 = base64.encode(new File(value.path).readAsBytesSync());
-          extension = value.path.split('/')[value.path.split('/').length - 1].split('.')[1];
-        });
-        print("EXTENSION : $extension");
-      }
-    });
+    try{
+      await ImagePicker().getImage(source: ImageSource.camera).then((value) {
+        if(value != null){
+          setState(() {
+            b64 = base64.encode(new File(value.path).readAsBytesSync());
+            b64ImagetoSend = b64;
+            extension = value.path.split('/')[value.path.split('/').length - 1].split('.')[1];
+          });
+          print("EXTENSION : $extension");
+        }
+      });
+    }catch(e){
+      print('IMAGE PICKER ERROR :'+e.toString());
+    }
   }
   getFromFile() async {
     await FilePicker.platform.pickFiles(type: FileType.custom,allowMultiple: false,allowedExtensions: ['jpg', 'pdf', 'doc'],).then((value) {
       if(value != null){
         setState(() {
           b64 = base64.encode(new File(value.paths[0]).readAsBytesSync());
+          b64FiletoSend = b64;
           extension = value.paths[0].split('/')[value.paths[0].split('/').length - 1].split('.')[1];
         });
-        print('PDF '+value.paths[0].toString());
+        print('PDF '+b64FiletoSend.toString());
       }
     });
   }
@@ -264,8 +289,11 @@ class _NewComposeMessageState extends State<NewComposeMessage> {
               if (widget.channelDetail['last_convo'] == null && widget.channelDetail['members'].length == 2){
               // conversationService.deleteChannelLoc(widget.channelDetail['id']);
               }
-              currentindex = 2;
-              Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=>MainScreen(false)));
+              setState(() {
+                currentindex = 2;
+                indexListener.update(data: 2);
+                Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=>MainScreen(false)));
+              });
         },
           ),
           backgroundColor: kPrimaryColor,
@@ -316,16 +344,6 @@ class _NewComposeMessageState extends State<NewComposeMessage> {
               child: StreamBuilder<List>(
                 stream: chatListener.stream$,
                 builder: (context, snapshot) {
-                  List clientDetails;
-
-                  for(var x =snapshot.data.length -1;x>=0;x--){
-                    clientDetails = events_clients.where((s){
-                    return s['id'].toString() == snapshot.data[x]['sender_id'].toString();
-                    }).toList();
-                  }
-
-                  print(clientDetails.toString());
-
                   try{
                     if(snapshot.hasData){
                       return ListView(
@@ -333,11 +351,10 @@ class _NewComposeMessageState extends State<NewComposeMessage> {
                         shrinkWrap: true,
                         reverse: true,
                         children: [
-//                          for(var x = snapshot.data.length - 1;x>0;x++)...{s
-//                            messageContainer(snapshot.data[x])
-//                          },
+                          Container(child: !_filetoSend ? Container() : ImageToSend(b64FiletoSend.toString(),_message.text.toString(),'File',_filetoSend)),
+                          Container(child: !_imagetoSend ? Container() : ImageToSend(b64ImagetoSend.toString(),_message.text.toString(),'Image',_imagetoSend)),
                           for(var x =snapshot.data.length -1;x>=0;x--)...{
-                            messageContainer(snapshot.data[x],clientDetails),
+                              messageContainer(snapshot.data[x]),
                           },
                           Container(
                             child: Text("${channelDetail == null ? "" : "${StringFormatter().titlize(data: getChannelName())}"}",
@@ -384,7 +401,46 @@ class _NewComposeMessageState extends State<NewComposeMessage> {
                     );
                   }catch(e){
                     return Center(
-                      child: Text("Oops! Un problème est survenu $e"),
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          Container(
+                            width: screenwidth/4,
+                            height: screenwidth/4,
+                            child: Image(
+                              color: Colors.grey[700],
+                              image: NetworkImage('https://static.thenounproject.com/png/1106407-200.png'),
+                            ),
+                          ),
+                          Text("Une erreur s'est produite".toString(),style: TextStyle(fontSize: screenwidth < 700 ? screenwidth/25  : 20,fontFamily: 'Google-Medium',color: Colors.grey[600]),),
+                          SizedBox(
+                            height: 10,
+                          ),
+                          Container(
+                              padding: EdgeInsets.symmetric(horizontal: 50),
+                              child: Text("Veuillez d'abord essayer de le fermer et de l'ouvrir à nouveau pour résoudre ce problème.",style: TextStyle(fontSize: screenwidth < 700 ? screenwidth/30  : 15,fontFamily: 'Google-Regular',color: Colors.grey[500]),textAlign: TextAlign.center,)),
+                          GestureDetector(
+                            child: Container(
+                              margin: EdgeInsets.symmetric(horizontal: 20,vertical: 40),
+                              height: screenwidth/8,
+                              width: screenwidth,
+                              decoration: BoxDecoration(
+                                color: kPrimaryColor,
+                                borderRadius: BorderRadius.circular(5)
+                              ),
+                              child: Center(
+                                  child: Text('FERMER LA PAGE',style: TextStyle(fontSize: screenwidth < 700 ? screenwidth/25  : 20,fontFamily: 'Google-Medium',color: Colors.white),),
+                              ),
+                            ),
+                            onTap: (){
+                                  Navigator.push(context, PageTransition(child: MainScreen(false), type: PageTransitionType.topToBottom));
+                              //   });
+                              // }
+                            },
+                          )
+                        ],
+                      )
                     );
                   }
                 },
@@ -402,10 +458,14 @@ class _NewComposeMessageState extends State<NewComposeMessage> {
                         child: Container(
                           alignment: AlignmentDirectional.centerStart,
                           child: _imageExtensions.contains(extension) ?
-                          Image.memory(base64.decode(b64)) :
                           GestureDetector(
+                              child: Image.memory(base64.decode(b64)),
                             onTap: (){
 
+                            },
+                          ) :
+                          GestureDetector(
+                            onTap: (){
                             },
                             child: Row(
                               children: [
@@ -486,9 +546,13 @@ class _NewComposeMessageState extends State<NewComposeMessage> {
                           maxLines: 4,
                           minLines: 1,
                           onChanged: (text){
-                            setState(() {
+                            if (b64 != null){
                               toShow = text.isNotEmpty;
-                            });
+                            }else{
+                              setState(() {
+                                toShow = text.isNotEmpty;
+                              });
+                            }
                           },
                           keyboardType: TextInputType.multiline,
                           decoration: InputDecoration(
@@ -504,9 +568,33 @@ class _NewComposeMessageState extends State<NewComposeMessage> {
                       child: _message.text.isNotEmpty || b64 != null ? IconButton(
                         icon: Icon(Icons.send,color: kPrimaryColor,),
                         onPressed: (){
-                          print(channelDetail['id'].toString());
+                          List _clientDetails = channelDetail['messages'].where((s){
+                            return s.toString().contains("a quitté le groupe.");
+                          }).toList();
+
+                          if (_clientDetails.toString() != "null" && _clientDetails.toString() != "[]" && channelDetail['members'].length > 2){
+                            print(_clientDetails.toString());
+                            List _localresult = _clientDetails.where((s){
+                              return s['message'].toString().contains("a quitté le groupe.");
+                            }).toList();
+
+                            print('RESULT OF LOCAL :'+_localresult.toString());
+
+                            for (var x = 0; x < _localresult.length; x ++){
+                              memberIds.removeWhere((s){
+                                return s == _localresult[x]['sender_id'];
+                              });
+                            }
+                          }
+
                           if (_message.text.isNotEmpty || b64 != null){
                             setState(() {
+                              if (b64ImagetoSend != ""){
+                                _imagetoSend = true;
+                              }
+                              if (b64FiletoSend != ""){
+                                _filetoSend = true;
+                              }
                               send(
                                 channelID: channelDetail['id'],
                                 message: _message.text,
@@ -524,6 +612,7 @@ class _NewComposeMessageState extends State<NewComposeMessage> {
                               pdfFile = null;
                             });
                           }
+
                         },
                       ) : Container(),
                     )
@@ -536,127 +625,166 @@ class _NewComposeMessageState extends State<NewComposeMessage> {
       ),
     );
   }
-
-  messageContainer(Map data, List currentclientData) => Container(
-    padding: const EdgeInsets.symmetric(horizontal: 10,vertical: 5),
-//    alignment: data['sender_id'] == userdetails['id'] ? AlignmentDirectional.centerEnd : AlignmentDirectional.centerStart,
-    child: Row(
-      mainAxisAlignment: data['sender_id'].toString() == userdetails['id'].toString() ? MainAxisAlignment.end : MainAxisAlignment.start,
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        data['sender_id'] == userdetails['id'] ? Container() : Container(
-          margin: const EdgeInsets.only(right: 10),
-          child: senderImage(data,currentclientData),
-        ),
-        SizedBox(
-          width: 10,
-        ),
-        Column(
-          mainAxisAlignment: MainAxisAlignment.start,
+  messageContainer(Map data){
+   return Container(
+        padding: const EdgeInsets.symmetric(horizontal: 10,vertical: 5),
+        child:  data['message'].toString().contains('a quitté le groupe.')  ?
+        Container(
+          width: screenwidth,
+          child: Text(data['message'].toString(),style: TextStyle(fontSize: screenwidth < 700 ? screenwidth/35 : screenwidth/40,color: Colors.grey[600]),textAlign: TextAlign.center,),
+        ) :
+        Row(
+          mainAxisAlignment: data['sender_id'].toString() == userdetails['id'].toString() ? MainAxisAlignment.end : MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.start,
-          children: <Widget>[
-            Text( data['sender_id'].toString() == userdetails['id'].toString() ? '' :  currentclientData[0]['name'].toString(),style: TextStyle(fontSize: screenwidth < 700 ? screenwidth/35 : screenwidth/40,color: Colors.grey[600]),),
-            Container(
-//          alignment: data['sender_id'] == userdetails['id'] ? AlignmentDirectional.centerEnd : AlignmentDirectional.centerStart,
-//           margin: data['sender_id'] == userdetails['id'] ? EdgeInsets.only(left: screenwidth/5) : EdgeInsets.only(right: 20),
-              padding: const EdgeInsets.all(10),
-              decoration: BoxDecoration(
-                  color: data['sender_id'] == userdetails['id'] ? kPrimaryColor : Colors.grey[300],
-                  borderRadius: BorderRadius.circular(5)
-              ),
-              constraints: BoxConstraints(
-                maxWidth: screenwidth/1.6
-              ),
-              child: Column(
-                crossAxisAlignment: data['sender_id'] == userdetails['id'] ? CrossAxisAlignment.end : CrossAxisAlignment.start,
-                children: [
-                  if(data['message'] != null)...{
-                    Text("${data['message']}",style: TextStyle(
-                        color: data['sender_id'] == userdetails['id'] ? Colors.white : Colors.black,
-                      fontSize: screenwidth < 700 ? screenwidth/30 : screenwidth/47
-                    ),),
-                  },
-                  if(data['filename'] != null)...{
-                    Builder(
-                      builder: (context) {
-                        try{
-                          if(!_imageExtensions.contains(data['filename'].toString().split('/')[data['filename'].toString().split('/').length - 1].split('.')[1]))
-                          {
-                            return GestureDetector(
-                              onTap: () async {
-                                WidgetsFlutterBinding.ensureInitialized();
-                                print(data['filename'].toString());
-                                Navigator.push(context, PageTransition(child:  ViewMessageImages(
-                                    "https://ujap.checkmy.dev${data['filename']}"
-                                ),type: PageTransitionType.leftToRightWithFade,alignment: Alignment.center, curve: Curves.easeIn,duration: Duration(milliseconds: 500)));
-                              },
-                              // child: PDF(
-                              //   swipeHorizontal: true,
-                              // ).cachedFromUrl('http://africau.edu/images/default/sample.pdf'),
-
-                              child: Container(
-                                constraints: BoxConstraints(
-                                    maxHeight: screenheight/5,
-
-                                ),
-//                              alignment: data['sender_id'] == userdetails['id'] ? AlignmentDirectional.centerEnd : AlignmentDirectional.centerStart,
-                                child: Text("UJAP.pdf",style: TextStyle(
-                                    color: data['sender_id'] == userdetails['id'] ? Colors.white : Colors.blue,
-                                    fontStyle: FontStyle.italic,
-                                  decoration: TextDecoration.underline
-                                ),),
-                              ),
-                            );
-                          }
-                          return Container(
-                            constraints: BoxConstraints(
-                                maxHeight: screenheight/5
-                            ),
-                            child: GestureDetector(
-                              onTap: (){
-                                Navigator.push(context, PageTransition(child:  ViewMessageImages(
-                                    "https://ujap.checkmy.dev${data['filename']}"
-                                ),type: PageTransitionType.leftToRightWithFade,alignment: Alignment.center, curve: Curves.easeIn,duration: Duration(milliseconds: 500)));
-                              },
-                              onLongPress: ()async{
-                                print("LONG PRESS");
-                                print(await FirebaseMessaging().getToken());
-                              },
-                              child: Image(
-                                image: NetworkImage("https://ujap.checkmy.dev${data['filename']}"),
-                              ),
-                            ),
-                          );
-                        }catch(e){
-                          return Container(
-                            child: Text("Type de fichier invalide"),
-                          );
-                        }
-                      },
-                    )
-                  }
-                ],
-              ),
+          children: [
+            data['sender_id'] == userdetails['id'] ? Container() : Container(
+              margin: const EdgeInsets.only(right: 10),
+              child: senderImage(data),
             ),
-            Container(
-              padding: EdgeInsets.symmetric(vertical: 5),
-              child: dateBetween == 0 ? Text(DateFormat('kk:mm').format(DateTime.parse(widget.channelDetail['last_convo']['date_sent'])),style: TextStyle(fontSize: screenwidth < 700 ? 11 : 16,color: Colors.grey, fontFamily: "Google-medium"),textAlign: TextAlign.end,) :
-              dateBetween == 1 ? Text('Yesterday',style: TextStyle(fontSize: screenwidth < 700 ? 11 : 16,color: Colors.grey, fontFamily: "Google-medium"),) :
-              dateBetween > 1 ? Text('${dateBetween.toString()} days ago',style: TextStyle(fontSize: screenwidth < 700 ? 11 : 16,color: Colors.grey, fontFamily: "Google-medium"),) :
-              dateBetween > 7 ? Text('A week ago',style: TextStyle(fontSize: screenwidth < 700 ? 11 : 16,color: Colors.grey, fontFamily: "Google-medium"),) :
-              Text(DateFormat("d").format(DateTime.parse(widget.channelDetail['last_convo']['date_sent'])).toString().toUpperCase()+' '+monthDate[int.parse(DateFormat("MM").format(DateTime.parse(widget.channelDetail['last_convo']['date_sent'])).toString())].toString()+'.'+' '+DateFormat("yyyy").format(DateTime.parse(widget.channelDetail['last_convo']['date_sent'])).toString().toUpperCase(),style: TextStyle(fontSize: screenwidth < 700 ? 13 : 16,color: Colors.grey, fontFamily: "Google-medium"),),
-            )
+            SizedBox(
+              width: 10,
+            ),
+            Column(
+              mainAxisAlignment: MainAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: <Widget>[
+                data['sender_id'].toString() == userdetails['id'].toString() ? Container() : Text(channelDetail['members'].where((s)=> s['client_id'] == data['sender_id']).toList()[0]['detail']['name'].toString(),style: TextStyle(fontSize: screenwidth < 700 ? screenwidth/35 : screenwidth/40,color: Colors.grey[600]),),
+                Container(
+                  padding: const EdgeInsets.all(10),
+                  decoration: BoxDecoration(
+                      color: data['sender_id'] == userdetails['id'] ? kPrimaryColor : Colors.grey[300],
+                      borderRadius: BorderRadius.circular(5)
+                  ),
+                  constraints: BoxConstraints(
+                      maxWidth: screenwidth/1.6
+                  ),
+                  child: Column(
+                    crossAxisAlignment: data['sender_id'] == userdetails['id'] ? CrossAxisAlignment.end : CrossAxisAlignment.start,
+                    children: [
+                      if(data['message'] != null)...{
+                        Text("${data['message']}",style: TextStyle(
+                            color: data['sender_id'] == userdetails['id'] ? Colors.white : Colors.black,
+                            fontSize: screenwidth < 700 ? screenwidth/30 : screenwidth/47
+                        ),),
+                      },
+                      if(data['filename'] != null)...{
+                        Builder(
+                          builder: (context) {
+                            try{
+                              if(!_imageExtensions.contains(data['filename'].toString().split('/')[data['filename'].toString().split('/').length - 1].split('.')[1]))
+                              {
+                                return GestureDetector(
+                                  onTap: () async {
+                                    WidgetsFlutterBinding.ensureInitialized();
+                                    print(data['filename'].toString());
+                                    Navigator.push(context, PageTransition(child:  ViewMessageImages(
+                                        "https://ujap.checkmy.dev${data['filename']}"
+                                    ),type: PageTransitionType.leftToRightWithFade,alignment: Alignment.center, curve: Curves.easeIn,duration: Duration(milliseconds: 500)));
+                                  },
+                                  child: Container(
+                                    constraints: BoxConstraints(
+                                      maxHeight: screenheight/5,
+                                    ),
+                                    child: Text("UJAP.pdf",style: TextStyle(
+                                        color: data['sender_id'] == userdetails['id'] ? Colors.white : Colors.blue,
+                                        fontStyle: FontStyle.italic,
+                                        decoration: TextDecoration.underline
+                                    ),),
+                                  ),
+                                );
+                              }
+                              return Container(
+                                constraints: BoxConstraints(
+                                    maxHeight: screenheight/5
+                                ),
+                                child: GestureDetector(
+                                  onTap: (){
+                                    Navigator.push(context, PageTransition(child:  ViewMessageImages(
+                                        "https://ujap.checkmy.dev${data['filename']}"
+                                    ),type: PageTransitionType.leftToRightWithFade,alignment: Alignment.center, curve: Curves.easeIn,duration: Duration(milliseconds: 500)));
+                                  },
+                                  onLongPress: ()async{
+                                    print("LONG PRESS");
+                                    print(await FirebaseMessaging().getToken());
+                                  },
+                                  child: CachedNetworkImage(
+                                    imageUrl: "https://ujap.checkmy.dev${data['filename']}",
+                                    placeholder: (context, url) => CircularProgressIndicator(),
+                                    errorWidget: (context, url, error) => Icon(Icons.error),
+                                  ),
+                                  // child: Image(
+                                  //   image:  NetworkImage("https://ujap.checkmy.dev${data['filename']}"),
+                                  // ),
+                                ),
+                              );
+                            }catch(e){
+                              return Container(
+                                  child: Column(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    crossAxisAlignment: CrossAxisAlignment.center,
+                                    children: [
+                                      Container(
+                                        width: screenwidth/4,
+                                        height: screenwidth/4,
+                                        child: Image(
+                                          color: Colors.grey[700],
+                                          image: NetworkImage('https://static.thenounproject.com/png/1106407-200.png'),
+                                        ),
+                                      ),
+                                      Text("Une erreur s'est produite".toString(),style: TextStyle(fontSize: screenwidth < 700 ? screenwidth/25  : 20,fontFamily: 'Google-Medium',color: Colors.grey[600]),),
+                                      SizedBox(
+                                        height: 10,
+                                      ),
+                                      Container(
+                                          padding: EdgeInsets.symmetric(horizontal: 50),
+                                          child: Text("Veuillez d'abord essayer de le fermer et de l'ouvrir à nouveau pour résoudre ce problème.",style: TextStyle(fontSize: screenwidth < 700 ? screenwidth/30  : 15,fontFamily: 'Google-Regular',color: Colors.grey[500]),textAlign: TextAlign.center,)),
+                                      GestureDetector(
+                                        child: Container(
+                                          margin: EdgeInsets.symmetric(horizontal: 20,vertical: 40),
+                                          height: screenwidth/8,
+                                          width: screenwidth,
+                                          decoration: BoxDecoration(
+                                              color: kPrimaryColor,
+                                              borderRadius: BorderRadius.circular(5)
+                                          ),
+                                          child: Center(
+                                            child: Text('FERMER LA PAGE',style: TextStyle(fontSize: screenwidth < 700 ? screenwidth/25  : 20,fontFamily: 'Google-Medium',color: Colors.white),),
+                                          ),
+                                        ),
+                                        onTap: (){
+                                          Navigator.push(context, PageTransition(child: MainScreen(false), type: PageTransitionType.topToBottom));
+                                        },
+                                      )
+                                    ],
+                                  )
+                              );
+                            }
+                          },
+                        )
+                      }
+                    ],
+                  ),
+                ),
+                Container(
+                  padding: EdgeInsets.symmetric(vertical: 5),
+                  child: dateBetween == 0 ? Text(DateFormat('kk:mm').format(DateTime.parse(widget.channelDetail['last_convo']['date_sent'])),style: TextStyle(fontSize: screenwidth < 700 ? 11 : 16,color: Colors.grey, fontFamily: "Google-medium"),textAlign: TextAlign.end,) :
+                  dateBetween == 1 ? Text('Yesterday',style: TextStyle(fontSize: screenwidth < 700 ? 11 : 16,color: Colors.grey, fontFamily: "Google-medium"),) :
+                  dateBetween > 1 ? Text('${dateBetween.toString()} days ago',style: TextStyle(fontSize: screenwidth < 700 ? 11 : 16,color: Colors.grey, fontFamily: "Google-medium"),) :
+                  dateBetween > 7 ? Text('A week ago',style: TextStyle(fontSize: screenwidth < 700 ? 11 : 16,color: Colors.grey, fontFamily: "Google-medium"),) :
+                  Text(DateFormat("d").format(DateTime.parse(widget.channelDetail['last_convo']['date_sent'])).toString().toUpperCase()+' '+monthDate[int.parse(DateFormat("MM").format(DateTime.parse(widget.channelDetail['last_convo']['date_sent'])).toString())].toString()+'.'+' '+DateFormat("yyyy").format(DateTime.parse(widget.channelDetail['last_convo']['date_sent'])).toString().toUpperCase(),style: TextStyle(fontSize: screenwidth < 700 ? 13 : 16,color: Colors.grey, fontFamily: "Google-medium"),),
+                )
+              ],
+            ),
+            data['sender_id'] == userdetails['id'] ? Container(
+              margin: const EdgeInsets.only(left: 10),
+              child: senderImage(data,),
+            ) : Container(),
           ],
-        ),
-        data['sender_id'] == userdetails['id'] ? Container(
-          margin: const EdgeInsets.only(left: 10),
-          child: senderImage(data,currentclientData),
-        ) : Container(),
-      ],
-    )
-  );
-  Widget senderImage(Map senderData, List currentclientDetail) {
-    return Container(
+        )
+    );
+  }
+  Widget senderImage(Map senderData) {
+    return senderData['sender_id'].toString() == userdetails['id'].toString() ? Container() : Container(
       width: screenwidth < 700 ? 40 : 60,
       height: screenwidth < 700 ? 40 : 60,
       decoration: BoxDecoration(
@@ -664,9 +792,7 @@ class _NewComposeMessageState extends State<NewComposeMessage> {
         color: Colors.white,
         image: DecorationImage(
           fit: BoxFit.cover,
-          image: senderData['sender_id'].toString() == userdetails['id'].toString() ?
-          userdetails['filename'].toString() == "null" ||  userdetails['filename'].toString() == ""  ? AssetImage("assets/messages_icon/no_profile.png") : NetworkImage("https://ujap.checkmy.dev/storage/clients/${userdetails['filename']}") :
-          currentclientDetail[0]['filename'].toString() == "null" ||  currentclientDetail[0]['filename'].toString() == ""  ? AssetImage("assets/messages_icon/no_profile.png") : NetworkImage("https://ujap.checkmy.dev/storage/clients/${currentclientDetail[0]['filename']}")
+          image:  channelDetail['members'].where((s)=> s['client_id'] == senderData['sender_id']).toList()[0]['detail']['filename'].toString() == "null" ||  channelDetail['members'].where((s)=> s['client_id'] == senderData['sender_id']).toList()[0]['detail']['filename'].toString() == ""  ? AssetImage("assets/messages_icon/no_profile.png") : NetworkImage("https://ujap.checkmy.dev/storage/clients/${channelDetail['members'].where((s)=> s['client_id'] == senderData['sender_id']).toList()[0]['detail']['filename'].toString()}")
         )
       ),
     );

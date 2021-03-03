@@ -81,7 +81,7 @@ class _UpdatePasswordState extends State<UpdatePassword> {
                                         image: DecorationImage(
                                           image:
                                           AssetImage(
-                                              "assets/logo.png"),
+                                              "assets/new_app_icon.png"),
                                         )),
                                   ),
                                 ))),
@@ -96,7 +96,7 @@ class _UpdatePasswordState extends State<UpdatePassword> {
                                   padding: EdgeInsets.all(10),
                                   alignment: Alignment.topLeft,
                                   color:
-                                  Color.fromRGBO(5, 93, 157, 0.9),
+                                  kPrimaryColor,
                                   width:
                                   MediaQuery
                                       .of(context)

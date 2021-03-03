@@ -41,9 +41,11 @@ class _Events_listviewState extends State<Events_listview> {
   var _dateConvertedString = "";
   var _dateConvertedDayYear = "";
   List _teamName;
+  List _hometeamName;
   int _daysbetween;
   List _attendedMeeting;
   List _eventStatus;
+  List<String> _listChecker = List<String>();
 
   ScrollController _scrollController;
   bool _isOnTop = true;
@@ -60,30 +62,11 @@ class _Events_listviewState extends State<Events_listview> {
     setState(() => _isOnTop = true);
   }
 
-  // getCurrentMeeting()async {
-  //   for (var x = 0; x < eventsData.length; x++) {
-  //     var response = await http.get('https://ujap.checkmy.dev/api/client/meeting/attendees/${eventsData[x]['id'].toString()}',
-  //       headers: {
-  //         HttpHeaders.authorizationHeader: "Bearer $accesstoken",
-  //         "Accept": "application/json"
-  //       },
-  //     );
-  //     var jsonData = json.decode(response.body);
-  //     if (response.statusCode == 200) {
-  //      setState(() {
-  //        _attendedMeeting = jsonData;
-  //        print('ATTENDED EVENT :'+_attendedMeeting.toString());
-  //      });
-  //     }
-  //   }
-  // }
-
   @override
   void initState() {
     _scrollController = ScrollController();
     _scrollController.addListener(_scrollListener);
     super.initState();
-    // getCurrentMeeting();
   }
 
   @override
@@ -98,14 +81,13 @@ class _Events_listviewState extends State<Events_listview> {
             No_events_data() :
             Stack(
               children: [
-                hideFloatingbutton ? Container () :
-                Container(
+                _listChecker.toString() != "[]" ? Container() : Container(
                   width: screenwidth,
                   decoration: BoxDecoration(
                       color: Colors.white,
                       borderRadius: BorderRadius.circular(10)
                   ),
-                  height: screenwidth < 700 ? screenheight/4.5 : screenheight/4.7,
+                  height: screenwidth < 700 ? screenheight/5 : screenheight/4.7,
                   margin: EdgeInsets.only(top: screenwidth < 700 ? screenwidth/2.5 : screenwidth/4.5,left: screenwidth < 700 ? screenwidth/15 :  screenwidth/18,right:  screenwidth < 700 ? screenwidth/15 :  screenwidth/18),
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
@@ -148,10 +130,10 @@ class _Events_listviewState extends State<Events_listview> {
                 ),
                 NotificationListener<ScrollUpdateNotification>(
                   child: Container(
-                    margin: EdgeInsets.only(top: !hideFloatingbutton ? 0 : 50),
+                    margin: EdgeInsets.only(top: 180),
                     child: ListView.builder(
                         controller: _scrollController,
-                        padding: hideFloatingbutton ? EdgeInsets.only(top: 20) : EdgeInsets.only(top: screenwidth < 700 ? screenwidth/2.5 : screenwidth/4.5,bottom: screenwidth/10),
+                        padding: EdgeInsets.all(0),
                         scrollDirection: Axis.vertical,
                         physics: BouncingScrollPhysics(),
                         itemCount:snapshot.data.length,
@@ -167,6 +149,10 @@ class _Events_listviewState extends State<Events_listview> {
                           if (snapshot.data[index]['match'].toString() != 'null'){
                             _teamName = teamNameData.where((s){
                               return s['id'].toString().toLowerCase() == snapshot.data[index]['match']['visitor_team_id'].toString().toLowerCase();
+                            }).toList();
+
+                            _hometeamName = teamNameData.where((s){
+                              return s['id'].toString().toLowerCase() == snapshot.data[index]['match']['home_team_id'].toString().toLowerCase();
                             }).toList();
                           }
 
@@ -208,6 +194,16 @@ class _Events_listviewState extends State<Events_listview> {
                           }
                           else{
                             _mathsymbol = int.parse(DateFormat("yyyyMMdd").format(DateTime.parse(snapshot.data[index]['sched_date'].toString().replaceAll(new RegExp(r'[^\w\s]+'),'')))) >= int.parse(DateFormat("yyyyMMdd").format(DateTime.now()));
+                          }
+
+                          if (myAttended_events.toString().contains('client_id: '+userdetails['id'].toString()) || attended_Meeting.toString().contains(snapshot.data[index]['id'].toString()+userdetails['name'].toString())){
+                            if(_mathsymbol){
+                              if(!myAttended_events.toString().contains('ticket_id: '+snapshot.data[index]['ticket']['id'].toString()) && !attended_Meeting.toString().contains(snapshot.data[index]['id'].toString()+userdetails.toString()) && !attended_Meeting.toString().contains(snapshot.data[index]['id'].toString()+userdetails['name'].toString())){
+
+                              }else{
+                                _listChecker.add(snapshot.data[index].toString());
+                              }
+                            }
                           }
 
 
@@ -254,7 +250,9 @@ class _Events_listviewState extends State<Events_listview> {
                                                             SizedBox(
                                                               width: 5,
                                                             ),
-                                                            Text(snapshot.data[index]['name'].toString().toUpperCase(),style: TextStyle(fontSize: screenwidth < 700 ? screenheight/70  : 20,fontFamily: 'Google-Bold',color: Colors.grey[800]),),
+                                                            Container(
+                                                                width: screenwidth/3,
+                                                                child: Text(snapshot.data[index]['name'].toString().toUpperCase(),style: TextStyle(fontSize: screenwidth < 700 ? screenheight/70  : 20,fontFamily: 'Google-Bold',color: Colors.grey[800]),overflow: TextOverflow.ellipsis,)),
                                                           ],
                                                         ),
                                                       ),
@@ -294,15 +292,27 @@ class _Events_listviewState extends State<Events_listview> {
                                                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                                                 children: [
                                                   Container(
-                                                    width : screenwidth < 700 ? screenwidth/5 : screenwidth/7,
-                                                    height:  screenwidth < 700 ? screenwidth/5 : screenwidth/7,
-                                                    child:  Container(
-                                                      child: Image(
-                                                          fit: BoxFit.contain,
-                                                          image: AssetImage('assets/logo.png')
-                                                      ),
-                                                      margin: EdgeInsets.all(5),
+                                                    width: screenwidth/4,
+                                                    child: Column(
+                                                      children: [
+                                                        Container(
+                                                          width : screenwidth < 700 ? screenwidth/5 : screenwidth/5,
+                                                          height:  screenwidth < 700 ? screenwidth/5 : screenwidth/7,
+                                                          child: Container(
+                                                            child: Image(
+                                                                fit: BoxFit.contain,
+                                                                image:  NetworkImage('https://ujap.checkmy.dev/storage/teams/'+_hometeamName[0]['logo'].toString())
+                                                            ),
 
+                                                          ),
+                                                        ),
+                                                        Container(
+                                                          width : screenwidth < 700 ? screenwidth/5 : screenwidth/5,
+                                                          child: Center(
+                                                            child: Text(_hometeamName[0]['name'].toString().toUpperCase(),textAlign: TextAlign.center,style: TextStyle(fontSize: screenwidth < 700 ? screenheight/78  : 20,fontFamily: 'Google-Bold',color: Colors.grey[800]),),
+                                                          ),
+                                                        )
+                                                      ],
                                                     ),
                                                   ),
                                                   Container(
@@ -333,25 +343,28 @@ class _Events_listviewState extends State<Events_listview> {
                                                     ),
                                                   ),
                                                   Container(
-                                                    width : screenwidth < 700 ? screenwidth/5 : screenwidth/7,
-                                                    height:  screenwidth < 700 ? screenwidth/5 : screenwidth/7,
-                                                    alignment: Alignment.center,
-                                                    child:  Stack(
+                                                    width: screenwidth/4,
+                                                    child: Column(
+                                                      mainAxisAlignment: MainAxisAlignment.end,
+                                                      crossAxisAlignment: CrossAxisAlignment.stretch,
                                                       children: [
                                                         Container(
-                                                          width : screenwidth < 700 ? screenwidth/5 : screenwidth/7,
-                                                          height:  screenwidth < 700 ? screenwidth/5 : screenwidth/7,
-                                                          decoration: BoxDecoration(
-                                                            borderRadius: BorderRadius.circular(10),),
-                                                          child: Image(
-                                                              fit: BoxFit.contain,
-//                                                    image: NetworkImage('https://thumbs.gfycat.com/FlawlessDimpledCaiman-max-1mb.gif'),
-                                                              image:  NetworkImage('https://ujap.checkmy.dev/storage/teams/'+_teamName[0]['logo'].toString())
-                                                          ),
-                                                          margin: EdgeInsets.all(10),
+                                                          width : screenwidth < 700 ? screenwidth/7 : screenwidth/5,
+                                                          height:  screenwidth < 700 ? screenwidth/7 : screenwidth/7,
+                                                          child: Container(
+                                                              child: Image(
+                                                                fit: BoxFit.contain,
+                                                                image:  NetworkImage('https://ujap.checkmy.dev/storage/teams/'+_teamName[0]['logo'].toString())
+                                                            ),
 
+                                                          ),
                                                         ),
-//
+                                                        Container(
+                                                          padding: EdgeInsets.only(top: 10),
+                                                          child: Center(
+                                                            child: Text(_teamName[0]['name'].toString().toUpperCase(),textAlign: TextAlign.center,style: TextStyle(fontSize: screenwidth < 700 ? screenheight/78  : 20,fontFamily: 'Google-Bold',color: Colors.grey[800]),),
+                                                          ),
+                                                        )
                                                       ],
                                                     ),
                                                   ),
@@ -377,6 +390,7 @@ class _Events_listviewState extends State<Events_listview> {
                                         child: Stack(
                                           children: [
                                             Container(
+                                              height: screenwidth < 700 ? screenheight/5 : screenheight/4.7,
                                               decoration: BoxDecoration(
                                                   color: Colors.white,
                                                   borderRadius: BorderRadius.circular(10)
@@ -454,7 +468,9 @@ class _Events_listviewState extends State<Events_listview> {
                                                                   SizedBox(
                                                                     width: 5,
                                                                   ),
-                                                                  Text(snapshot.data[index]['name'].toString().toUpperCase(),style: TextStyle(fontSize: screenwidth < 700 ? screenheight/70  : 20,fontFamily: 'Google-Bold',color: Colors.grey[800]),),
+                                                                  Container(
+                                                                      width: screenwidth/3,
+                                                                      child: Text(snapshot.data[index]['name'].toString().toUpperCase(),style: TextStyle(fontSize: screenwidth < 700 ? screenheight/70  : 20,fontFamily: 'Google-Bold',color: Colors.grey[800]),overflow: TextOverflow.ellipsis,)),
                                                                 ],
                                                               ),
                                                             ),
@@ -486,31 +502,6 @@ class _Events_listviewState extends State<Events_listview> {
                                                       ],
                                                     ),
                                                   ),
-//                                            Container(
-//                                              alignment: Alignment.center,
-//                                                padding: EdgeInsets.symmetric(horizontal: screenwidth/30),
-//                                              child: Text(snapshot.data[index]['name'].toString(),style: TextStyle(fontSize: screenwidth < 700 ? screenheight/35 : 20,fontFamily: 'Google-Medium',color: Colors.white),
-//                                              textAlign: TextAlign.center,
-//                                                maxLines: 2,
-//                                                overflow: TextOverflow.ellipsis,
-//                                              ),
-//                                            ),
-//                                            Expanded(
-//                                              child: snapshot.data[index]['country'].toString() == 'null' ? Container() : Container(
-//                                                width: screenwidth,
-//                                                height: screenheight,
-//                                                 child: Row(
-//                                                   mainAxisAlignment: MainAxisAlignment.center,
-//                                                  children: [
-//                                                    Icon(Icons.location_on,size: screenwidth/25,color: Colors.white),
-//                                                    SizedBox(
-//                                                      width: screenwidth/90,
-//                                                    ),
-//                                                    Text(snapshot.data[index]['country'].toString(),style: TextStyle(fontSize: screenwidth < 700 ? screenheight/65 : 17,fontFamily: 'Google-Bold',fontWeight: FontWeight.bold,color: Colors.white),),
-//                                                  ],
-//                                                ),
-//                                                ),
-//                                              ),
                                                 ],
                                               ),
                                             )
@@ -518,11 +509,18 @@ class _Events_listviewState extends State<Events_listview> {
                                         ),
                                       ),
                                       onTap: (){
-                                        print("EVENT");
-//                                  Navigator.push(context, PageTransition(child: ViewEventDetails(eventDetail: snapshot.data[index],), type: null));
-//                                  setState(() {
-//                                    navigateEvents(index,context,snapshot.data[index]);
-//                                  });
+                                        setState(() {
+                                          Navigator.push(context, PageTransition(
+                                              child: snapshot.data[index]['type'].toString() != "meeting" ? ViewEvent(
+                                                eventDetail: snapshot.data[index],
+                                                pastEvent: _mathsymbol ? false : true,
+                                              ) : ViewEventDetails(
+                                                eventDetail: snapshot.data[index],
+                                                pastEvent: _mathsymbol ? false : true,
+                                              ),
+                                              type: PageTransitionType.topToBottom
+                                          ));
+                                        });
                                       },
                                     ),
                                   ) : Container()
@@ -555,7 +553,7 @@ class _Events_listviewState extends State<Events_listview> {
                     height: screenwidth < 700 ? screenwidth/7 : screenwidth/12,
                     child: FloatingActionButton(
                       heroTag: 'btn3',
-                      backgroundColor: Color.fromRGBO(5, 93, 157, 0.9),
+                      backgroundColor: kPrimaryColor,
                       onPressed:  _scrollToTop,
                       child: Icon(Icons.arrow_upward,size: screenwidth < 700 ? screenwidth/20 : screenwidth/30,),
                     ),

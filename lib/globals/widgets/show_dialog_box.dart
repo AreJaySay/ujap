@@ -80,7 +80,7 @@ class RequestTicketState extends State<RequestTicket>
                               border: Border.all(color: kPrimaryColor,width: 2)
                             ),
                             child: Image(
-                              color: Color.fromRGBO(5, 93, 157, 0.9),
+                              color: kPrimaryColor,
                               image: AssetImage('assets/home_icons/ticket.png'),
                             ),
                           ),

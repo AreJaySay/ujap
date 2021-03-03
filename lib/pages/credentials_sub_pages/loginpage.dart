@@ -102,7 +102,7 @@ class _LoginpageState extends State<Loginpage> {
                                 height: screenwidth < 700 ? screenwidth/2.7 : screenwidth/3.5,
                                 decoration: BoxDecoration(
                                   image: DecorationImage(
-                                      image: AssetImage('assets/logo.png')
+                                      image: AssetImage('assets/new_app_icon.png')
 
 
 

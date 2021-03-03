@@ -21,11 +21,12 @@ import 'package:ujap/pages/homepage_sub_pages/message_parent_page.dart';
 import 'package:ujap/services/api.dart';
 
 List teamNameandlogo;
+List homeNameandlogo;
 List eventsAttended_client;
 
 class Ticket_homepage extends StatefulWidget {
-  final String _matchID,_image,_visitorID,_ticketID, matchName;
-  Ticket_homepage(this._matchID,this._image,this._visitorID,this._ticketID,this.matchName);
+  final String _matchID,_image,_visitorID,_homeID,_ticketID, matchName;
+  Ticket_homepage(this._matchID,this._image,this._visitorID,this._homeID,this._ticketID,this.matchName);
 
   @override
   _Ticket_homepageState createState() => _Ticket_homepageState();
@@ -35,10 +36,14 @@ class _Ticket_homepageState extends State<Ticket_homepage> {
   List _eventStatus;
   var _attend_pass = "No";
 
-  getData()async{
+  getData(){
     setState(() {
         teamNameandlogo = teamNameData.where((s){
           return s['id'].toString().toLowerCase() == widget._visitorID.toString().toLowerCase();
+        }).toList();
+
+        homeNameandlogo = teamNameData.where((s){
+          return s['id'].toString().toLowerCase() == widget._homeID.toString().toLowerCase();
         }).toList();
 
         _eventStatus = events_status.where((s) {
@@ -108,7 +113,7 @@ class _Ticket_homepageState extends State<Ticket_homepage> {
                                           decoration: BoxDecoration(
                                               image: DecorationImage(
 
-                                                image: AssetImage("assets/logo.png"),
+                                                image: AssetImage("assets/new_app_icon.png"),
 
                                               )
                                           ),
@@ -123,7 +128,7 @@ class _Ticket_homepageState extends State<Ticket_homepage> {
                                       child:ClipPath(
                                         clipper: CurvedTop(),
                                         child: Container(
-                                          color: Color.fromRGBO(5, 93, 157, 0.9),
+                                          color: kPrimaryColor,
 
                                           height: screenwidth < 700 ? screenheight/3: screenheight/2.4,
                                         ),
@@ -252,21 +257,29 @@ class _Ticket_homepageState extends State<Ticket_homepage> {
                                                       mainAxisAlignment: MainAxisAlignment.start,
                                                       crossAxisAlignment: CrossAxisAlignment.center,
                                                       children: [
-                                                        Container(
-                                                          width : screenwidth/5,
-                                                          height:  screenwidth/6,
+                                                        SizedBox(
+                                                          height: 5,
+                                                        ),
+                                                        homeNameandlogo == null ? Container() : Container(
+                                                          width : screenwidth < 700 ? screenwidth/5 : screenwidth/5,
+                                                          height: screenwidth < 700 ? screenwidth/6 : screenwidth/6,
                                                           child: Image(
-                                                              fit: BoxFit.contain,
-                                                              image: AssetImage('assets/logo.png')
+                                                            fit: BoxFit.contain,
+                                                              image: NetworkImage('https://ujap.checkmy.dev/storage/teams/'+homeNameandlogo[0]['logo'].toString()),
                                                           ),
 
                                                         ),
+                                                        homeNameandlogo == null ? Container() :
                                                         SizedBox(
-                                                          height: screenwidth < 700 ? screenheight/90 : 20,
+                                                          height: 5,
                                                         ),
-                                                        Text('UJAP Quimper',style: TextStyle(fontSize: screenwidth < 700 ? screenheight/70  : 20,fontFamily: 'Google-Bold'),
-                                                          textAlign: TextAlign.center,
-                                                        ), ],
+                                                        Container(
+                                                          width: screenwidth,
+                                                          child: Text(homeNameandlogo == null ? '' : homeNameandlogo[0]['name'].toString(),style: TextStyle(fontSize: screenwidth < 700 ? screenheight/70 : 20,fontFamily: 'Google-Bold'),
+                                                            textAlign: TextAlign.center,
+                                                          ),
+                                                        ),
+                                                      ],
                                                     ),
                                                   ),
                                                   Container(
@@ -301,9 +314,8 @@ class _Ticket_homepageState extends State<Ticket_homepage> {
 
                                                   Container(
                                                     width: screenwidth/4,
-                                                    height: 300,
                                                     child: Column(
-                                                      mainAxisAlignment: MainAxisAlignment.center,
+                                                      mainAxisAlignment: MainAxisAlignment.start,
                                                       crossAxisAlignment: CrossAxisAlignment.center,
                                                       children: [
                                                         SizedBox(
@@ -311,7 +323,7 @@ class _Ticket_homepageState extends State<Ticket_homepage> {
                                                         ),
                                                         teamNameandlogo == null ? Container() : Container(
                                                           width : screenwidth < 700 ? screenwidth/5 : screenwidth/5,
-                                                          height: screenwidth < 700 ? screenwidth/7 : screenwidth/6,
+                                                          height: screenwidth < 700 ? screenwidth/6 : screenwidth/6,
                                                           child: Image(
                                                             fit: BoxFit.contain,
                                                             image: NetworkImage('https://ujap.checkmy.dev/storage/teams/'+teamNameandlogo[0]['logo'].toString()),

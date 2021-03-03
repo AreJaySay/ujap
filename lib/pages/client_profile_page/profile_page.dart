@@ -1,3 +1,4 @@
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_keyboard_visibility/flutter_keyboard_visibility.dart';
 import 'package:page_transition/page_transition.dart';
@@ -21,6 +22,7 @@ import 'package:ujap/pages/homepage_sub_pages/message_children_page/view_message
 import 'package:ujap/services/api.dart';
 import 'package:ujap/services/conversation_listener.dart';
 import 'package:ujap/services/pushnotification.dart';
+import 'package:ujap/services/sample_sqlite.dart';
 import 'package:ujap/services/searches/search_service.dart';
 
 import '../../globals/variables/other_variables.dart';
@@ -63,7 +65,6 @@ class _ProfilePageState extends State<ProfilePage> {
       accesstoken = null;
     });
     conversationService.updateAll(data: []);
-    PushNotification().unsubscribe(userdetails['id']);
   }
 
   @override
@@ -146,8 +147,7 @@ class _ProfilePageState extends State<ProfilePage> {
                                               decoration: BoxDecoration(
                                                   image: DecorationImage(
                                                     image:
-                                                    AssetImage(
-                                                        "assets/logo.png"),
+                                                    AssetImage("assets/new_app_icon.png"),
                                                   )),
                                             ),
                                           ))),
@@ -162,7 +162,7 @@ class _ProfilePageState extends State<ProfilePage> {
                                             padding: EdgeInsets.all(30),
                                             alignment: Alignment.topLeft,
                                             color:
-                                            Color.fromRGBO(5, 93, 157, 0.9), width: MediaQuery.of(context).size.width,height: screenwidth < 700 ? screenheight / 2.2 : screenheight / 2.4,
+                                            kPrimaryColor, width: MediaQuery.of(context).size.width,height: screenwidth < 700 ? screenheight / 2.2 : screenheight / 2.4,
                                             child: SafeArea(
                                               child: GestureDetector(
                                                 child: Container(
@@ -242,7 +242,7 @@ class _ProfilePageState extends State<ProfilePage> {
                                                     alignment: AlignmentDirectional
                                                         .bottomEnd,
                                                     child: Container(
-                                                      padding: EdgeInsets.all( screenwidth < 700 ? 8 : 5),
+                                                      padding: EdgeInsets.all( screenwidth < 700 ? 8 : 13),
                                                       decoration: BoxDecoration(borderRadius: BorderRadius.circular(1000),
                                                           border: Border.all(color: Colors.white, width: 3),
                                                           color: kPrimaryColor
@@ -289,7 +289,7 @@ class _ProfilePageState extends State<ProfilePage> {
                                     SizedBox(
                                       height: 20,
                                     ),
-                                    Text('Participations'.toUpperCase(), style: TextStyle(color: Colors.black87.withOpacity(0.5), fontSize: screenwidth < 700 ? screenwidth/27 : 15, fontFamily: 'Google-Medium',fontWeight: FontWeight.w700)),
+                                    Text('Participations'.toUpperCase(), style: TextStyle(color: Colors.black87.withOpacity(0.5), fontSize: screenwidth < 700 ? screenwidth/27 : 25, fontFamily: 'Google-Medium',fontWeight: FontWeight.w700)),
                                     Container(
                                       height: screenwidth/4,
                                       width: double.infinity,
@@ -412,6 +412,7 @@ class _ProfilePageState extends State<ProfilePage> {
                                         ),
                                         onPressed: () {
                                           setState(() {
+                                            PushNotification().unsubscribe(userdetails['id']);
                                             _logout();
                                             isCollapsed = !isCollapsed;
                                             Navigator.pushAndRemoveUntil(
@@ -440,7 +441,7 @@ class _ProfilePageState extends State<ProfilePage> {
                                 child: AnimatedContainer(
                                   duration: Duration(milliseconds: 300),
                                   width: screenwidth,
-                                  height: !showProfilePict ? 0 : screenwidth/1.8,
+                                  height: !showProfilePict ? 0 : screenwidth < 700 ? screenwidth/1.8 : screenwidth/3.5,
                                   padding: EdgeInsets.symmetric(vertical: 20),
                                   decoration: BoxDecoration(
                                     color: Colors.white,
@@ -450,6 +451,7 @@ class _ProfilePageState extends State<ProfilePage> {
                                     ),
                                   ),
                                   child: Column(
+                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                     children: <Widget>[
                                       FlatButton(
                                         child: Container(
@@ -467,7 +469,7 @@ class _ProfilePageState extends State<ProfilePage> {
                                               SizedBox(
                                                 width: 10,
                                               ),
-                                              Text('Voir la photo de profil',style: TextStyle(fontFamily: 'Google-medium',fontSize: screenwidth/27,color: Colors.grey[800]),)
+                                              Text('Voir la photo de profil',style: TextStyle(fontFamily: 'Google-medium',fontSize: screenwidth < 700 ? screenwidth/27 : screenwidth/33,color: Colors.grey[800]),)
                                             ],
                                           ),
                                         ),
@@ -493,7 +495,7 @@ class _ProfilePageState extends State<ProfilePage> {
                                               SizedBox(
                                                 width: 10,
                                               ),
-                                              Text('Prendre une photo',style: TextStyle(fontFamily: 'Google-medium',fontSize: screenwidth/27,color: Colors.grey[800]),)
+                                              Text('Prendre une photo',style: TextStyle(fontFamily: 'Google-medium',fontSize:  screenwidth < 700 ? screenwidth/27 : screenwidth/33,color: Colors.grey[800]),)
                                             ],
                                           ),
                                         ),
@@ -521,7 +523,7 @@ class _ProfilePageState extends State<ProfilePage> {
                                               SizedBox(
                                                 width: 10,
                                               ),
-                                              Text('Photo depuis la galerie',style: TextStyle(fontFamily: 'Google-medium',fontSize: screenwidth/27,color: Colors.grey[800]),)
+                                              Text('Photo depuis la galerie',style: TextStyle(fontFamily: 'Google-medium',fontSize:  screenwidth < 700 ? screenwidth/27 : screenwidth/33,color: Colors.grey[800]),)
                                             ],
                                           ),
                                         ),

@@ -97,7 +97,7 @@ class _Forgot_passwordState extends State<Forgot_password> {
                                   width: screenwidth < 700 ? screenwidth/5 : screenwidth/7,
                                   height: screenheight,
                                   child: Image(
-                                    color: Color.fromRGBO(5, 93, 157, 0.9) ,
+                                    color: kPrimaryColor ,
                                     image: AssetImage('assets/login_icons/forgot_password_icon.png'),
                                   ),
                                 )
@@ -156,9 +156,9 @@ class _Forgot_passwordState extends State<Forgot_password> {
                                 alignment: Alignment.center,
                                 margin: EdgeInsets.symmetric(horizontal: screenwidth/10),
                                 decoration: BoxDecoration(
-                                    color: Color.fromRGBO(5, 93, 157, 0.9) ,
+                                    color: kPrimaryColor ,
                                     borderRadius: BorderRadius.circular(10.0),
-                                    border: Border.all(color:  Color.fromRGBO(5, 93, 157, 0.9))
+                                    border: Border.all(color:  kPrimaryColor)
                                 ),
                                 child: Text('envoyer'.toUpperCase(),style: TextStyle(fontFamily: 'Google-Bold',color: Colors.white,fontSize: screenwidth < 700 ? screenheight/55 : 23),)
                             ),

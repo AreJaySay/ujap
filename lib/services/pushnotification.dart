@@ -8,10 +8,12 @@ import 'package:ujap/globals/container_data.dart';
 import 'package:ujap/globals/user_data.dart';
 import 'package:http/http.dart' as http;
 import 'package:ujap/globals/variables/messages_sub_pages_variables.dart';
+import 'package:ujap/globals/widgets/appbar_icons.dart';
 import 'package:ujap/globals/widgets/banner.dart';
 import 'package:ujap/globals/widgets/show_flushbar.dart';
 import 'package:ujap/pages/drawer_page.dart';
 import 'package:ujap/pages/homepage.dart';
+import 'package:ujap/pages/homepage_sub_pages/message_children_page/new_compose_message.dart';
 import 'package:ujap/services/ad_listener.dart';
 import 'package:ujap/services/api.dart';
 import 'package:ujap/services/event_listener.dart';
@@ -33,33 +35,35 @@ final FirebaseMessaging firebaseMessaging = FirebaseMessaging();
 class PushNotification {
   Future getFCMToken ()async{
     fcmToken = await firebaseMessaging.getToken();
-
-    print('FCM TOKEN RETURN :'+fcmToken.toString());
   }
   void subscribe(int id) {
-    print('subscribed to : Subscription$id');
     firebaseMessaging.subscribeToTopic('Subscription$id');
   }
   void unsubscribe(int id) {
-    print('subscribed to : Subscription$id');
     firebaseMessaging.unsubscribeFromTopic('Subscription$id');
+  }
+  void _deleteTask(int id) async {
+    await DatabaseHelper.instance.delete(id);
+    taskList.removeWhere((element) => element.itemid == id);
   }
   Future initListen(context) async {
     firebaseMessaging.configure(
       onMessage: (Map message) async {
-        print("CHECK MESSAGE : $message");
         try{
           if(Platform.isAndroid){
             print("Android MESSAGE : $message");
             if(message['data']['type'] == "message"){
               if(message['data']['refresh'] == 'false'){
                 if (message['data']['sender'].toString() == userdetails['name'].toString()){
+                }else if (message['data']['reason'].toString() == 'deletegroup'){
                 }else{
                   var mappedData = json.decode(message['data']['data']);
                   messagecontroller.messagechecker(context, mappedData);
+                  print('OR DIDI NASULOD :'+message.toString());
                 }
               }else{
                 if (message['data']['sender'].toString() == userdetails['name'].toString()){
+                }else if (message['data']['reason'].toString() == 'deletegroup'){
                 }else{
                   messagecontroller.messageHandler(message['data'],context);
                 }
@@ -67,44 +71,60 @@ class PushNotification {
               getPersonMessage();
             }else if(message['data']['type'] == "event"){
               var mappedData = json.decode(message['data']['data']);
-
               eventservice.appendNew(data: mappedData);
-              NotificationDisplayer().showNotification(mappedData['type'].toString() == 'event' ? 'New Event has been scheduled.' : mappedData['type'].toString() == 'match' ? 'New Match has been scheduled.' : 'New Meeting has been scheduled.', "Nouvel évènement", context);
+              NotificationDisplayer().showNotification(mappedData['type'].toString() == 'event' ? 'Nouvel événement programmé.' : mappedData['type'].toString() == 'match' ? 'Un nouveau match a été programmé.' : 'Une nouvelle réunion a été programmée.', "Annonce nouvelle Ujap", context, mappedData['id'].toString(),mappedData['type'].toString());
               notificationIndicator = true;
-               addToDb(itemid: mappedData['id'].toString(),messageTypes: 'Event');
+              notificID = mappedData['id'].toString();
+              notificType = 'Event';
               getEvents();
 
             }else{
               var mappedData = json.decode(message['data']['data']);
               bannerDisplay.update(mappedData);
+              print('ADVERTISEMENT :'+mappedData.toString());
               AdListener().showAd(context,mappedData);
+              notificID = mappedData['id'].toString();
+              notificType = 'Event';
             }
-
           }else{
             print("IOS MESSAGE : $message");
             if(message['type'] == 'message'){
               if(message['refresh'] == 'false'){
-                var mappedData = json.decode(message['data']);
-                messagecontroller.messagechecker(context, mappedData);
-                getPersonMessage();
-              }else{
-                messagecontroller.messageHandler(message['data'],context);
-                getPersonMessage();
-              }
-            }else if(message['type'] == "event"){
-              var mappedData = json.decode(message['data']);
+                if (message['sender'].toString() == userdetails['name'].toString()){
+                }else if (message['reason'].toString() == 'deletegroup'){
 
+                }else if (!message['recievers'].toString().contains(userdetails['id'].toString())){
+
+                }else{
+                  var mappedData = json.decode(message['data']);
+                  messagecontroller.messagechecker(context, mappedData);
+                }
+              }else{
+                if (message['sender'].toString() == userdetails['name'].toString()){
+                }else if (message['reason'].toString() == 'deletegroup'){
+
+                }else{
+                  messagecontroller.messageHandler(message['data'],context);
+                }
+              }
+              getPersonMessage();
+
+            }else if(message['type'] == "event"){
+              print('EVENT ANDRIOD :'+message.toString());
+              var mappedData = json.decode(message['data']);
               eventservice.appendNew(data: mappedData);
-              NotificationDisplayer().showNotification(mappedData['type'].toString() == 'event' ? 'New Event has been scheduled.' : mappedData['type'].toString() == 'match' ? 'New Match has been scheduled.' : 'New Meeting has been scheduled.', "Nouvel évènement", context);
+              NotificationDisplayer().showNotification(mappedData['type'].toString() == 'event' ? 'Nouvel événement programmé.' : mappedData['type'].toString() == 'match' ? 'Un nouveau match a été programmé.' : 'Une nouvelle réunion a été programmée.', "Nouvel évènement", context, mappedData['id'].toString(),mappedData['type'].toString(),image: "");
               notificationIndicator = true;
-               addToDb(itemid: mappedData['id'].toString(),messageTypes: 'Event');
+              notificID = mappedData['id'].toString();
+              notificType = 'Event';
               getEvents();
 
             }else{
-              print("SHOW AD!");
               var mappedData = json.decode(message['data']);
               bannerDisplay.update(mappedData);
               AdListener().showAd(context, mappedData);
+              notificID = mappedData['id'].toString();
+              notificType = 'Event';
             }
           }
         }catch(e){
@@ -121,56 +141,81 @@ class PushNotification {
             print("Android MESSAGE : $message");
             if(message['data']['type'] == "message"){
               if(message['data']['refresh'] == 'false'){
-                var mappedData = json.decode(message['data']['data']);
-                messagecontroller.messagechecker(context, mappedData);
+                if (message['data']['sender'].toString() == userdetails['name'].toString()){
+                }else if (message['data']['reason'].toString() == 'deletegroup'){
+                }else{
+                  var mappedData = json.decode(message['data']['data']);
+                  messagecontroller.messagechecker(context, mappedData);
+                  print('OR DIDI NASULOD :'+message.toString());
+                }
               }else{
-                messagecontroller.messageHandler(message['data'],context);
-                getPersonMessage();
+                if (message['data']['sender'].toString() == userdetails['name'].toString()){
+                }else if (message['data']['reason'].toString() == 'deletegroup'){
+                }else{
+                  messagecontroller.messageHandler(message['data'],context);
+                }
               }
+              getPersonMessage();
             }else if(message['data']['type'] == "event"){
               var mappedData = json.decode(message['data']['data']);
-
               eventservice.appendNew(data: mappedData);
-              NotificationDisplayer().showNotification(mappedData['type'].toString() == 'event' ? 'New Event has been scheduled.' : mappedData['type'].toString() == 'match' ? 'New Match has been scheduled.' : 'New Meeting has been scheduled.', "Nouvel évènement", context);
+              NotificationDisplayer().showNotification(mappedData['type'].toString() == 'event' ? 'Nouvel événement programmé.' : mappedData['type'].toString() == 'match' ? 'Un nouveau match a été programmé.' : 'Une nouvelle réunion a été programmée.', "Annonce nouvelle Ujap", context, mappedData['id'].toString(),mappedData['type'].toString());
               notificationIndicator = true;
-               addToDb(itemid: mappedData['id'].toString(),messageTypes: 'Event');
+              notificID = mappedData['id'].toString();
+              notificType = 'Event';
               getEvents();
 
             }else{
-              print("SHOW AD!");
               var mappedData = json.decode(message['data']['data']);
               bannerDisplay.update(mappedData);
+              print('ADVERTISEMENT :'+mappedData.toString());
               AdListener().showAd(context,mappedData);
+              notificID = mappedData['id'].toString();
+              notificType = 'Event';
             }
-
           }else{
             print("IOS MESSAGE : $message");
             if(message['type'] == 'message'){
               if(message['refresh'] == 'false'){
-                var mappedData = json.decode(message['data']);
-                messagecontroller.messagechecker(context, mappedData);
-              }else{
-                messagecontroller.messageHandler(message['data'],context);
-                getPersonMessage();
-              }
-            }else if(message['type'] == "event"){
-              var mappedData = json.decode(message['data']);
+                if (message['sender'].toString() == userdetails['name'].toString()){
+                }else if (message['reason'].toString() == 'deletegroup'){
 
+                }else if (!message['recievers'].toString().contains(userdetails['id'].toString())){
+
+                }else{
+                  var mappedData = json.decode(message['data']);
+                  messagecontroller.messagechecker(context, mappedData);
+                }
+              }else{
+                if (message['sender'].toString() == userdetails['name'].toString()){
+                }else if (message['reason'].toString() == 'deletegroup'){
+
+                }else{
+                  messagecontroller.messageHandler(message['data'],context);
+                }
+              }
+              getPersonMessage();
+
+            }else if(message['type'] == "event"){
+              print('EVENT ANDRIOD :'+message.toString());
+              var mappedData = json.decode(message['data']);
               eventservice.appendNew(data: mappedData);
-              NotificationDisplayer().showNotification(mappedData['type'].toString() == 'event' ? 'New Event has been scheduled.' : mappedData['type'].toString() == 'match' ? 'New Match has been scheduled.' : 'New Meeting has been scheduled.', "Nouvel évènement", context);
+              NotificationDisplayer().showNotification(mappedData['type'].toString() == 'event' ? 'Nouvel événement programmé.' : mappedData['type'].toString() == 'match' ? 'Un nouveau match a été programmé.' : 'Une nouvelle réunion a été programmée.', "Nouvel évènement", context, mappedData['id'].toString(),mappedData['type'].toString(),image: "");
               notificationIndicator = true;
-               addToDb(itemid: mappedData['id'].toString(),messageTypes: 'Event');
+              notificID = mappedData['id'].toString();
+              notificType = 'Event';
               getEvents();
 
             }else{
-              print("SHOW AD!");
               var mappedData = json.decode(message['data']);
               bannerDisplay.update(mappedData);
               AdListener().showAd(context, mappedData);
+              notificID = mappedData['id'].toString();
+              notificType = 'Event';
             }
           }
         }catch(e){
-          Messagecontroller().printWrapped("onLaunch Error : $e");
+          Messagecontroller().printWrapped("onMessage Error : $e");
         }
         return ;
       },
@@ -180,56 +225,81 @@ class PushNotification {
             print("Android MESSAGE : $message");
             if(message['data']['type'] == "message"){
               if(message['data']['refresh'] == 'false'){
-                var mappedData = json.decode(message['data']['data']);
-                messagecontroller.messagechecker(context, mappedData);
+                if (message['data']['sender'].toString() == userdetails['name'].toString()){
+                }else if (message['data']['reason'].toString() == 'deletegroup'){
+                }else{
+                  var mappedData = json.decode(message['data']['data']);
+                  messagecontroller.messagechecker(context, mappedData);
+                  print('OR DIDI NASULOD :'+message.toString());
+                }
               }else{
-                messagecontroller.messageHandler(message['data'],context);
-                getPersonMessage();
+                if (message['data']['sender'].toString() == userdetails['name'].toString()){
+                }else if (message['data']['reason'].toString() == 'deletegroup'){
+                }else{
+                  messagecontroller.messageHandler(message['data'],context);
+                }
               }
+              getPersonMessage();
             }else if(message['data']['type'] == "event"){
               var mappedData = json.decode(message['data']['data']);
-
               eventservice.appendNew(data: mappedData);
-              NotificationDisplayer().showNotification(mappedData['type'].toString() == 'event' ? 'New Event has been scheduled.' : mappedData['type'].toString() == 'match' ? 'New Match has been scheduled.' : 'New Meeting has been scheduled.', "Nouvel évènement", context);
+              NotificationDisplayer().showNotification(mappedData['type'].toString() == 'event' ? 'Nouvel événement programmé.' : mappedData['type'].toString() == 'match' ? 'Un nouveau match a été programmé.' : 'Une nouvelle réunion a été programmée.', "Annonce nouvelle Ujap", context, mappedData['id'].toString(),mappedData['type'].toString());
               notificationIndicator = true;
-               addToDb(itemid: mappedData['id'].toString(),messageTypes: 'Event');
+              notificID = mappedData['id'].toString();
+              notificType = 'Event';
               getEvents();
 
             }else{
-              print("SHOW AD!");
               var mappedData = json.decode(message['data']['data']);
               bannerDisplay.update(mappedData);
+              print('ADVERTISEMENT :'+mappedData.toString());
               AdListener().showAd(context,mappedData);
+              notificID = mappedData['id'].toString();
+              notificType = 'Event';
             }
-
           }else{
             print("IOS MESSAGE : $message");
             if(message['type'] == 'message'){
               if(message['refresh'] == 'false'){
-                var mappedData = json.decode(message['data']);
-                messagecontroller.messagechecker(context, mappedData);
-              }else{
-                messagecontroller.messageHandler(message['data'],context);
-                getPersonMessage();
-              }
-            }else if(message['type'] == "event"){
-              var mappedData = json.decode(message['data']);
+                if (message['sender'].toString() == userdetails['name'].toString()){
+                }else if (message['reason'].toString() == 'deletegroup'){
 
+                }else if (!message['recievers'].toString().contains(userdetails['id'].toString())){
+
+                }else{
+                  var mappedData = json.decode(message['data']);
+                  messagecontroller.messagechecker(context, mappedData);
+                }
+              }else{
+                if (message['sender'].toString() == userdetails['name'].toString()){
+                }else if (message['reason'].toString() == 'deletegroup'){
+
+                }else{
+                  messagecontroller.messageHandler(message['data'],context);
+                }
+              }
+              getPersonMessage();
+
+            }else if(message['type'] == "event"){
+              print('EVENT ANDRIOD :'+message.toString());
+              var mappedData = json.decode(message['data']);
               eventservice.appendNew(data: mappedData);
-              NotificationDisplayer().showNotification(mappedData['type'].toString() == 'event' ? 'Un nouvel  évènement a été planifié.' : mappedData['type'].toString() == 'match' ? 'Un nouveau match a été programmé.' : 'New Meeting has been scheduled.', "Nouvel évènement", context);
+              NotificationDisplayer().showNotification(mappedData['type'].toString() == 'event' ? 'Nouvel événement programmé.' : mappedData['type'].toString() == 'match' ? 'Un nouveau match a été programmé.' : 'Une nouvelle réunion a été programmée.', "Nouvel évènement", context, mappedData['id'].toString(),mappedData['type'].toString(),image: "");
               notificationIndicator = true;
-               addToDb(itemid: mappedData['id'].toString(),messageTypes: 'Event');
+              notificID = mappedData['id'].toString();
+              notificType = 'Event';
               getEvents();
 
             }else{
-              print("SHOW AD!");
               var mappedData = json.decode(message['data']);
               bannerDisplay.update(mappedData);
               AdListener().showAd(context, mappedData);
+              notificID = mappedData['id'].toString();
+              notificType = 'Event';
             }
           }
         }catch(e){
-          Messagecontroller().printWrapped("onResume Error : $e");
+          Messagecontroller().printWrapped("onMessage Error : $e");
         }
         return ;
       }
@@ -246,4 +316,9 @@ class PushNotification {
       print("SETTINGS : $settings");
     });
   }
+}
+
+class ReceiveNotific{
+  String notificID = "";
+  String notificType = "";
 }

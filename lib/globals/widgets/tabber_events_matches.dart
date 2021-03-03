@@ -138,7 +138,8 @@ class _View_events_tabbarState extends State<View_events_tabbar>  {
                       Container(
                         width: screenwidth,
                         height: screenheight,
-                        child: Column(
+                        child: ListView(
+                          padding: EdgeInsets.all(0),
                           children: [
                             Container(
                               width: screenwidth,
@@ -268,8 +269,8 @@ class _View_events_tabbarState extends State<View_events_tabbar>  {
                                               SizedBox(
                                                 height: screenwidth < 700 ? 3 : 7,
                                               ),
-                                              (allocation-participant) == 0 || (allocation-participant) == 1 ? Text((allocation-participant).toString()+' billet disponible',style: TextStyle(fontFamily: 'Google-Bold',fontSize: screenwidth < 700 ? screenheight/90 : 13,color: Colors.grey[600],),)
-                                              : Text((allocation-participant).toString()+' billets disponible',style: TextStyle(fontFamily: 'Google-Bold',fontSize: screenwidth < 700 ? screenheight/90 : 13,color: Colors.grey[600],),),
+                                              (allocation-participant) == 0 || (allocation-participant) == 1 ? Text(allocation < participant ? '0 billet disponible' : (allocation-participant).toString()+' billet disponible',style: TextStyle(fontFamily: 'Google-Bold',fontSize: screenwidth < 700 ? screenheight/90 : 13,color: Colors.grey[600],),)
+                                              : Text(allocation < participant ? '0 billet disponible' : (allocation-participant).toString()+' billets disponible',style: TextStyle(fontFamily: 'Google-Bold',fontSize: screenwidth < 700 ? screenheight/90 : 13,color: Colors.grey[600],),),
                                             ],
                                           )),
                                     ],
@@ -290,7 +291,7 @@ class _View_events_tabbarState extends State<View_events_tabbar>  {
                                       borderRadius: BorderRadius.circular(10),
                                       border: Border.all(color: Color.fromRGBO(1, 80, 147, 0.9))
                                   ),
-                                  margin: EdgeInsets.all(screenwidth/25),
+                                  margin: EdgeInsets.symmetric(horizontal: screenwidth < 700 ? 20 : 45),
                                   child: Container(
                                     child: Center(
                                       child: Text('Annuler présence ',style: TextStyle(fontSize: screenwidth < 700 ? screenwidth/23 : 20,fontFamily: 'Google-Bold', color: kPrimaryColor,),textAlign: TextAlign.left,),
@@ -305,7 +306,7 @@ class _View_events_tabbarState extends State<View_events_tabbar>  {
                                  });
                                 },
                             ),
-                            )
+                            ),
                           ],
                         ),
                       ),

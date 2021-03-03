@@ -4,6 +4,7 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
 import 'package:page_transition/page_transition.dart';
+import 'package:ujap/controllers/home.dart';
 import 'package:ujap/globals/container_data.dart';
 import 'package:ujap/globals/user_data.dart';
 import 'package:http/http.dart' as http;
@@ -400,12 +401,10 @@ sendMessage_compose(context,sentTime,attachment)async {
     messageToclient_public = "";
     sendmessageTo = "";
     checkConnection = "";
-//    add_caption.text = "";
-    
-    // sendAndRetrieveMessage();
     print('SUCCESS');
     message_compose_open = false;
     SystemChannels.textInput.invokeMethod('TextInput.hide');
+    indexListener.update(data: 2);
     currentindex = 2;
     Navigator.pushReplacement(context,PageTransition(child: MainScreen(false),type: PageTransitionType.fade));
   }
@@ -645,7 +644,7 @@ List backupAds;
           return s['status'].toString().contains('1');
         }).toList();
         if (get_ads.toString() != "[]"){
-          _deleteTask(int.parse(get_ads[0]['id'].toString()));
+          _deleteTask(get_ads[0]['id']);
           Future.delayed(const Duration(milliseconds: 500), () {
             addToDb(itemid: get_ads[0]['id'].toString(),messageTypes: 'Advertisement');
           });

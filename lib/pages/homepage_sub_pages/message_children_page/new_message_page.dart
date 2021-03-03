@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:page_transition/page_transition.dart';
 import 'package:ujap/globals/container_data.dart';
@@ -5,6 +7,9 @@ import 'package:ujap/globals/user_data.dart';
 import 'package:ujap/globals/variables/other_variables.dart';
 import 'package:ujap/pages/homepage_sub_pages/message_children_page/new_compose_message.dart';
 import 'package:ujap/pages/homepage_sub_pages/message_children_page/new_group_page.dart';
+import 'package:ujap/pages/homepage_sub_pages/message_children_page/slider.dart';
+import 'package:ujap/services/api.dart';
+import 'package:ujap/services/conversation_chats_listener.dart';
 import 'package:ujap/services/conversation_listener.dart';
 import 'package:ujap/services/image_uploader.dart';
 import 'package:ujap/services/member_traversal.dart';
@@ -145,16 +150,53 @@ class _NewMessageState extends State<NewMessage> {
                         margin: const EdgeInsets.only(bottom: 10),
                         child: FlatButton(
                           onPressed: ()async{
-                              print('asdasd');
-                              List<int> dd = [];
+                            List<int> dd = [];
+                            List clientDetails;
+
+                            List checkerList = ownMessages.where((s){
+                              if (s['members'][1]['client_id'].toString() == contacts['id'].toString()){
+                                return s['members'][1]['client_id'].toString() == contacts['id'].toString()  && s['members'].length == 2;
+                              }else{
+                                return s['members'][0]['client_id'].toString() == contacts['id'].toString()  && s['members'].length == 2;
+                              }
+                            }).toList();
+
+
+                            if (checkerList.toString() == "[]"){
+                              print('DRE PA GINGAMIT '+ checkerList.toString());
                               selected = contacts;
                               if(userdetails['id'] != selected['id']){
                                 dd = [userdetails['id'],selected['id']];
                               }
                               await conversationService.checkConvoMembersExist(memberIds: dd).then((value) {
-                              Navigator.of(context).pop(null);
-                              Navigator.push(context, PageTransition(child: NewComposeMessage(value), type: PageTransitionType.leftToRightWithFade));
-                            });
+                                Navigator.of(context).pop(null);
+                                Navigator.push(context, PageTransition(child: NewComposeMessage(value,null), type: PageTransitionType.leftToRightWithFade));
+                              });
+                            }else{
+                              print('GINGAMIT NA'+ checkerList[0]['id'].toString());
+                              for (var x = 0; x <checkerList[0]['messages'].length; x++ ){
+                                channelMembersID.add(checkerList[0]['messages'][x]['sender_id'].toString());
+                              }
+                              setState(() {
+
+                                clientDetails = events_clients.where((s){
+                                  return s['id'].toString() == contacts['id'].toString();
+                                }).toList();
+
+                                conversationService.readMessage(on: checkerList[0]['id']);
+                                chatListener.updateChannelID(id: checkerList[0]['id']);
+                              });
+                              if(Platform.isIOS){
+                                conversationService.checkConvoMembersExist(memberIds: MemberTraverser().getIds(from: checkerList[0]['members'])).then((value) {
+                                  Navigator.push(context, PageTransition(child: NewComposeMessage(value,clientDetails[0]), type: PageTransitionType.topToBottom));
+                                });
+                              }else{
+                                Future.delayed(Duration.zero, () async{
+                                  Map dd = await conversationService.checkConvoMembersExist(memberIds: MemberTraverser().getIds(from: checkerList[0]['members']));
+                                  Navigator.push(context, PageTransition(child: NewComposeMessage(dd,clientDetails[0]), type: PageTransitionType.topToBottom));
+                                });
+                              }
+                            }
                           },
                           padding: const EdgeInsets.symmetric(vertical: 10,horizontal: 0),
                           child: Row(
@@ -182,7 +224,7 @@ class _NewMessageState extends State<NewMessage> {
                                 width: 10,
                               ),
                               Expanded(
-                                child: Text("${contacts['name']}",style: TextStyle(
+                                child: Text("${contacts['name']} "+" ${contacts['lastname']}",style: TextStyle(
                                   fontFamily: "Google-Bold",
                                   fontSize: screenwidth < 700 ? screenwidth/30 : screenwidth/40
                                 ),),

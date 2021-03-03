@@ -5,6 +5,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
 import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:ujap/controllers/home.dart';
 import 'package:ujap/controllers/login_controller.dart';
 import 'package:ujap/globals/user_data.dart';
 import 'package:ujap/globals/variables/home_sub_pages_variables.dart';
@@ -177,6 +178,7 @@ class _UpdatePictureState extends State<UpdatePicture> {
                                   if(value){
                                     setState(() {
                                       currentindex = 1;
+                                      indexListener.update(data: 1);
                                     });
                                     login(user, pass, context, true);
                                     changeProfilePict = true;

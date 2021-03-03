@@ -199,7 +199,7 @@ class _Messages_publicState extends State<Messages_public> {
                                               child: Container(
                                                 padding: EdgeInsets.all(3),
                                                 decoration: BoxDecoration(
-                                                    color: Color.fromRGBO(5, 93, 157, 0.9),
+                                                    color: kPrimaryColor,
                                                     borderRadius: BorderRadius.circular(3)
                                                 ),
                                                 child: Text(snapshot.data[snapshot.data.length - index - 1]['unread_messages'].toString(),style: TextStyle(color: Colors.white,fontFamily: 'Google-Bold',fontSize: screenheight/75 )),

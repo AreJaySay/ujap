@@ -261,23 +261,23 @@ class _ConvoSettingsPageState extends State<ConvoSettingsPage> {
                     ),
                   )
                 ),
-                Container(
-                    width: double.infinity,
-                    child: FlatButton(
-//              padding: const EdgeInsets.symmetric(horizontal: 0),
-                      onPressed: (){
-                        Navigator.push(context, PageTransition(child: SearchConversationPage(channelId: widget.channelId), type: PageTransitionType.bottomToTop));
-                      },
-                      child: Row(
-                        children: [
-                          Expanded(
-                            child: Text("Rechercher dans la conversation"),
-                          ),
-                          Icon(Icons.search)
-                        ],
-                      ),
-                    )
-                ),
+//                 Container(
+//                     width: double.infinity,
+//                     child: FlatButton(
+// //              padding: const EdgeInsets.symmetric(horizontal: 0),
+//                       onPressed: (){
+//                         Navigator.push(context, PageTransition(child: SearchConversationPage(channelId: widget.channelId), type: PageTransitionType.bottomToTop));
+//                       },
+//                       child: Row(
+//                         children: [
+//                           Expanded(
+//                             child: Text("Rechercher dans la conversation"),
+//                           ),
+//                           Icon(Icons.search)
+//                         ],
+//                       ),
+//                     )
+//                 ),
                 widget.data['members'].length == 2 ? Container(
                     width: double.infinity,
                     child: FlatButton(

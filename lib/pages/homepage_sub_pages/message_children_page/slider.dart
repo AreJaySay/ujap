@@ -1,9 +1,11 @@
+import 'dart:convert';
 import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:intl/intl.dart';
 import 'package:page_transition/page_transition.dart';
+import 'package:ujap/globals/container_data.dart';
 import 'package:ujap/globals/user_data.dart';
 import 'package:ujap/globals/variables/other_variables.dart';
 import 'package:ujap/pages/homepage_sub_pages/home_children_page/matches.dart';
@@ -16,8 +18,10 @@ import 'package:ujap/services/member_traversal.dart';
 import 'package:ujap/services/message_controller.dart';
 import 'package:ujap/services/pushnotification.dart';
 import 'package:ujap/services/string_formatter.dart';
+import 'package:http/http.dart' as http;
 
 List<String> channelMembersID = List<String>();
+// bool navigateNotific = false;
 
 class MySlider extends StatefulWidget {
   final int id;
@@ -60,44 +64,33 @@ class _MySliderState extends State<MySlider> {
       final date2 = DateTime.now();
       dateBetween  = date2.difference(birthday).inDays;
     }
-//     if (widget.data['last_convo'] == null && widget.data['members'].length == 2){
-//       conversationService.deleteChannelLoc(widget.id);
-//       List<int> _ids =[];
-//       for(var member in widget.data['members']){
-//         setState(() {
-//           _ids.add(int.parse(member['client_id'].toString()));
-//         });
-//       }
-// //              print(_ids);
-//       setState(() {
-//         _ids.remove(int.parse(userdetails['id'].toString()));
-//       });
-//       print(_ids);
-//       for(var id in _ids){
-//         Messagecontroller().sendmessage('', 'Conversation supprimée', id, true, 'c_delete');
-//       }
-//     }
     return Slidable(
       controller: widget.slidableController,
       closeOnScroll: true,
       key: Key(widget.id.toString()),
         child:  GestureDetector(
           onTap: () async {
+            List clientDetails;
             for (var x = 0; x <widget.data['messages'].length; x++ ){
               channelMembersID.add(widget.data['messages'][x]['sender_id'].toString());
+
+              clientDetails = events_clients.where((s){
+                return s['id'].toString() == widget.data['messages'][x]['sender_id'].toString();
+              }).toList();
             }
+            print('CHANNEL ID :'+widget.data.toString());
             setState(() {
               conversationService.readMessage(on: widget.id);
               chatListener.updateChannelID(id: widget.id);
             });
             if(Platform.isIOS){
               conversationService.checkConvoMembersExist(memberIds: MemberTraverser().getIds(from: widget.data['members'])).then((value) {
-                Navigator.push(context, PageTransition(child: NewComposeMessage(value), type: PageTransitionType.topToBottom));
+                Navigator.push(context, PageTransition(child: NewComposeMessage(value, clientDetails == null? null : clientDetails[0]), type: PageTransitionType.topToBottom));
               });
             }else{
               Future.delayed(Duration.zero, () async{
                 Map dd = await conversationService.checkConvoMembersExist(memberIds: MemberTraverser().getIds(from: widget.data['members']));
-                Navigator.push(context, PageTransition(child: NewComposeMessage(dd), type: PageTransitionType.topToBottom));
+                Navigator.push(context, PageTransition(child: NewComposeMessage(dd, clientDetails == null? null :  clientDetails[0]), type: PageTransitionType.topToBottom));
               });
             }
           },
@@ -136,7 +129,7 @@ class _MySliderState extends State<MySlider> {
                             decoration: BoxDecoration(
                               image: DecorationImage(
                                 fit: BoxFit.cover,
-                                image: memberGroup(widget.data['members'], 0)['detail']['filename'] == null ? AssetImage("assets/messages_icon/no_profile.png") : NetworkImage("https://ujap.checkmy.dev/storage/clients/${memberGroup(widget.data['members'], 0)['detail']['filename']}")
+                                image: memberGroup(widget.data['members'], 0)['detail']['filename'].toString() == "null" || memberGroup(widget.data['members'], 0)['detail']['filename'].toString() == "" ? AssetImage("assets/messages_icon/no_profile.png") : NetworkImage("https://ujap.checkmy.dev/storage/clients/${memberGroup(widget.data['members'], 0)['detail']['filename']}")
                               )
                             ),
                           ),
@@ -149,7 +142,7 @@ class _MySliderState extends State<MySlider> {
                                   decoration: BoxDecoration(
                                       image: DecorationImage(
                                           fit: BoxFit.cover,
-                                          image: memberGroup(widget.data['members'], 1)['detail']['filename'] == null ? AssetImage("assets/messages_icon/no_profile.png") : NetworkImage("https://ujap.checkmy.dev/storage/clients/${memberGroup(widget.data['members'], 1)['detail']['filename']}")
+                                          image: memberGroup(widget.data['members'], 1)['detail']['filename'].toString() == "null" || memberGroup(widget.data['members'], 1)['detail']['filename'].toString() == "" ? AssetImage("assets/messages_icon/no_profile.png") : NetworkImage("https://ujap.checkmy.dev/storage/clients/${memberGroup(widget.data['members'], 1)['detail']['filename']}")
                                       )
                                   ),
                                 ),
@@ -159,7 +152,7 @@ class _MySliderState extends State<MySlider> {
                                   decoration: BoxDecoration(
                                       image: DecorationImage(
                                           fit: BoxFit.cover,
-                                          image: memberGroup(widget.data['members'], 2)['detail']['filename'] == null ? AssetImage("assets/messages_icon/no_profile.png") : NetworkImage("https://ujap.checkmy.dev/storage/clients/${memberGroup(widget.data['members'], 2)['detail']['filename']}")
+                                          image: memberGroup(widget.data['members'], 2)['detail']['filename'].toString() == "null" || memberGroup(widget.data['members'], 2)['detail']['filename'].toString() == "" ? AssetImage("assets/messages_icon/no_profile.png") : NetworkImage("https://ujap.checkmy.dev/storage/clients/${memberGroup(widget.data['members'], 2)['detail']['filename']}")
                                       )
                                   ),
                                 ),
@@ -226,8 +219,8 @@ class _MySliderState extends State<MySlider> {
                         borderRadius: BorderRadius.circular(1000)
                       ),
                       child: FittedBox(
-                        child: Text("${widget.data['unread_messages']}",style: TextStyle(
-                          color: Colors.white
+                        child: Text((widget.data['unread_messages']).toString(),style: TextStyle(
+                            color: Colors.white
                         ),),
                       ),
                     ),
@@ -249,11 +242,6 @@ class _MySliderState extends State<MySlider> {
           widget.data['members'].length > 2 ? IconSlideAction(
             color: Colors.grey[900],
             onTap: (){
-              if ( widget.data['members'][0]['detail']['id'].toString() == userdetails['id'].toString()){
-                confirmaction(context: context,channelID: widget.id,type: 'groupleader');
-              }else{
-                confirmaction(context: context, channelID: widget.id,type: 'groupmember');
-              }
               List<int> _ids =[];
               for(var member in widget.data['members']){
                 setState(() {
@@ -264,17 +252,21 @@ class _MySliderState extends State<MySlider> {
                 _ids.remove(int.parse(userdetails['id'].toString()));
               });
               print(_ids);
-              for(var id in _ids){
-                Messagecontroller().sendmessage('', 'La conversation avec ${userdetails['name'].toString()+' '+userdetails['lastname'].toString()} a été supprimée', id, true, 'c_delete');
+              if ( widget.data['members'][0]['detail']['id'].toString() == userdetails['id'].toString()){
+                confirmaction(context: context,channelID: widget.id,type: 'groupleader',receiverIds: _ids);
+                conversationService.readMessage(on: widget.id);
+              }else{
+                print('DAPAT DIDI HIYA MASULOD');
+                confirmaction(context: context,channelID: widget.id,type: 'groupmember',receiverIds: _ids);
+                conversationService.readMessage(on: widget.id);
               }
             },
-            iconWidget: widget.data['members'][0]['detail']['id'].toString() == userdetails['id'].toString() ? Icon(Icons.delete,color: Colors.white,) :  Icon(Icons.exit_to_app,color: Colors.white,size: 25,),
+            iconWidget: widget.data['members'][0]['detail']['id'].toString() == userdetails['id'].toString() ? Icon(Icons.delete,color: Colors.white,) : Icon(Icons.exit_to_app,color: Colors.white,size: 25,),
           )
               :
           IconSlideAction(
             color: Colors.grey[900],
             onTap: (){
-              confirmaction(context: context, channelID: widget.id,type: 'private');
               List<int> _ids =[];
               for(var member in widget.data['members']){
                 setState(() {
@@ -285,9 +277,8 @@ class _MySliderState extends State<MySlider> {
                 _ids.remove(int.parse(userdetails['id'].toString()));
               });
               print(_ids);
-              for(var id in _ids){
-                Messagecontroller().sendmessage('', 'La conversation avec ${userdetails['name'].toString()+' '+userdetails['lastname'].toString()} a été supprimée', id, true, 'c_delete');
-              }
+              confirmaction(context: context, channelID: widget.id,type: 'private',receiverIds: _ids);
+              conversationService.readMessage(on: widget.id);
             },
             iconWidget:Icon(Icons.delete,color: Colors.white,),
           ),
@@ -321,12 +312,12 @@ DecorationImage imageFetcher(List members){
     if(members[0]['client_id'] == userdetails['id']){
       return DecorationImage(
           fit:  BoxFit.cover,
-          image: members[1]['detail']['filename'] == null ? AssetImage("assets/messages_icon/no_profile.png") : NetworkImage("https://ujap.checkmy.dev/storage/clients/${members[1]['detail']['filename']}")
+          image: members[1]['detail']['filename'].toString() == "null" || members[1]['detail']['filename'] .toString() == "" ? AssetImage("assets/messages_icon/no_profile.png") : NetworkImage("https://ujap.checkmy.dev/storage/clients/${members[1]['detail']['filename']}")
       );
     }else{
       return DecorationImage(
           fit:  BoxFit.cover,
-          image: members[0]['detail']['filename'].toString() == "null" || members[0]['detail']['filename'] .toString() == "" ? AssetImage("assets/messages_icon/no_profile.png") : NetworkImage("https://ujap.checkmy.dev/storage/clients/${members[0]['detail']['filename']}")
+          image: members[1]['detail']['filename'].toString() == "null" || members[1]['detail']['filename'] .toString() == "" ? AssetImage("assets/messages_icon/no_profile.png") : NetworkImage("https://ujap.checkmy.dev/storage/clients/${members[0]['detail']['filename']}")
       );
     }
   }

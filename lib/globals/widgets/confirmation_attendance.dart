@@ -91,7 +91,7 @@ confirmation(context,ticketID,attend_or_pass,data){
                     },
                     child: CircleAvatar(
                       child: Icon(Icons.close,size: screenwidth < 700 ? 30 : 40,),
-                      backgroundColor: Color.fromRGBO(5, 93, 157, 0.9),
+                      backgroundColor: kPrimaryColor,
                     ),
                   ),
                 ),
@@ -143,8 +143,8 @@ confirmation(context,ticketID,attend_or_pass,data){
                                       alignment: Alignment.center,
                                       child: Text('Confirmer',style: TextStyle(fontFamily: 'Google-Medium',color: Colors.white,fontSize: screenwidth < 700 ? screenheight/53 : 25 )),
                                       decoration: BoxDecoration(
-                                          color:  Color.fromRGBO(5, 93, 157, 0.9),
-                                          border: Border.all(color:  Color.fromRGBO(5, 93, 157, 0.9)),
+                                          color:  kPrimaryColor,
+                                          border: Border.all(color:  kPrimaryColor),
                                           borderRadius: BorderRadius.circular(screenwidth/40)
                                       ),
                                     ),

@@ -82,7 +82,7 @@ class _Messages_listviewState extends State<Messages_listview> {
                             alignment: Alignment.center,
                             padding: EdgeInsets.symmetric(vertical: 2,horizontal: screenwidth/170),
                             decoration: BoxDecoration(
-                                color: Color.fromRGBO(5, 93, 157, 0.9),
+                                color: kPrimaryColor,
                                 borderRadius: BorderRadius.circular(3)
                             ),
                             child: Text('2',style: TextStyle(color: Colors.white,fontFamily: 'Google-Bold',fontSize: screenheight/75 )),

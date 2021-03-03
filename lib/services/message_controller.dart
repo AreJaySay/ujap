@@ -13,11 +13,8 @@ import 'package:ujap/services/pushnotification.dart';
 
 class Messagecontroller{
   NotificationDisplayer notificationDisplayer = new NotificationDisplayer();
-  sendmessage(data, String messagetoSend,receiverId, bool refresh, String reason)async{
+  sendmessage(data, String messagetoSend,int receiverId, bool refresh, String reason, List<int> recievers)async{
     try{
-//      await firebaseMessaging.requestNotificationPermissions(
-//        const IosNotificationSettings(sound: true, badge: true, alert: true, provisional: false),
-//      );
       var response = await http.post(
         'https://fcm.googleapis.com/fcm/send',
         headers: <String, String>{
@@ -34,8 +31,10 @@ class Messagecontroller{
               'id': '1',
               'refresh' : refresh,
               'refresh_type' : "",
+              'reason': reason.toString(),
               'type' : "message",
               'status': 'done',
+              'recievers': recievers.toString() == "[]" || recievers == null ? "" : recievers,
               'sender': userdetails['name'].toString(),
               'message': messagetoSend,
               'data': data,
@@ -53,9 +52,9 @@ class Messagecontroller{
   }
   updateMembers(int id,Map clientData, [int type = 1]) {
     if(type == 1) {
-      this.sendmessage(clientData, "Un nouveau membre est ajouté", id, true, "n_member");
+      this.sendmessage(clientData, "Un nouveau membre est ajouté", id, true, "n_member",null);
     }else{
-      this.sendmessage(clientData, "Un membre est supprimé", id, true, 'x_member');
+      this.sendmessage(clientData, "Un membre est supprimé", id, true, 'x_member',null);
     }
   }
   messagechecker(context,Map message){
@@ -63,7 +62,8 @@ class Messagecontroller{
       if(chatListener.getChannelID() != int.parse(message['channel_id'].toString())){
         conversationService.appendNewMessageOnConvo(convoId: int.parse(message['channel_id'].toString()),data: message);
         conversationService.updateUnreadMessage(int.parse(message['channel_id'].toString()));
-        NotificationDisplayer().showNotification(message['message'] == null ? "Envoyé une pièce jointe" : message['message'], message['client']['name'], context);
+        NotificationDisplayer().showNotification(message['message'] == null ? "Envoyé une pièce jointe" : message['message'], message['client']['name'], context,message['channel_id'].toString(),'message',image: message['client']['filename']);
+        print('IOS MESSAGE :'+message['client']['filename'].toString());
       }else{
         chatListener.append(data: message);
         conversationService.readMessage(on: int.parse(message['channel_id'].toString()));
@@ -88,7 +88,7 @@ class Messagecontroller{
       }else{
         body = "Rien à dire";
       }
-      NotificationDisplayer().showNotification(body, message['message'], context);
+      NotificationDisplayer().showNotification(body, message['message'], context,message['channel_id'].toString(),'message',image: message['client']['filename']);
     }catch(e){
       print("Handler Error : $e");
     }
@@ -147,5 +147,12 @@ class Messagecontroller{
     }
   }
 }
+
+chatMemberChecker(List<int> ids) async {
+  for(var message in conversationService.currentConvo){
+
+  }
+}
+
 
 Messagecontroller messagecontroller = Messagecontroller();

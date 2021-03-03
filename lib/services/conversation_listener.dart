@@ -199,7 +199,7 @@ class ConversationService{
       var data = json.decode(respo.body);
       if(respo.statusCode == 200){
         this.currentConvo.where((element) => int.parse(element['id'].toString()) == channelId).toList()[0]['members'].add(data);
-        messagecontroller.sendmessage('', 'Vous avez été ajouté à un groupe', id, true, "a_member");
+        messagecontroller.sendmessage('', 'Vous avez été ajouté à un groupe', id, true, "a_member",null);
         return data;
       }
       return null;
