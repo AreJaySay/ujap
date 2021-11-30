@@ -41,8 +41,9 @@ android {
         applicationId "com.ohmconception.ujap"
         minSdkVersion 23
         targetSdkVersion 29
-        versionCode flutterVersionCode.toInteger()
-        versionName flutterVersionName
+        versionCode 10
+        versionName "101"
+        multiDexEnabled true
     }
     signingConfigs {
         release {

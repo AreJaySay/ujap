@@ -81,7 +81,7 @@ class _Events_listviewState extends State<Events_listview> {
             No_events_data() :
             Stack(
               children: [
-                _listChecker.toString() != "[]" ? Container() : Container(
+                Container(
                   width: screenwidth,
                   decoration: BoxDecoration(
                       color: Colors.white,
@@ -98,7 +98,7 @@ class _Events_listviewState extends State<Events_listview> {
                       ),
                       Image(
                         fit: BoxFit.contain,
-                        width:  screenwidth < 700 ? screenwidth/5 : screenwidth/6,
+                        width:  screenwidth < 700 ? 70 : screenwidth/6,
                         image: AssetImage('assets/sad.jpg'),
                       ),
                       SizedBox(
@@ -482,7 +482,7 @@ class _Events_listviewState extends State<Events_listview> {
                                                               padding: EdgeInsets.symmetric(horizontal: 20),
                                                               child: Row(
                                                                 children: [
-                                                                  Text( snapshot.data[index]['type'].toString().toLowerCase() == 'event' ? "date de l'évènement:".toUpperCase() : "date de l'RÉUNION:".toUpperCase(),style: TextStyle(fontSize: screenwidth < 700 ? screenheight/70  : 20,fontFamily: 'Google-Bold',color: Colors.grey[600]),),
+                                                                  Text( snapshot.data[index]['type'].toString().toLowerCase() == 'event' ? "date de l'évènement:".toUpperCase() : "Date de la réunion:".toUpperCase(),style: TextStyle(fontSize: screenwidth < 700 ? screenheight/70  : 20,fontFamily: 'Google-Bold',color: Colors.grey[600]),),
                                                                   SizedBox(
                                                                     width: 5,
                                                                   ),

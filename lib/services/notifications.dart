@@ -170,7 +170,7 @@ class _NotificationsState extends State<Notifications> {
                                         borderRadius: BorderRadius.circular(1000.0)
                                     ),
                                     padding: EdgeInsets.all(3),
-                                    child: Icon(Icons.arrow_back_rounded,color: Colors.white,size: screenwidth < 700 ? screenwidth/12 : screenwidth/20,)),
+                                    child: Icon(Icons.arrow_back_rounded,color: Colors.white,size: 26,)),
                                 onTap: (){
                                   setState(() {
                                     if (taskList.toString() != "[]"){
@@ -209,7 +209,7 @@ class _NotificationsState extends State<Notifications> {
                                     border: Border.all(color: _choosenButton == "1" ? Colors.transparent :  Colors.black87.withOpacity(0.5),width: 2)
                                   ),
                                   child: Center(
-                                    child: Text('ALL',style: TextStyle(color:  _choosenButton == "1" ? Colors.white : Colors.black87.withOpacity(0.7) ,fontSize: screenwidth < 700 ? screenwidth/30 : 20,fontFamily: 'Google-Bold'),),
+                                    child: Text('TOUT',style: TextStyle(color:  _choosenButton == "1" ? Colors.white : Colors.black87.withOpacity(0.7) ,fontSize: screenwidth < 700 ? screenwidth/30 : 20,fontFamily: 'Google-Bold'),),
                                   ),
                                 ),
                                 onTap: (){
@@ -302,7 +302,7 @@ class _NotificationsState extends State<Notifications> {
                                     Container(
                                         padding: EdgeInsets.symmetric(horizontal: screenwidth/8),
                                         width: screenwidth,
-                                        child: Text("Vous verrez ici toutes vos notifications que vous avez reçues."
+                                        child: Text("Ici vous verrez toutes les notifications que vous avez reçues."
                                           ,style: TextStyle(color: Colors.grey[350],fontFamily: 'Google-Bold',fontSize: screenheight/70 ,
                                           ),textAlign: TextAlign.center,
                                         )
@@ -400,7 +400,7 @@ class _NotificationsState extends State<Notifications> {
                                                         Expanded(
                                                           child: Container(
                                                               width: screenwidth < 700 ? screenwidth/2.5 : 350,
-                                                              child: Text(adverTisement[0]['description'],style: TextStyle(color: Colors.black54,fontFamily: 'Google-Medium',fontSize: 14 ),overflow: TextOverflow.ellipsis,maxLines: 1,)),
+                                                              child:Text(  adverTisement[0]['description'].toString() == "null" ? "Pas de description" : adverTisement[0]['description'].toString(),style: TextStyle(color: Colors.black54,fontFamily: 'Google-Medium',fontSize: 14 ),overflow: TextOverflow.ellipsis,maxLines: 1,)),
                                                         ),
                                                       ],
                                                     ),
@@ -517,8 +517,10 @@ class _NotificationsState extends State<Notifications> {
                                           navigateMatch(index,context,eventDetails[0]);
                                         }
                                         setState(() {
-                                          notifPage = true;
+                                          notificType = "";
+                                          notifPage = false;
                                         });
+                                        
                                       },
                                     ),
                                     secondaryActions: <Widget>[
@@ -544,7 +546,7 @@ class _NotificationsState extends State<Notifications> {
                                                 )),
                                             onTap: (){
                                               _deleteTask(double.parse(taskList[index].itemid).toInt(),taskList[index].id);
-                                              showSnackBar(context, 'Successfully deleted.');
+                                              showSnackBar(context, 'Supprimé avec succès.');
                                             }
 //                      onTap: () => _showSnackBar('Delete'),
                                           ),

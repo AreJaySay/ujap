@@ -171,7 +171,7 @@ class _ProfilePageState extends State<ProfilePage> {
                                                         borderRadius: BorderRadius.circular(1000.0)
                                                     ),
                                                     padding: EdgeInsets.all(screenwidth < 700 ? 2 : 3),
-                                                    child: Icon(Icons.arrow_back_rounded,color: Colors.white,size: screenwidth < 700 ? screenwidth/12 : screenwidth/18,)),
+                                                    child: Icon(Icons.arrow_back_rounded,color: Colors.white,size: 26,)),
                                                 onTap: (){
                                                   Navigator.pushReplacement(context,PageTransition(child: MainScreen(false),type: PageTransitionType.fade));
                                                 },
@@ -412,7 +412,7 @@ class _ProfilePageState extends State<ProfilePage> {
                                         ),
                                         onPressed: () {
                                           setState(() {
-                                            PushNotification().unsubscribe(userdetails['id']);
+                                            PushNotification().unsubscribe(userdetails["id"]);
                                             _logout();
                                             isCollapsed = !isCollapsed;
                                             Navigator.pushAndRemoveUntil(
@@ -502,7 +502,7 @@ class _ProfilePageState extends State<ProfilePage> {
                                         onPressed: (){
                                           setState(() {
                                             Navigator.push(context, PageTransition(child: UpdatePicture(
-                                              "TakePhoto"
+                                              "TakePhoto","profilepage"
                                             )));
                                           });
                                         },
@@ -530,7 +530,7 @@ class _ProfilePageState extends State<ProfilePage> {
                                         onPressed: (){
                                           setState(() {
                                             Navigator.push(context, PageTransition(child: UpdatePicture(
-                                                "UploadPhoto"
+                                                "UploadPhoto","profilepage"
                                             )));
                                           });
                                         },

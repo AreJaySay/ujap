@@ -30,7 +30,7 @@ Map confirmedData;
 
 attendCurrentmatch(context,ticket_ID,attend_or_pass,Map data)async{
   showloader(context);
-  var response = await http.post('https://ujap.checkmy.dev/api/client/confirmations/save',
+  var response = await http.post(Uri.parse('https://ujap.checkmy.dev/api/client/confirmations/save'),
       headers: {
         HttpHeaders.authorizationHeader: "Bearer $accesstoken",
         "Accept": "application/json"
@@ -97,14 +97,14 @@ confirmation(context,ticketID,attend_or_pass,data){
                 ),
               Container(
                 width: screenwidth,
-                height: screenwidth < 700 ? attend_pass  != "Yes" ? screenwidth/3.2 : screenwidth/4.2 : screenwidth/5,
+                height: screenwidth < 700 ? attend_pass  != "Yes" ? screenwidth/2.6 : screenwidth/4.2 : screenwidth/5,
                 child: Column(
                   children: [
                     Expanded(
                       child: Container(
                         alignment: Alignment.center,
                         width: screenwidth,
-                        child: Text( currentindex == 0 ? type.toString() == "event" ? 'Vous souhaitez annuler votre participation à cet évènement?' : 'Vous souhaitez annuler votre participation à ce match?' : attend_pass == 'No' ? 'Vous ne pourrez pas être présent au $eventType ? Nous vous prions de nous confirmer ce choix.' : 'Confirmez-vous votre présence à ce $eventType?',
+                        child: Text( currentindex == 0 ? 'Vous ne pourrez pas être présent ? Veuillez confirmer votre choix.' : attend_pass == 'No' ? 'Vous ne pourrez pas être présent au $eventType ? Nous vous prions de nous confirmer ce choix.' : 'Souhaitez-vous confirmer votre présence?',
                           textAlign: TextAlign.center,
                           style: TextStyle(fontFamily: 'Google-Medium',color: Colors.black87,fontSize: screenwidth < 700 ? screenheight/53 : 25 ),
                         ),
@@ -119,7 +119,7 @@ confirmation(context,ticketID,attend_or_pass,data){
                               child: GestureDetector(
                                 child: Container(
                                   width:  attend_pass  != "Yes" ? screenwidth/2.5 : screenwidth/2,
-                                  height: screenheight,
+                                  height: 50,
                                   alignment: Alignment.center,
                                   margin: EdgeInsets.symmetric(horizontal: screenwidth/30,vertical: 5),
                                   child: Text('Annuler',style: TextStyle(fontFamily: 'Google-Medium',color: Colors.black54,fontSize: screenwidth < 700 ? screenheight/53 : 25 )),
@@ -138,7 +138,7 @@ confirmation(context,ticketID,attend_or_pass,data){
                                 builder: (context)=> GestureDetector(
                                     child: Container(
                                       width: attend_pass  != "Yes" ? screenwidth/2.5 : screenwidth/2,
-                                      height: screenheight,
+                                      height: 50,
                                       margin: EdgeInsets.symmetric(horizontal: screenwidth/30,vertical: 5),
                                       alignment: Alignment.center,
                                       child: Text('Confirmer',style: TextStyle(fontFamily: 'Google-Medium',color: Colors.white,fontSize: screenwidth < 700 ? screenheight/53 : 25 )),
@@ -150,7 +150,6 @@ confirmation(context,ticketID,attend_or_pass,data){
                                     ),
                                     onTap: (){
                                       attendCurrentmatch(context,ticketID,attend_or_pass,data);
-                                      // Navigator.of(context).pop(null);
                                     }
                                   ),
                               ),

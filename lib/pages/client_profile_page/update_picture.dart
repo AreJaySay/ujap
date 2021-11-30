@@ -9,10 +9,7 @@ import 'package:ujap/controllers/home.dart';
 import 'package:ujap/controllers/login_controller.dart';
 import 'package:ujap/globals/user_data.dart';
 import 'package:ujap/globals/variables/home_sub_pages_variables.dart';
-import 'package:ujap/globals/widgets/show_snackbar.dart';
-import 'package:ujap/pages/client_profile_page/profile_information.dart';
 import 'package:ujap/pages/client_profile_page/profile_page.dart';
-import 'package:ujap/pages/homepage_sub_pages/home_children_page/download_pdf%202.dart';
 import 'package:ujap/services/image_uploader.dart';
 import '../../globals/variables/other_variables.dart';
 
@@ -20,7 +17,8 @@ bool changeProfilePict = false;
 
 class UpdatePicture extends StatefulWidget {
   String chooseFrom;
-  UpdatePicture(this.chooseFrom);
+  String pagechecker;
+  UpdatePicture(this.chooseFrom,this.pagechecker);
   @override
   _UpdatePictureState createState() => _UpdatePictureState();
 }
@@ -30,34 +28,40 @@ class _UpdatePictureState extends State<UpdatePicture> {
   var binaryImage;
   int choice = 0;
   bool _isLoading = false;
-  Future _choosecamera() async {
-    _file = await ImagePicker.pickImage(
-        source: ImageSource.camera, maxHeight: 480, maxWidth: 640);
-    print('IMAGE PHOTO :'+_file.toString());
-    if(_file != null) {
-      final  g = await _file.readAsBytes();
-      setState(() {
-        choice = 1;
-        binaryImage = g;
-      });
-    }else{
-      Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=>ProfilePage()));
-    }
+  Future _choosegallery() async {
+   await ImagePicker().getImage(source: ImageSource.gallery).then((value)async {
+      if(value != null) {
+        setState(() {
+          _file = new File(value.path);
+        });
+        print('IMAGE PHOTO :'+_file.toString());
+        final  g = await _file.readAsBytes();
+        setState(() {
+          choice = 1;
+          binaryImage = g;
+        });
+      }else{
+        Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=>ProfilePage()));
+      }
+    });
   }
 
-  Future _choosegallery() async {
-    _file = await ImagePicker.pickImage(
-        source: ImageSource.gallery, maxHeight: 480, maxWidth: 640);
-    print('IMAGE PHOTO GALLERY:'+_file.toString());
-    if(_file != null) {
-      final g = await _file.readAsBytes();
-      setState(() {
-        choice = 2;
-        binaryImage = g;
-      });
-    }else{
-      Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=>ProfilePage()));
-    }
+  Future _choosecamera() async {
+    await ImagePicker().getImage(source: ImageSource.camera).then((value)async {
+      if(value != null) {
+        setState(() {
+          _file = new File(value.path);
+        });
+        print('IMAGE PHOTO :'+_file.toString());
+        final  g = await _file.readAsBytes();
+        setState(() {
+          choice = 1;
+          binaryImage = g;
+        });
+      }else{
+        Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=>ProfilePage()));
+      }
+    });
   }
   Future crop() async {
     File cropped = await ImageCropper.cropImage(sourcePath: _file.path);
@@ -138,8 +142,11 @@ class _UpdatePictureState extends State<UpdatePicture> {
             Column(
               children: <Widget>[
                 Expanded(
-                  child: _file == null ? Container() : Container(
-                    child: Image.memory(_file.readAsBytesSync()),
+                  child: _file == null ? Container() :
+                  Container(
+                    child: Image(
+                      image: FileImage(_file),
+                    ),
                   ),
                 ),
                 SafeArea(
@@ -167,20 +174,17 @@ class _UpdatePictureState extends State<UpdatePicture> {
                               padding: EdgeInsets.all(0),
                               icon: Icon(Icons.check_circle, color: Colors.green,size: 40,),
                               onPressed: (){
-//                              var _newPhoto = _file.path.split('/')[_file.path.split('/').length - 1];
-//                              print(_newPhoto);
-//                              print(userdetails['filename']);
                                 setState(() {
                                   _isLoading = true;
                                 });
-//
+// //
                                 UploadImage().init(context,file: _file, id: userdetails['id']).then((value) {
                                   if(value){
                                     setState(() {
                                       currentindex = 1;
                                       indexListener.update(data: 1);
                                     });
-                                    login(user, pass, context, true);
+                                    login(user, pass, context, true, widget.pagechecker == "profileinformation" ? true : false);
                                     changeProfilePict = true;
                                   }else{
                                     // showSnackBar_download(context, 'Please check your internet connection', Icon(Icons.network_check));

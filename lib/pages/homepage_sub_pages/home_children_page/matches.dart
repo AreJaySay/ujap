@@ -135,7 +135,7 @@ class _Bottom_listview_dataState extends State<Bottom_listview_data> {
                         padding: EdgeInsets.symmetric(horizontal: 20),
                         child: Row(
                           children: [
-                            Text( snapshot.data[index]['type'].toString().toLowerCase() == 'event' ? "NOM DE L'évènement:".toUpperCase() : "NOM DE L RÉUNION:".toUpperCase() ,style: TextStyle(fontSize: screenwidth < 700 ? screenheight/70  : 20,fontFamily: 'Google-Bold',color: Colors.grey[600]),),
+                            Text( snapshot.data[index]['type'].toString().toLowerCase() == 'event' ? "NOM DE L'évènement:".toUpperCase() : "Nom de la réunion:".toUpperCase() ,style: TextStyle(fontSize: screenwidth < 700 ? screenheight/70  : 20,fontFamily: 'Google-Bold',color: Colors.grey[600]),),
                             SizedBox(
                               width: 5,
                             ),
@@ -151,7 +151,7 @@ class _Bottom_listview_dataState extends State<Bottom_listview_data> {
                         padding: EdgeInsets.symmetric(horizontal: 20),
                         child: Row(
                           children: [
-                            Text( snapshot.data[index]['type'].toString().toLowerCase() == 'event' ? "date de l'évènement:".toUpperCase() : "date de l'RÉUNION:".toUpperCase(),style: TextStyle(fontSize: screenwidth < 700 ? screenheight/70  : 20,fontFamily: 'Google-Bold',color: Colors.grey[600]),),
+                            Text( snapshot.data[index]['type'].toString().toLowerCase() == 'event' ? "date de l'évènement:".toUpperCase() : "Date de la réunion:".toUpperCase(),style: TextStyle(fontSize: screenwidth < 700 ? screenheight/70  : 20,fontFamily: 'Google-Bold',color: Colors.grey[600]),),
                             SizedBox(
                               width: 5,
                             ),

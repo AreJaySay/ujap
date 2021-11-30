@@ -1,20 +1,14 @@
 import 'dart:async';
-import 'dart:convert';
-import 'dart:io';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_email_sender/flutter_email_sender.dart';
-import 'package:image_picker/image_picker.dart';
 import 'package:page_transition/page_transition.dart';
-import 'package:pdf_flutter/pdf_flutter.dart';
-import 'package:ujap/globals/variables/messages_sub_pages_variables.dart';
 import 'package:ujap/globals/variables/other_variables.dart';
 import 'package:ujap/globals/widgets/show_snackbar.dart';
 import 'package:ujap/pages/homepage_sub_pages/home_children_page/download_pdf%202.dart';
 import 'package:ujap/pages/homepage_sub_pages/home_children_page/view_download_pdf.dart';
-import 'package:ujap/pages/homepage_sub_pages/message_children_page/list_of_clients.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 List<String> attachmentsFile = [];
@@ -275,22 +269,10 @@ class _SendGmailState extends State<SendGmail> {
               ),
             ),
           ),
-          // floatingActionButton: FloatingActionButton.extended(
-          //   icon: Icon(Icons.camera),
-          //   label: Text('Add Image'),
-          //   onPressed: _openImagePicker,
-          // ),
       ),
       onTap: (){
         SystemChannels.textInput.invokeMethod('TextInput.hide');
       },
     );
   }
-
-  // void _openImagePicker() async {
-  //   File pick = await ImagePicker.pickImage(source: ImageSource.gallery);
-  //   setState(() {
-  //     attachments.add(pick.path);
-  //   });
-  // }
 }

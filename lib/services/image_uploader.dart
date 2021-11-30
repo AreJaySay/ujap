@@ -22,7 +22,7 @@ Map clientData;
     try{
       print('USER DETAILS :'+id.toString());
 
-      var formData = new FormData.fromMap({
+      FormData formData = new FormData.fromMap({
         "id" : id.toString(),
         "file" : await MultipartFile.fromFile(file.path)
       });
@@ -44,13 +44,10 @@ Map clientData;
     }
   }
 
-  Future<bool> upload({File files}) async {
+  Future<bool> upload({File files, String user}) async {
     try{
-      String _userdetails = '{"id" : ${userdetails['id'].toString()},"name" : "${Fname.text.toString()}","telephone" : "${telephone.text.toString()}","email" : "${email.text.toString()}","address" : "${address.text.toString().replaceAll('\n', "")}","city" : "${city.text.toString()}","state" : "${state.text.toString()}","country" : "${country.text.toString()}","lastname" : "${Lname.text.toString()}"}';
-
-      print(files.toString());
-
-      var formData = new FormData.fromMap({
+      String _userdetails = '{"id":${userdetails['id'].toString()},"name":"${Fname.text.toString()}","telephone":"${telephone.text.toString()}","email":"${email.text.toString()}","address":"${address.text.toString().replaceAll('\n', "")}","city":"${city.text.toString()}","company":"${company.text.toString()}","position":"${position.text.toString()}","country":"${country.text.toString()}","lastname":"${Lname.text.toString()}"}';
+      FormData formData = new FormData.fromMap({
         "item" : _userdetails,
         "file" : await MultipartFile.fromFile(files.path)
       });

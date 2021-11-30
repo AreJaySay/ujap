@@ -23,7 +23,7 @@ import 'package:ujap/services/sample_sqlite.dart';
 
 var messagingToken = "";
 
-void addToDb({String itemid, String messageTypes}) async {
+void addToDb({String itemid = "", String messageTypes = ""}) async {
   var id = await DatabaseHelper.instance.insert(Todo( itemid: itemid, messageType: messageTypes));
   // taskList.insert(0, Todo(id: id, itemid: itemid.toString(), messageType: messageTypes));
   print('DATAS :'+id.toString());
@@ -31,294 +31,372 @@ void addToDb({String itemid, String messageTypes}) async {
 
 // SEND NOTIFICATION ON CLIENT
 final String TokenServer = 'AAAAul-TWVQ:APA91bEbjbQq6LFzBXst8KDbr_PKlCFHXtQoxOAhJBMhVbTXQUI5lTo_kAGclXh-qKS54dDALWTme8YxYWR19g-kim2CXsydSzO76oMdsBojSWBK98viVtdCbIjpVrRKrRiZwYM-wEBu';
-final FirebaseMessaging firebaseMessaging = FirebaseMessaging();
+final FirebaseMessaging firebaseMessaging = FirebaseMessaging.instance;
 class PushNotification {
   Future getFCMToken ()async{
     fcmToken = await firebaseMessaging.getToken();
+    return fcmToken;
   }
   void subscribe(int id) {
     firebaseMessaging.subscribeToTopic('Subscription$id');
   }
-  void unsubscribe(int id) {
+  void unsubscribe(int id) async{
     firebaseMessaging.unsubscribeFromTopic('Subscription$id');
+     await firebaseMessaging.deleteToken();
   }
   void _deleteTask(int id) async {
     await DatabaseHelper.instance.delete(id);
     taskList.removeWhere((element) => element.itemid == id);
+
   }
-  Future initListen(context) async {
-    firebaseMessaging.configure(
-      onMessage: (Map message) async {
-        try{
-          if(Platform.isAndroid){
-            print("Android MESSAGE : $message");
-            if(message['data']['type'] == "message"){
-              if(message['data']['refresh'] == 'false'){
-                if (message['data']['sender'].toString() == userdetails['name'].toString()){
-                }else if (message['data']['reason'].toString() == 'deletegroup'){
-                }else{
-                  var mappedData = json.decode(message['data']['data']);
-                  messagecontroller.messagechecker(context, mappedData);
-                  print('OR DIDI NASULOD :'+message.toString());
-                }
-              }else{
-                if (message['data']['sender'].toString() == userdetails['name'].toString()){
-                }else if (message['data']['reason'].toString() == 'deletegroup'){
-                }else{
-                  messagecontroller.messageHandler(message['data'],context);
-                }
-              }
-              getPersonMessage();
-            }else if(message['data']['type'] == "event"){
-              var mappedData = json.decode(message['data']['data']);
-              eventservice.appendNew(data: mappedData);
-              NotificationDisplayer().showNotification(mappedData['type'].toString() == 'event' ? 'Nouvel événement programmé.' : mappedData['type'].toString() == 'match' ? 'Un nouveau match a été programmé.' : 'Une nouvelle réunion a été programmée.', "Annonce nouvelle Ujap", context, mappedData['id'].toString(),mappedData['type'].toString());
-              notificationIndicator = true;
-              notificID = mappedData['id'].toString();
-              notificType = 'Event';
-              getEvents();
 
-            }else{
-              var mappedData = json.decode(message['data']['data']);
-              bannerDisplay.update(mappedData);
-              print('ADVERTISEMENT :'+mappedData.toString());
-              AdListener().showAd(context,mappedData);
-              notificID = mappedData['id'].toString();
-              notificType = 'Event';
-            }
-          }else{
-            print("IOS MESSAGE : $message");
-            if(message['type'] == 'message'){
-              if(message['refresh'] == 'false'){
-                if (message['sender'].toString() == userdetails['name'].toString()){
-                }else if (message['reason'].toString() == 'deletegroup'){
-
-                }else if (!message['recievers'].toString().contains(userdetails['id'].toString())){
-
-                }else{
-                  var mappedData = json.decode(message['data']);
-                  messagecontroller.messagechecker(context, mappedData);
-                }
-              }else{
-                if (message['sender'].toString() == userdetails['name'].toString()){
-                }else if (message['reason'].toString() == 'deletegroup'){
-
-                }else{
-                  messagecontroller.messageHandler(message['data'],context);
-                }
-              }
-              getPersonMessage();
-
-            }else if(message['type'] == "event"){
-              print('EVENT ANDRIOD :'+message.toString());
-              var mappedData = json.decode(message['data']);
-              eventservice.appendNew(data: mappedData);
-              NotificationDisplayer().showNotification(mappedData['type'].toString() == 'event' ? 'Nouvel événement programmé.' : mappedData['type'].toString() == 'match' ? 'Un nouveau match a été programmé.' : 'Une nouvelle réunion a été programmée.', "Nouvel évènement", context, mappedData['id'].toString(),mappedData['type'].toString(),image: "");
-              notificationIndicator = true;
-              notificID = mappedData['id'].toString();
-              notificType = 'Event';
-              getEvents();
-
-            }else{
-              var mappedData = json.decode(message['data']);
-              bannerDisplay.update(mappedData);
-              AdListener().showAd(context, mappedData);
-              notificID = mappedData['id'].toString();
-              notificType = 'Event';
-            }
-          }
-        }catch(e){
-          Messagecontroller().printWrapped("onMessage Error : $e");
-        }
-        // Navigator.pushReplacement(
-        //   context,
-        //   PageRouteBuilder(pageBuilder: (_, __, ___) => MainScreen(false)),
-        // );
-      },
-      onLaunch: (Map<String, dynamic> message) async {
-        try{
-          if(Platform.isAndroid){
-            print("Android MESSAGE : $message");
-            if(message['data']['type'] == "message"){
-              if(message['data']['refresh'] == 'false'){
-                if (message['data']['sender'].toString() == userdetails['name'].toString()){
-                }else if (message['data']['reason'].toString() == 'deletegroup'){
-                }else{
-                  var mappedData = json.decode(message['data']['data']);
-                  messagecontroller.messagechecker(context, mappedData);
-                  print('OR DIDI NASULOD :'+message.toString());
-                }
-              }else{
-                if (message['data']['sender'].toString() == userdetails['name'].toString()){
-                }else if (message['data']['reason'].toString() == 'deletegroup'){
-                }else{
-                  messagecontroller.messageHandler(message['data'],context);
-                }
-              }
-              getPersonMessage();
-            }else if(message['data']['type'] == "event"){
-              var mappedData = json.decode(message['data']['data']);
-              eventservice.appendNew(data: mappedData);
-              NotificationDisplayer().showNotification(mappedData['type'].toString() == 'event' ? 'Nouvel événement programmé.' : mappedData['type'].toString() == 'match' ? 'Un nouveau match a été programmé.' : 'Une nouvelle réunion a été programmée.', "Annonce nouvelle Ujap", context, mappedData['id'].toString(),mappedData['type'].toString());
-              notificationIndicator = true;
-              notificID = mappedData['id'].toString();
-              notificType = 'Event';
-              getEvents();
-
-            }else{
-              var mappedData = json.decode(message['data']['data']);
-              bannerDisplay.update(mappedData);
-              print('ADVERTISEMENT :'+mappedData.toString());
-              AdListener().showAd(context,mappedData);
-              notificID = mappedData['id'].toString();
-              notificType = 'Event';
-            }
-          }else{
-            print("IOS MESSAGE : $message");
-            if(message['type'] == 'message'){
-              if(message['refresh'] == 'false'){
-                if (message['sender'].toString() == userdetails['name'].toString()){
-                }else if (message['reason'].toString() == 'deletegroup'){
-
-                }else if (!message['recievers'].toString().contains(userdetails['id'].toString())){
-
-                }else{
-                  var mappedData = json.decode(message['data']);
-                  messagecontroller.messagechecker(context, mappedData);
-                }
-              }else{
-                if (message['sender'].toString() == userdetails['name'].toString()){
-                }else if (message['reason'].toString() == 'deletegroup'){
-
-                }else{
-                  messagecontroller.messageHandler(message['data'],context);
-                }
-              }
-              getPersonMessage();
-
-            }else if(message['type'] == "event"){
-              print('EVENT ANDRIOD :'+message.toString());
-              var mappedData = json.decode(message['data']);
-              eventservice.appendNew(data: mappedData);
-              NotificationDisplayer().showNotification(mappedData['type'].toString() == 'event' ? 'Nouvel événement programmé.' : mappedData['type'].toString() == 'match' ? 'Un nouveau match a été programmé.' : 'Une nouvelle réunion a été programmée.', "Nouvel évènement", context, mappedData['id'].toString(),mappedData['type'].toString(),image: "");
-              notificationIndicator = true;
-              notificID = mappedData['id'].toString();
-              notificType = 'Event';
-              getEvents();
-
-            }else{
-              var mappedData = json.decode(message['data']);
-              bannerDisplay.update(mappedData);
-              AdListener().showAd(context, mappedData);
-              notificID = mappedData['id'].toString();
-              notificType = 'Event';
-            }
-          }
-        }catch(e){
-          Messagecontroller().printWrapped("onMessage Error : $e");
-        }
-        return ;
-      },
-      onResume: (Map<String, dynamic> message) async {
-        try{
-          if(Platform.isAndroid){
-            print("Android MESSAGE : $message");
-            if(message['data']['type'] == "message"){
-              if(message['data']['refresh'] == 'false'){
-                if (message['data']['sender'].toString() == userdetails['name'].toString()){
-                }else if (message['data']['reason'].toString() == 'deletegroup'){
-                }else{
-                  var mappedData = json.decode(message['data']['data']);
-                  messagecontroller.messagechecker(context, mappedData);
-                  print('OR DIDI NASULOD :'+message.toString());
-                }
-              }else{
-                if (message['data']['sender'].toString() == userdetails['name'].toString()){
-                }else if (message['data']['reason'].toString() == 'deletegroup'){
-                }else{
-                  messagecontroller.messageHandler(message['data'],context);
-                }
-              }
-              getPersonMessage();
-            }else if(message['data']['type'] == "event"){
-              var mappedData = json.decode(message['data']['data']);
-              eventservice.appendNew(data: mappedData);
-              NotificationDisplayer().showNotification(mappedData['type'].toString() == 'event' ? 'Nouvel événement programmé.' : mappedData['type'].toString() == 'match' ? 'Un nouveau match a été programmé.' : 'Une nouvelle réunion a été programmée.', "Annonce nouvelle Ujap", context, mappedData['id'].toString(),mappedData['type'].toString());
-              notificationIndicator = true;
-              notificID = mappedData['id'].toString();
-              notificType = 'Event';
-              getEvents();
-
-            }else{
-              var mappedData = json.decode(message['data']['data']);
-              bannerDisplay.update(mappedData);
-              print('ADVERTISEMENT :'+mappedData.toString());
-              AdListener().showAd(context,mappedData);
-              notificID = mappedData['id'].toString();
-              notificType = 'Event';
-            }
-          }else{
-            print("IOS MESSAGE : $message");
-            if(message['type'] == 'message'){
-              if(message['refresh'] == 'false'){
-                if (message['sender'].toString() == userdetails['name'].toString()){
-                }else if (message['reason'].toString() == 'deletegroup'){
-
-                }else if (!message['recievers'].toString().contains(userdetails['id'].toString())){
-
-                }else{
-                  var mappedData = json.decode(message['data']);
-                  messagecontroller.messagechecker(context, mappedData);
-                }
-              }else{
-                if (message['sender'].toString() == userdetails['name'].toString()){
-                }else if (message['reason'].toString() == 'deletegroup'){
-
-                }else{
-                  messagecontroller.messageHandler(message['data'],context);
-                }
-              }
-              getPersonMessage();
-
-            }else if(message['type'] == "event"){
-              print('EVENT ANDRIOD :'+message.toString());
-              var mappedData = json.decode(message['data']);
-              eventservice.appendNew(data: mappedData);
-              NotificationDisplayer().showNotification(mappedData['type'].toString() == 'event' ? 'Nouvel événement programmé.' : mappedData['type'].toString() == 'match' ? 'Un nouveau match a été programmé.' : 'Une nouvelle réunion a été programmée.', "Nouvel évènement", context, mappedData['id'].toString(),mappedData['type'].toString(),image: "");
-              notificationIndicator = true;
-              notificID = mappedData['id'].toString();
-              notificType = 'Event';
-              getEvents();
-
-            }else{
-              var mappedData = json.decode(message['data']);
-              bannerDisplay.update(mappedData);
-              AdListener().showAd(context, mappedData);
-              notificID = mappedData['id'].toString();
-              notificType = 'Event';
-            }
-          }
-        }catch(e){
-          Messagecontroller().printWrapped("onMessage Error : $e");
-        }
-        return ;
-      }
+  Future<void> initialize(context) async {
+    await firebaseMessaging.setForegroundNotificationPresentationOptions(
+      alert: true,
+      badge: true,
+      sound: true,
     );
-    firebaseMessaging.requestNotificationPermissions(
-        const IosNotificationSettings(
-            sound: true,
-            badge: true,
-            alert: true,
-            provisional: true
-        )
+    await firebaseMessaging.requestPermission(
+      alert: true,
+      announcement: true,
+      badge: true,
+      carPlay: true,
+      criticalAlert: true,
+      provisional: true,
+      sound: true,
     );
-    firebaseMessaging.onIosSettingsRegistered.listen((IosNotificationSettings settings) {
-      print("SETTINGS : $settings");
+    FirebaseMessaging.onMessage.listen((RemoteMessage message) async {
+        if(message.data['type'] == "message"){
+          if(message.data['refresh'] == 'false'){
+            if (message.data['sender'].toString() == userdetails['name'].toString()){
+            }else if (message.data['reason'].toString() == 'deletegroup'){
+            }else{
+              var mappedData = json.decode(message.data['data']);
+              messagecontroller.messagechecker(context, mappedData);
+              print('OR DIDI NASULOD :'+message.toString());
+            }
+          }else{
+            if (message.data['sender'].toString() == userdetails['name'].toString()){
+            }else if (message.data['reason'].toString() == 'deletegroup'){
+            }else{
+              messagecontroller.messageHandler(message.data['data'],context);
+            }
+          }
+          getPersonMessage();
+        }else if(message.data['type'] == "event"){
+          var mappedData = json.decode(message.data['data']);
+          eventservice.appendNew(data: mappedData);
+          NotificationDisplayer().showNotification(mappedData['type'].toString() == 'event' ? 'Nouvel événement programmé.' : mappedData['type'].toString() == 'match' ? 'Un nouveau match a été programmé.' : 'Une nouvelle réunion a été programmée.', "Annonce nouvelle Ujap", context, mappedData['id'].toString(),mappedData['type'].toString());
+          notificationIndicator = true;
+          notificID = mappedData['id'].toString();
+          notificType = 'Event';
+          getEvents();
+
+        }else{
+          var mappedData = json.decode(message.data['data']);
+          bannerDisplay.update(mappedData);
+          print('ADVERTISEMENT :'+mappedData.toString());
+          AdListener().showAd(context,mappedData);
+          notificID = mappedData['id'].toString();
+          notificType = 'Event';
+        }
+      // print('TITLE'+message.data.toString());
+      // print('BODY'+message.notification.body.toString());
+      return;
     });
-  }
-}
+    // on open
+    FirebaseMessaging.onMessageOpenedApp.listen((event) {
+      print('TITLE 2ND'+event.toString());
+      print('BODY 2ND'+event.notification.body.toString());
+    });
 
-class ReceiveNotific{
-  String notificID = "";
-  String notificType = "";
-}
+    //background
+    FirebaseMessaging.onBackgroundMessage((RemoteMessage message) async {
+      print('TITLE 3RD'+message.toString());
+      print('BODY 3RD'+message.notification.body.toString());
+    });
+    }
+  }
+  
+  
+  
+  
+  
+  
+//   Future initListen(context) async {
+//     firebaseMessaging.configure(
+//       onMessage: (Map message) async {
+//         try{
+//           if(Platform.isAndroid){
+//             print("Android MESSAGE : $message");
+//             if(message.data['data']['type'] == "message"){
+//               if(message.data['data']['refresh'] == 'false'){
+//                 if (message.data['data']['sender'].toString() == userdetails['name'].toString()){
+//                 }else if (message.data['data']['reason'].toString() == 'deletegroup'){
+//                 }else{
+//                   var mappedData = json.decode(message.data['data']['data']);
+//                   messagecontroller.messagechecker(context, mappedData);
+//                   print('OR DIDI NASULOD :'+message.toString());
+//                 }
+//               }else{
+//                 if (message.data['data']['sender'].toString() == userdetails['name'].toString()){
+//                 }else if (message.data['data']['reason'].toString() == 'deletegroup'){
+//                 }else{
+//                   messagecontroller.messageHandler(message.data['data'],context);
+//                 }
+//               }
+//               getPersonMessage();
+//             }else if(message.data['data']['type'] == "event"){
+//               var mappedData = json.decode(message.data['data']['data']);
+//               eventservice.appendNew(data: mappedData);
+//               NotificationDisplayer().showNotification(mappedData['type'].toString() == 'event' ? 'Nouvel événement programmé.' : mappedData['type'].toString() == 'match' ? 'Un nouveau match a été programmé.' : 'Une nouvelle réunion a été programmée.', "Annonce nouvelle Ujap", context, mappedData['id'].toString(),mappedData['type'].toString());
+//               notificationIndicator = true;
+//               notificID = mappedData['id'].toString();
+//               notificType = 'Event';
+//               addToDb(itemid: notificID.toString(),messageTypes: notificType.toString());
+//               getEvents();
+//
+//             }else{
+//               var mappedData = json.decode(message.data['data']['data']);
+//               bannerDisplay.update(mappedData);
+//               print('ADVERTISEMENT :'+mappedData.toString());
+//               AdListener().showAd(context,mappedData);
+//               notificID = mappedData['id'].toString();
+//               notificType = 'Event';
+//             }
+//           }else{
+//             print("IOS MESSAGE : $message");
+//             if(message['type'] == 'message'){
+//               if(message['refresh'] == 'false'){
+//                 if (message['sender'].toString() == userdetails['name'].toString()){
+//                 }else if (message['reason'].toString() == 'deletegroup'){
+//
+//                 }else if (!message['recievers'].toString().contains(userdetails['id'].toString())){
+//
+//                 }else{
+//                   var mappedData = json.decode(message.data['data']);
+//                   messagecontroller.messagechecker(context, mappedData);
+//                 }
+//               }else{
+//                 if (message['sender'].toString() == userdetails['name'].toString()){
+//                 }else if (message['reason'].toString() == 'deletegroup'){
+//
+//                 }else{
+//                   messagecontroller.messageHandler(message.data['data'],context);
+//                 }
+//               }
+//               getPersonMessage();
+//
+//             }else if(message['type'] == "event"){
+//               var mappedData = json.decode(message.data['data']);
+//               eventservice.appendNew(data: mappedData);
+//               NotificationDisplayer().showNotification(mappedData['type'].toString() == 'event' ? 'Nouvel événement programmé.' : mappedData['type'].toString() == 'match' ? 'Un nouveau match a été programmé.' : 'Une nouvelle réunion a été programmée.', "Nouvel évènement", context, mappedData['id'].toString(),mappedData['type'].toString(),image: "");
+//               notificationIndicator = true;
+//               notificID = mappedData['id'].toString();
+//               notificType = 'Event';
+//               addToDb(itemid: notificID.toString(),messageTypes: notificType.toString());
+//               getEvents();
+//
+//             }else{
+//               var mappedData = json.decode(message.data['data']);
+//               bannerDisplay.update(mappedData);
+//               AdListener().showAd(context, mappedData);
+//               notificID = mappedData['id'].toString();
+//               notificType = 'Event';
+//             }
+//           }
+//         }catch(e){
+//           Messagecontroller().printWrapped("onMessage Error : $e");
+//         }
+//         // Navigator.pushReplacement(
+//         //   context,
+//         //   PageRouteBuilder(pageBuilder: (_, __, ___) => MainScreen(false)),
+//         // );
+//       },
+//       onLaunch: (Map<String, dynamic> message) async {
+//         try{
+//           if(Platform.isAndroid){
+//             print("Android MESSAGE : $message");
+//             if(message.data['data']['type'] == "message"){
+//               if(message.data['data']['refresh'] == 'false'){
+//                 if (message.data['data']['sender'].toString() == userdetails['name'].toString()){
+//                 }else if (message.data['data']['reason'].toString() == 'deletegroup'){
+//                 }else{
+//                   var mappedData = json.decode(message.data['data']['data']);
+//                   messagecontroller.messagechecker(context, mappedData);
+//                   print('OR DIDI NASULOD :'+message.toString());
+//                 }
+//               }else{
+//                 if (message.data['data']['sender'].toString() == userdetails['name'].toString()){
+//                 }else if (message.data['data']['reason'].toString() == 'deletegroup'){
+//                 }else{
+//                   messagecontroller.messageHandler(message.data['data'],context);
+//                 }
+//               }
+//               getPersonMessage();
+//             }else if(message.data['data']['type'] == "event"){
+//               var mappedData = json.decode(message.data['data']['data']);
+//               eventservice.appendNew(data: mappedData);
+//               NotificationDisplayer().showNotification(mappedData['type'].toString() == 'event' ? 'Nouvel événement programmé.' : mappedData['type'].toString() == 'match' ? 'Un nouveau match a été programmé.' : 'Une nouvelle réunion a été programmée.', "Annonce nouvelle Ujap", context, mappedData['id'].toString(),mappedData['type'].toString());
+//               notificationIndicator = true;
+//               notificID = mappedData['id'].toString();
+//               notificType = 'Event';
+//               getEvents();
+//
+//             }else{
+//               var mappedData = json.decode(message.data['data']['data']);
+//               bannerDisplay.update(mappedData);
+//               print('ADVERTISEMENT :'+mappedData.toString());
+//               AdListener().showAd(context,mappedData);
+//               notificID = mappedData['id'].toString();
+//               notificType = 'Event';
+//             }
+//           }else{
+//             print("IOS MESSAGE : $message");
+//             if(message['type'] == 'message'){
+//               if(message['refresh'] == 'false'){
+//                 if (message['sender'].toString() == userdetails['name'].toString()){
+//                 }else if (message['reason'].toString() == 'deletegroup'){
+//
+//                 }else if (!message['recievers'].toString().contains(userdetails['id'].toString())){
+//
+//                 }else{
+//                   var mappedData = json.decode(message.data['data']);
+//                   messagecontroller.messagechecker(context, mappedData);
+//                 }
+//               }else{
+//                 if (message['sender'].toString() == userdetails['name'].toString()){
+//                 }else if (message['reason'].toString() == 'deletegroup'){
+//
+//                 }else{
+//                   messagecontroller.messageHandler(message.data['data'],context);
+//                 }
+//               }
+//               getPersonMessage();
+//
+//             }else if(message['type'] == "event"){
+//               print('EVENT ANDRIOD :'+message.toString());
+//               var mappedData = json.decode(message.data['data']);
+//               eventservice.appendNew(data: mappedData);
+//               NotificationDisplayer().showNotification(mappedData['type'].toString() == 'event' ? 'Nouvel événement programmé.' : mappedData['type'].toString() == 'match' ? 'Un nouveau match a été programmé.' : 'Une nouvelle réunion a été programmée.', "Nouvel évènement", context, mappedData['id'].toString(),mappedData['type'].toString(),image: "");
+//               notificationIndicator = true;
+//               notificID = mappedData['id'].toString();
+//               notificType = 'Event';
+//               getEvents();
+//
+//             }else{
+//               var mappedData = json.decode(message.data['data']);
+//               bannerDisplay.update(mappedData);
+//               AdListener().showAd(context, mappedData);
+//               notificID = mappedData['id'].toString();
+//               notificType = 'Event';
+//             }
+//           }
+//         }catch(e){
+//           Messagecontroller().printWrapped("onMessage Error : $e");
+//         }
+//         return ;
+//       },
+//       onResume: (Map<String, dynamic> message) async {
+//         try{
+//           if(Platform.isAndroid){
+//             print("Android MESSAGE : $message");
+//             if(message.data['data']['type'] == "message"){
+//               if(message.data['data']['refresh'] == 'false'){
+//                 if (message.data['data']['sender'].toString() == userdetails['name'].toString()){
+//                 }else if (message.data['data']['reason'].toString() == 'deletegroup'){
+//                 }else{
+//                   var mappedData = json.decode(message.data['data']['data']);
+//                   messagecontroller.messagechecker(context, mappedData);
+//                   print('OR DIDI NASULOD :'+message.toString());
+//                 }
+//               }else{
+//                 if (message.data['data']['sender'].toString() == userdetails['name'].toString()){
+//                 }else if (message.data['data']['reason'].toString() == 'deletegroup'){
+//                 }else{
+//                   messagecontroller.messageHandler(message.data['data'],context);
+//                 }
+//               }
+//               getPersonMessage();
+//             }else if(message.data['data']['type'] == "event"){
+//               var mappedData = json.decode(message.data['data']['data']);
+//               eventservice.appendNew(data: mappedData);
+//               NotificationDisplayer().showNotification(mappedData['type'].toString() == 'event' ? 'Nouvel événement programmé.' : mappedData['type'].toString() == 'match' ? 'Un nouveau match a été programmé.' : 'Une nouvelle réunion a été programmée.', "Annonce nouvelle Ujap", context, mappedData['id'].toString(),mappedData['type'].toString());
+//               notificationIndicator = true;
+//               notificID = mappedData['id'].toString();
+//               notificType = 'Event';
+//               getEvents();
+//
+//             }else{
+//               var mappedData = json.decode(message.data['data']['data']);
+//               bannerDisplay.update(mappedData);
+//               print('ADVERTISEMENT :'+mappedData.toString());
+//               AdListener().showAd(context,mappedData);
+//               notificID = mappedData['id'].toString();
+//               notificType = 'Event';
+//             }
+//           }else{
+//             print("IOS MESSAGE : $message");
+//             if(message['type'] == 'message'){
+//               if(message['refresh'] == 'false'){
+//                 if (message['sender'].toString() == userdetails['name'].toString()){
+//                 }else if (message['reason'].toString() == 'deletegroup'){
+//
+//                 }else if (!message['recievers'].toString().contains(userdetails['id'].toString())){
+//
+//                 }else{
+//                   var mappedData = json.decode(message.data['data']);
+//                   messagecontroller.messagechecker(context, mappedData);
+//                 }
+//               }else{
+//                 if (message['sender'].toString() == userdetails['name'].toString()){
+//                 }else if (message['reason'].toString() == 'deletegroup'){
+//
+//                 }else{
+//                   messagecontroller.messageHandler(message.data['data'],context);
+//                 }
+//               }
+//               getPersonMessage();
+//
+//             }else if(message['type'] == "event"){
+//               print('EVENT ANDRIOD :'+message.toString());
+//               var mappedData = json.decode(message.data['data']);
+//               eventservice.appendNew(data: mappedData);
+//               NotificationDisplayer().showNotification(mappedData['type'].toString() == 'event' ? 'Nouvel événement programmé.' : mappedData['type'].toString() == 'match' ? 'Un nouveau match a été programmé.' : 'Une nouvelle réunion a été programmée.', "Nouvel évènement", context, mappedData['id'].toString(),mappedData['type'].toString(),image: "");
+//               notificationIndicator = true;
+//               notificID = mappedData['id'].toString();
+//               notificType = 'Event';
+//               getEvents();
+//
+//             }else{
+//               var mappedData = json.decode(message.data['data']);
+//               bannerDisplay.update(mappedData);
+//               AdListener().showAd(context, mappedData);
+//               notificID = mappedData['id'].toString();
+//               notificType = 'Event';
+//             }
+//           }
+//         }catch(e){
+//           Messagecontroller().printWrapped("onMessage Error : $e");
+//         }
+//         return ;
+//       }
+//     );
+//     firebaseMessaging.requestNotificationPermissions(
+//         const IosNotificationSettings(
+//             sound: true,
+//             badge: true,
+//             alert: true,
+//             provisional: true
+//         )
+//     );
+//     firebaseMessaging.onIosSettingsRegistered.listen((IosNotificationSettings settings) {
+//       print("SETTINGS : $settings");
+//     });
+//   }
+// }
+//
+// class ReceiveNotific{
+//   String notificID = "";
+//   String notificType = "";
+// }

@@ -26,7 +26,7 @@ class _Enter_new_credentialsState extends State<Enter_new_credentials> {
 
   _sendCode()async{
     showloader(context);
-    var response = await http.post('https://ujap.checkmy.dev/api/client/password-reset',
+    var response = await http.post(Uri.parse('https://ujap.checkmy.dev/api/client/password-reset'),
         headers: {
           HttpHeaders.authorizationHeader: "Bearer $accesstoken",
           "Accept": "application/json"
@@ -58,9 +58,9 @@ class _Enter_new_credentialsState extends State<Enter_new_credentials> {
     // TODO: implement initState
     super.initState();
     SystemChannels.textInput.invokeMethod('TextInput.hide');
-    KeyboardVisibility.onChange.listen((bool visible) {
-        keyboardvisible = visible;
-    });
+    // KeyboardVisibility.onChange.listen((bool visible) {
+    //     keyboardvisible = visible;
+    // });
   }
 
 

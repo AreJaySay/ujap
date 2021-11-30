@@ -55,9 +55,6 @@ class _Clients_listState extends State<Clients_list> {
 
   @override
   Widget build(BuildContext context) {
-    // return StreamBuilder(
-    //     stream: _searchEvents(),
-    //     builder: (context, snapshot) {
           return Scaffold(
               body: Stack(children: [
             Scaffold(
@@ -356,43 +353,18 @@ class _Clients_listState extends State<Clients_list> {
                                       Map dd = await conversationService.checkConvoMembersExist(memberIds: [userdetails['id'], int.parse(receiverID_public)]);
                                       setState(() {
                                         List receiverDetails;
-
-                                        // if (sendGmailValidation){
-                                        //   clientGmail = events_clients[index]['email'].toString();
-                                        //   sendmessageTo = events_clients[index]['name'].toString();
-                                        //   attachments.add(pdfFile.path);
-                                        //   uploadPDF();
-                                        //   Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=>SendGmail(
-                                        //   )));
-                                        //   // sendGmail(context,clientGmail)
-                                        // }
-                                        // else{
                                           try{
-
                                             print(sendmessageTo);
                                             setState(() {
                                               sendmessageTo = events_clients[index]['name'].toString();
                                               receiverID_public = events_clients[index]['id'].toString();
-//                                              receiverDetails = events_clients[index];
                                             });
-//                                            if (privateMessages != null) {
-//                                              receiverDetails = privateMessages.where((s){
-//                                                return s['members'].toString().contains(sendmessageTo.toString());
-//                                              }).toList();
-//                                            }
-
                                             print('RESULT : $events_clients');
                                             if(conversationService.checkConvoMembersExist(memberIds: [userdetails['id'], int.parse(receiverID_public)]) == null){
                                               createChannel(context, true, '');
                                             }else{
                                               senderID = dd['id'].toString();
                                             }
-
-//                                            if (receiverDetails.toString() == "[]"){
-//                                              createChannel(context, true, "");
-//                                            }else{
-//                                              senderID = receiverDetails[0]['id'].toString();
-//                                            }
                                             Navigator.of(context).pop(null);
                                           }catch(e){
                                             print("$e");

@@ -85,6 +85,7 @@ class _ViewEventState extends State<ViewEvent> with SingleTickerProviderStateMix
                       Expanded(
                         child: ListView(
                           padding: EdgeInsets.all(0),
+                          physics: NeverScrollableScrollPhysics(),
                           children: [
                             Hero(
                               transitionOnUserGestures: true,
@@ -295,7 +296,7 @@ class _ViewEventState extends State<ViewEvent> with SingleTickerProviderStateMix
                             ),
                             Container(
                               width: double.infinity,
-                              height: _tabIndex == 0 ? screenheight/8 : screenheight/3,
+                              height: _tabIndex == 0 ? screenheight/7 : screenheight/3,
                               margin: const EdgeInsets.symmetric(horizontal: 20),
                               child: TabBarView(
                                 physics: NeverScrollableScrollPhysics(),
@@ -325,7 +326,7 @@ class _ViewEventState extends State<ViewEvent> with SingleTickerProviderStateMix
                         ConfirmAttendance(widget.eventDetail,attendees,eventStatuscurrentEvent) :
                         Container(
                           width: double.infinity,
-                          margin: const EdgeInsets.symmetric(horizontal: 20,vertical: 50),
+                          margin: const EdgeInsets.symmetric(horizontal: 20,vertical: 30),
                           height: 60,
                           child: Row(
                             children: [
@@ -402,13 +403,16 @@ class _ViewEventState extends State<ViewEvent> with SingleTickerProviderStateMix
                             color: kPrimaryColor,
                             borderRadius: BorderRadius.circular(1000.0)
                         ),
-                        child: Icon(Icons.arrow_back, color: Colors.white,size: screenwidth < 700 ? screenwidth/13 : screenwidth/18,)),
+                        child: Icon(Icons.arrow_back, color: Colors.white,size: 26,)),
                     onTap: (){
                       setState(() {
                         filterSearchService.filter(past: pastTicketMatches);
                         if (notifPage){
                           Navigator.of(context).pop(null);
                         }else{
+                          if (taskList.toString() != "[]"){
+                            taskList.clear();
+                          }
                           Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=>MainScreen(false)));
                         }
                       });

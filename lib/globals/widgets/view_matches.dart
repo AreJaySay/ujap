@@ -207,16 +207,14 @@ class _View_matchesState extends State<View_matches> {
                                                   Container(
                                                       width : screenwidth/6,
                                                       height: screenheight/9,
-                                                      child: _teamNameandlogo == null ? Container() :
-                                                      Image(
+                                                      child: Image(
                                                         fit: BoxFit.contain ,
-                                                        image: NetworkImage('https://ujap.checkmy.dev/storage/teams/'+_teamNameandlogo[0]['logo'].toString()),
+                                                        image: NetworkImage(_teamNameandlogo.toString() == "[]" ? "https://static.thenounproject.com/png/340719-200.png" : 'https://ujap.checkmy.dev/storage/teams/'+_teamNameandlogo[0]['logo'].toString()),
                                                       )
                                                   ),
-
                                                   Container(
                                                       margin: EdgeInsets.symmetric(horizontal: 15),
-                                                      child: Text(_teamNameandlogo[0]['name'].toString().toUpperCase(),style: TextStyle(fontSize: screenwidth < 700 ? screenheight/70  : 20,fontFamily: 'Google-Bold',color: Colors.grey[800]),textAlign: TextAlign.center,)),
+                                                      child: Text( _teamNameandlogo.toString() == "[]" ? "Pas de nom d'équipe adverse".toUpperCase() : _teamNameandlogo[0]['name'].toString().toUpperCase(),style: TextStyle(fontSize: screenwidth < 700 ? screenheight/70  : 20,fontFamily: 'Google-Bold',color: Colors.grey[800]),textAlign: TextAlign.center,)),
                                                 ],
                                               ),
                                             ),
@@ -234,21 +232,21 @@ class _View_matchesState extends State<View_matches> {
                                         SizedBox(
                                           width: 15,
                                         ),
-                                        GestureDetector(
-                                          child: Container(
-                                            width: screenwidth/2,
-                                            child: Text(_teamNameandlogo[0]['address'].toString(),
-                                            textAlign: TextAlign.center,
-                                            style: TextStyle(fontSize: screenwidth < 700 ? screenheight/60  : 20,fontFamily: 'Google-Medium',color: Colors.grey[700]),
-                                            ),
-                                          ),
-                                          onTap: (){
-                                            setState(() {
-                                              // print(_teamNameandlogo[0]['address'].toString().replaceAll('/N', ''));
-                                              launchMap(_teamNameandlogo[0]['address'].toString());
-                                            });
-                                          },
-                                        ),
+                                        // GestureDetector(
+                                        //   child: Container(
+                                        //     width: screenwidth/2,
+                                        //     child: Text(_teamNameandlogo[0]['address'].toString(),
+                                        //     textAlign: TextAlign.center,
+                                        //     style: TextStyle(fontSize: screenwidth < 700 ? screenheight/60  : 20,fontFamily: 'Google-Medium',color: Colors.grey[700]),
+                                        //     ),
+                                        //   ),
+                                        //   onTap: (){
+                                        //     setState(() {
+                                        //       // print(_teamNameandlogo[0]['address'].toString().replaceAll('/N', ''));
+                                        //       launchMap(_teamNameandlogo[0]['address'].toString());
+                                        //     });
+                                        //   },
+                                        // ),
                                         SizedBox(
                                           width: 15,
                                         ),
@@ -280,24 +278,24 @@ class _View_matchesState extends State<View_matches> {
                               child: Container(
                                   height: screenwidth/3,
                                   alignment: Alignment.centerLeft,
-                                  child: Row(
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    crossAxisAlignment: CrossAxisAlignment.center,
-                                    children: [
-                                      Container(
-                                        height: screenwidth <700 ? 25 : 50,
-                                        width: screenwidth <700 ? 25 : 50,
-                                        child: Image(
-                                          color: Colors.grey,
-                                          image:  AssetImage('assets/home_icons/green_ticket.png'),
-                                        ),
-                                      ),
-                                      SizedBox(
-                                        width: 10,
-                                      ),
-                                      Text('Pas de ticket disponible!'.toUpperCase(),style: TextStyle(fontSize: screenwidth < 700 ? screenheight/50  : 30,fontFamily: 'Google-Bold',color: Colors.grey[600]),),
-                                    ],
-                                  )
+                                  // child: Row(
+                                  //   mainAxisAlignment: MainAxisAlignment.center,
+                                  //   crossAxisAlignment: CrossAxisAlignment.center,
+                                  //   children: [
+                                  //     Container(
+                                  //       height: screenwidth <700 ? 25 : 50,
+                                  //       width: screenwidth <700 ? 25 : 50,
+                                  //       child: Image(
+                                  //         color: Colors.grey,
+                                  //         image:  AssetImage('assets/home_icons/green_ticket.png'),
+                                  //       ),
+                                  //     ),
+                                  //     SizedBox(
+                                  //       width: 10,
+                                  //     ),
+                                  //     Text('Pas de ticket disponible!'.toUpperCase(),style: TextStyle(fontSize: screenwidth < 700 ? screenheight/50  : 30,fontFamily: 'Google-Bold',color: Colors.grey[600]),),
+                                  //   ],
+                                  // )
                               ),
                             ) :
                             eventStatusmatch[0]['accepted_clients'].toString().contains('client_id: '+userdetails['id'].toString()) ?
@@ -343,7 +341,7 @@ class _View_matchesState extends State<View_matches> {
                                     borderRadius: BorderRadius.circular(1000.0)
                                   ),
                                   padding: EdgeInsets.all(screenwidth < 700 ? 2 : 3),
-                                  child: Icon(Icons.arrow_back_rounded,color: Colors.white,size: screenwidth < 700 ? screenwidth/12 : screenwidth/18,)),
+                                  child: Icon(Icons.arrow_back_rounded,color: Colors.white,size: 26,)),
                               onTap: (){
                                 setState(() {
                                   attend_pass = "";
@@ -355,6 +353,9 @@ class _View_matchesState extends State<View_matches> {
                                   if (notifPage){
                                     Navigator.of(context).pop(null);
                                   }else{
+                                    if (taskList.toString() != "[]"){
+                                      taskList.clear();
+                                    }
                                     Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=>MainScreen(false)));
                                   }
                                   SystemChannels.textInput.invokeMethod('TextInput.hide');

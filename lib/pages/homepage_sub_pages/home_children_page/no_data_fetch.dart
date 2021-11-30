@@ -50,7 +50,7 @@ class _No_events_data_yetState extends State<No_events_data_yet> {
                   scrollDirection: Axis.horizontal,
                 ),
                 itemCount: 4,
-                itemBuilder: (BuildContext context, int index) {
+                itemBuilder: (BuildContext context, int index, int pageViewIndex) {
                   return  Stack(
                     children: [
                        Container(

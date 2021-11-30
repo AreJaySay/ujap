@@ -92,10 +92,12 @@ class _ParametersState extends State<Parameters> {
                   SizedBox(
                     width: 10,
                   ),
-                  Container(
-                      margin: EdgeInsets.symmetric(horizontal: screenwidth/40),
-                      alignment: Alignment.centerLeft,
-                      child: Text('Info',style: TextStyle(color: Colors.white,fontSize: screenwidth < 700 ? screenheight/60 : 20,fontFamily: 'Google-Medium'),))
+                  Expanded(
+                    child: Container(
+                        margin: EdgeInsets.symmetric(horizontal: screenwidth/40),
+                        alignment: Alignment.centerLeft,
+                        child: Text('Informations sur le profil',style: TextStyle(color: Colors.white,fontSize: screenwidth < 700 ? screenheight/60 : 20,fontFamily: 'Google-Medium'),)),
+                  )
                 ],
               ),
             ),
@@ -108,49 +110,6 @@ class _ParametersState extends State<Parameters> {
               ),type: PageTransitionType.rightToLeftWithFade,alignment: Alignment.center, curve: Curves.easeIn,duration: Duration(milliseconds: 500)));
             },
           ),
-//           StreamBuilder<Status>(
-//             stream: isPushEnabled.stream$,
-//             builder: (context, snapshot) => FlatButton(
-//               child: Container(
-//                 child: Row(
-//                   children: [
-//                     Icon( snapshot.data == Status.denied ? Icons.notifications : Icons.notifications_off,size: screenwidth < 700 ? 25 : 30,color: Colors.white,),
-//                     SizedBox(
-//                       width: 10,
-//                     ),
-//                     Expanded(
-//                       child: Container(
-//                           alignment: Alignment.centerLeft,
-//                           child: Text( snapshot.data == Status.denied ? 'Activer les notifications' : 'Mettre les notifications en sourdine',style: TextStyle(color: Colors.white,fontSize: screenwidth < 700 ? screenheight/60 : 20,fontFamily: 'Google-Medium'),)),
-//                     )
-//                   ],
-//                 ),
-//               ),
-//               onPressed: (){
-// //                isPushEnabled.clear();
-//                 isPushEnabled.updateData(newStatus: snapshot.data == Status.denied ? 'granted' : 'denied');
-// //              print(IsPushEnabled().updater(type: snapshot.data == Status.denied || snapshot.data == null ? 'granted' : 'denied'));
-// //              IsPushEnabled().updateTest();
-// //                  print(IsPushEnabled().updater(type: snapshot.data == Status.denied || snapshot.data == null ? 'granted' : 'denied'));
-// //                  setState(() async{
-// //
-// ////                SharedPreferences prefs = await SharedPreferences.getInstance();
-// ////                List<String> _local = [];
-// ////                if (!silent_notifications.toString().contains(userdetails['email'].toString())){
-// ////                  _local.add(userdetails['email'].toString());
-// ////                  silent_notifications = _local;
-// ////                  prefs.setStringList('notification', silent_notifications);
-// ////                }
-// ////                else{
-// ////                  _local.remove(userdetails['email'].toString());
-// ////                  silent_notifications = _local;
-// ////                  prefs.setStringList('notification', silent_notifications);
-// ////    }
-// ////                print('NITIFICATION :'+silent_notifications.toString());
-// //                  });
-//               },
-//             ),
-//           )
         ],
       ),
     );

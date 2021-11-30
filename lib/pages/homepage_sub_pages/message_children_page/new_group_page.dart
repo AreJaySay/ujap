@@ -69,7 +69,7 @@ class _NewGroupPageState extends State<NewGroupPage> {
                 print("ADD");
 
                 for(var add in _toAdd){
-                  conversationService.addMember(widget.channelId, add['id']);
+                  conversationService.addMember(widget.channelId, add['id'], "You have been added as member");
                   Messagecontroller().sendmessage("", "Vous avez été ajouté à un groupe", add['id'], true, "add as member",null);
                   for(var member in _selectedParticipants){
                     Messagecontroller().updateMembers(int.parse(member['id'].toString()), add);

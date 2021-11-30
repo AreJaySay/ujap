@@ -3,9 +3,12 @@ import 'package:page_transition/page_transition.dart';
 import 'package:ujap/globals/container_data.dart';
 import 'package:ujap/globals/user_data.dart';
 import 'package:ujap/globals/variables/other_variables.dart';
+import 'package:ujap/pages/homepage_sub_pages/message_children_page/message_children/change_group_name.dart';
 import 'package:ujap/pages/homepage_sub_pages/message_children_page/new_group_page.dart';
 import 'package:ujap/pages/homepage_sub_pages/message_children_page/search_conversation_page.dart';
 import 'package:ujap/pages/homepage_sub_pages/message_children_page/view_channel_photos.dart';
+
+String channelNameSetting = "";
 
 class ConvoSettingsPage extends StatefulWidget {
   final Map data;
@@ -16,6 +19,11 @@ class ConvoSettingsPage extends StatefulWidget {
 }
 
 class _ConvoSettingsPageState extends State<ConvoSettingsPage> {
+  Stream changename()async*{
+    setState(() {
+      changeName = changeName;
+    });
+  }
   bool _showMembers = false;
   Widget avatarCircle(Map data){
     return Container(
@@ -129,138 +137,147 @@ class _ConvoSettingsPageState extends State<ConvoSettingsPage> {
       return widget.data['members'][0]['detail']['name'];
     }
   }
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
+
     return Scaffold(
-      appBar: AppBar(
+      appBar: changeName ? null : AppBar(
         elevation: 0,
         backgroundColor: Colors.transparent,
         iconTheme: IconThemeData(
           color: kPrimaryColor
         ),
       ),
-      body: Column(
+      body: Stack(
         children: [
-          Expanded(
-            child: ListView(
-              padding: const EdgeInsets.symmetric(horizontal: 20),
-              children: [
-                Container(
-                  width: double.infinity,
-                  padding: const EdgeInsets.symmetric(vertical: 10),
-                  child: getMembers()
-                ),
-                Container(
-                  child: Text("${channelName()}",textAlign: TextAlign.center,maxLines: 1,overflow: TextOverflow.ellipsis,style: TextStyle(
-                    fontFamily: "Google-Bold",
-                    fontSize: 18
-                  ),),
-                ),
-                Container(
-                  margin: const EdgeInsets.only(top: 10),
-                  width: double.infinity,
-                  alignment: AlignmentDirectional.center,
-                  child: Container(
-                    width: 30,
-                    height: 30,
-                    decoration: BoxDecoration(
-                      color: Colors.grey[400],
-                      borderRadius: BorderRadius.circular(1000),
-                      boxShadow: [
-                        BoxShadow(
-                          color: Colors.grey,
-                          blurRadius: 2
-                        )
-                      ]
+          Column(
+            children: [
+              changeName ? SizedBox(
+                height: 50,
+              ) : Container(),
+              Expanded(
+                child: ListView(
+                  padding: const EdgeInsets.symmetric(horizontal: 20),
+                  children: [
+                    Container(
+                      width: double.infinity,
+                      padding: const EdgeInsets.symmetric(vertical: 10),
+                      child: getMembers()
                     ),
-                    child: FlatButton(
-                      onPressed: (){
-                        List members = [];
-                        for(var m in widget.data['members']){
-                          for(var x in events_clients){
-                            if(int.parse(m['client_id'].toString()) == int.parse(x['id'].toString())){
-                              members.add(x);
-                            }
-                          }
-                        }
-                        members.removeWhere((element) => element['id'] == userdetails['id']);
-                        Navigator.push(context, PageTransition(child: NewGroupPage(participateWith: members,toAdd: true,channelId: widget.channelId,), type: PageTransitionType.bottomToTop));
-                      },
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(1000)
-                      ),
-                      padding: const EdgeInsets.all(5),
-                      child: FittedBox(
-                        child: Icon(Icons.person_add,color: Colors.black54,),
-                      ),
+                    Container(
+                      child: Text("${channelNameSetting == "" ? channelName() : channelNameSetting}",textAlign: TextAlign.center,maxLines: 1,overflow: TextOverflow.ellipsis,style: TextStyle(
+                        fontFamily: "Google-Bold",
+                        fontSize: 18
+                      ),),
                     ),
-                  ),
-                ),
-                widget.data['members'].length > 2 ? Container(
-                  margin: EdgeInsets.only(top: 10),
-                  width: double.infinity,
-                  child: Text("Informations sur le groupe",style: TextStyle(
-                      color: Colors.black54
-                  ),),
-                ) : Container(),
-                // widget.data['members'].length > 2 ? Container(
-                //     width: double.infinity,
-                //     child: FlatButton(
-                //       onPressed: (){
-                //
-                //       },
-                //       child: Row(
-                //         children: [
-                //           Expanded(
-                //             child: Text("Changer le nom du groupe"),
-                //           ),
-                //           Icon(Icons.edit)
-                //         ],
-                //       ),
-                //     )
-                // ) : Container(),
-                widget.data['members'].length > 2 ? Container(
-                    width: double.infinity,
-                    child: FlatButton(
-//              padding: const EdgeInsets.symmetric(horizontal: 0),
-                      onPressed: (){
-                        setState(() {
-                          _showMembers = !_showMembers;
-                        });
-                      },
-                      child: Row(
-                        children: [
-                          Expanded(
-                            child: Text("${_showMembers ? "Cacher" : "Voir"} les membres du groupe"),
-                          ),
-                          Icon(!_showMembers ? Icons.visibility : Icons.visibility_off)
-                        ],
-                      ),
-                    )
-                ) : Container(),
-                // Container(
-                //   width: double.infinity,
-                //   child: Text("Actions",style: TextStyle(
-                //     color: Colors.black54
-                //   ),),
-                // ),
-                Container(
-                  width: double.infinity,
-                  child: FlatButton(
-//              padding: const EdgeInsets.symmetric(horizontal: 0),
-                    onPressed: (){
-                      Navigator.push(context, PageTransition(child: ViewChannelPhotos(widget.channelId), type: PageTransitionType.bottomToTop));
-                    },
-                    child: Row(
-                      children: [
-                        Expanded(
-                          child: Text("Voir les photos"),
+                    Container(
+                      margin: const EdgeInsets.only(top: 10),
+                      width: double.infinity,
+                      alignment: AlignmentDirectional.center,
+                      child: Container(
+                        width: 30,
+                        height: 30,
+                        decoration: BoxDecoration(
+                          color: Colors.grey[400],
+                          borderRadius: BorderRadius.circular(1000),
+                          boxShadow: [
+                            BoxShadow(
+                              color: Colors.grey,
+                              blurRadius: 2
+                            )
+                          ]
                         ),
-                        Icon(Icons.photo_size_select_actual)
-                      ],
+                        child: FlatButton(
+                          onPressed: (){
+                            List members = [];
+                            for(var m in widget.data['members']){
+                              for(var x in events_clients){
+                                if(int.parse(m['client_id'].toString()) == int.parse(x['id'].toString())){
+                                  members.add(x);
+                                }
+                              }
+                            }
+                            members.removeWhere((element) => element['id'] == userdetails['id']);
+                            Navigator.push(context, PageTransition(child: NewGroupPage(participateWith: members,toAdd: true,channelId: widget.channelId,), type: PageTransitionType.bottomToTop));
+                          },
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(1000)
+                          ),
+                          padding: const EdgeInsets.all(5),
+                          child: FittedBox(
+                            child: Icon(Icons.person_add,color: Colors.black54,),
+                          ),
+                        ),
+                      ),
                     ),
-                  )
-                ),
+                    widget.data['members'].length > 2 ? Container(
+                      margin: EdgeInsets.only(top: 10),
+                      width: double.infinity,
+                      child: Text("Informations sur le groupe",style: TextStyle(
+                          color: Colors.black54
+                      ),),
+                    ) : Container(),
+                    widget.data['members'].length > 2 ? Container(
+                        width: double.infinity,
+                        child: FlatButton(
+                          onPressed: (){
+                            setState(() {
+                              changeName = true;
+                            });
+                          },
+                          child: Row(
+                            children: [
+                              Expanded(
+                                child: Text("Changer le nom du groupe"),
+                              ),
+                              Icon(Icons.edit)
+                            ],
+                          ),
+                        )
+                    ) : Container(),
+                    widget.data['members'].length > 2 ? Container(
+                        width: double.infinity,
+                        child: FlatButton(
+//              padding: const EdgeInsets.symmetric(horizontal: 0),
+                          onPressed: (){
+                            setState(() {
+                              _showMembers = !_showMembers;
+                            });
+                          },
+                          child: Row(
+                            children: [
+                              Expanded(
+                                child: Text("${_showMembers ? "Cacher" : "Voir"} les membres du groupe"),
+                              ),
+                              Icon(!_showMembers ? Icons.visibility : Icons.visibility_off)
+                            ],
+                          ),
+                        )
+                    ) : Container(),
+                    Container(
+                      width: double.infinity,
+                      child: FlatButton(
+//              padding: const EdgeInsets.symmetric(horizontal: 0),
+                        onPressed: (){
+                          Navigator.push(context, PageTransition(child: ViewChannelPhotos(widget.channelId), type: PageTransitionType.bottomToTop));
+                        },
+                        child: Row(
+                          children: [
+                            Expanded(
+                              child: Text("Voir les photos"),
+                            ),
+                            Icon(Icons.photo_size_select_actual)
+                          ],
+                        ),
+                      )
+                    ),
 //                 Container(
 //                     width: double.infinity,
 //                     child: FlatButton(
@@ -278,87 +295,104 @@ class _ConvoSettingsPageState extends State<ConvoSettingsPage> {
 //                       ),
 //                     )
 //                 ),
-                widget.data['members'].length == 2 ? Container(
-                    width: double.infinity,
-                    child: FlatButton(
+                    widget.data['members'].length == 2 ? Container(
+                        width: double.infinity,
+                        child: FlatButton(
 //              padding: const EdgeInsets.symmetric(horizontal: 0),
-                      onPressed: (){
-                        List participant = events_clients.where((element) => element['name'] == channelName()).toList();
-                        Navigator.push(context, PageTransition(child: NewGroupPage(participateWith: participant,toAdd: false,), type: PageTransitionType.bottomToTop));
-                      },
-                      child: Row(
-                        children: [
-                          Expanded(
-                            child: Text("Créer une discussion de groupe avec ${channelName()}"),
+                          onPressed: (){
+                            List participant = events_clients.where((element) => element['name'] == channelName()).toList();
+                            Navigator.push(context, PageTransition(child: NewGroupPage(participateWith: participant,toAdd: false,), type: PageTransitionType.bottomToTop));
+                          },
+                          child: Row(
+                            children: [
+                              Expanded(
+                                child: Text("Créer une discussion de groupe avec ${channelName()}"),
+                              ),
+                              Container(
+                                width: 25,
+                                height: 25,
+                                alignment: AlignmentDirectional.center,
+                                child: Image.asset("assets/messages_icon/add_group.png"),
+                              )
+                            ],
                           ),
-                          Container(
-                            width: 25,
-                            height: 25,
-                            alignment: AlignmentDirectional.center,
-                            child: Image.asset("assets/messages_icon/add_group.png"),
-                          )
-                        ],
+                        )
+                    ) : Container()
+                  ],
+                ),
+              ),
+              AnimatedContainer(
+                width: double.infinity,
+                duration: Duration(milliseconds: 400),
+                height: _showMembers ? screenheight/4 : 0,
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.vertical(top: Radius.circular(5)),
+                  color: Colors.grey[300]
+                ),
+                child: Column(
+                  children: [
+                    Expanded(
+                      flex: 1,
+                      child: Container(
+                        child: Row(
+                          children: [
+                            Expanded(
+                              child: Padding(
+                                padding: const EdgeInsets.only(left: 20),
+                                  child: Text("Membres : ",style: TextStyle(
+                                    fontSize: screenheight/55,
+                                    fontWeight: FontWeight.w600
+                                  ),)
+                              ),
+                            ),
+                            // channelNameSetting
+                            IconButton(
+                              icon: Icon(Icons.close),
+                              onPressed: (){
+                                setState(() {
+                                  _showMembers = false;
+                                  channelNameSetting = "";
+                                });
+                              },
+                            )
+                          ],
+                        ),
                       ),
-                    )
-                ) : Container()
-              ],
-            ),
-          ),
-          AnimatedContainer(
-            width: double.infinity,
-            duration: Duration(milliseconds: 400),
-            height: _showMembers ? screenheight/4 : 0,
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.vertical(top: Radius.circular(5)),
-              color: Colors.grey[300]
-            ),
-            child: Column(
-              children: [
-                Expanded(
-                  flex: 1,
-                  child: Container(
-                    child: Row(
-                      children: [
-                        Expanded(
-                          child: Padding(
-                            padding: const EdgeInsets.only(left: 20),
-                              child: Text("Membres : ",style: TextStyle(
-                                fontSize: screenheight/55,
-                                fontWeight: FontWeight.w600
-                              ),)
+                    ),
+                    Expanded(
+                      flex: 4,
+                      child: ListView.builder(
+                        itemCount: widget.data['members'].length,
+                        itemBuilder: (context, index) => Container(
+                          width: double.infinity,
+                          margin: const EdgeInsets.only(bottom: 10),
+                          padding: const EdgeInsets.symmetric(horizontal: 20),
+                          child: Row(
+                            children: [
+                              avatarCircle(widget.data['members'][index]),
+                              const SizedBox(
+                                width: 10,
+                              ),
+                              Expanded(
+                                child: Text("${widget.data['members'][index]['detail']['name']}",style: TextStyle(
+                                  fontFamily: "Google-Bold"
+                                ),),
+                              )
+                            ],
                           ),
                         ),
-                        IconButton(icon: Icon(Icons.close), onPressed: ()=>setState(()=> _showMembers = false))
-                      ],
-                    ),
-                  ),
-                ),
-                Expanded(
-                  flex: 4,
-                  child: ListView.builder(
-                    itemCount: widget.data['members'].length,
-                    itemBuilder: (context, index) => Container(
-                      width: double.infinity,
-                      margin: const EdgeInsets.only(bottom: 10),
-                      padding: const EdgeInsets.symmetric(horizontal: 20),
-                      child: Row(
-                        children: [
-                          avatarCircle(widget.data['members'][index]),
-                          const SizedBox(
-                            width: 10,
-                          ),
-                          Expanded(
-                            child: Text("${widget.data['members'][index]['detail']['name']}",style: TextStyle(
-                              fontFamily: "Google-Bold"
-                            ),),
-                          )
-                        ],
                       ),
-                    ),
-                  ),
-                )
-              ],
-            ),
+                    )
+                  ],
+                ),
+              )
+            ],
+          ),
+          StreamBuilder<Object>(
+              stream: changename(),
+              builder: (context, snapshot) {
+                return !changeName ? Container() : ChangeGroupName(widget.data);
+              }
           )
         ],
       ),

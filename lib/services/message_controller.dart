@@ -13,10 +13,11 @@ import 'package:ujap/services/pushnotification.dart';
 
 class Messagecontroller{
   NotificationDisplayer notificationDisplayer = new NotificationDisplayer();
-  sendmessage(data, String messagetoSend,int receiverId, bool refresh, String reason, List<int> recievers)async{
+  sendmessage(data, String messagetoSend,int receiverId, bool refresh, String reason, List<int> recievers, {String groupname})async{
+    print(groupname.toString());
     try{
       var response = await http.post(
-        'https://fcm.googleapis.com/fcm/send',
+        Uri.parse('https://fcm.googleapis.com/fcm/send'),
         headers: <String, String>{
           'Content-Type': 'application/json',
           'Authorization': 'key=$TokenServer',
@@ -24,6 +25,8 @@ class Messagecontroller{
         body: jsonEncode(
           <String, dynamic>{
             'notification': <String, dynamic>{
+              'title': '${groupname}',
+              'body' : "${userdetails['name']}: $messagetoSend"
             },
             'priority': 'high',
             'data': <String, dynamic>{
@@ -39,6 +42,7 @@ class Messagecontroller{
               'message': messagetoSend,
               'data': data,
             },
+            // 'to' : "cxnkdkEzm05mpfAzLu_wEK:APA91bFgpp-OBEkV7NT-1oR09ruLV1bikZQ14YXnzoH47uhYCCQ50Io-Rab5gDUYZlxzEIfPFzJZV_c1qsbhaXGfSkyoxbny1glVOAKh2kQLVuGtc2CavRkwt1KDIGYRRIgn9LtStdJr"
             'to': "/topics/Subscription$receiverId",
           },
         ),
@@ -116,7 +120,7 @@ class Messagecontroller{
 //      );
       for (var x = 0; x < serverFcmTokens.length; x ++){
         var response = await http.post(
-          'https://fcm.googleapis.com/fcm/send',
+          Uri.parse('https://fcm.googleapis.com/fcm/send'),
           headers: <String, String>{
             'Content-Type': 'application/json',
             'Authorization': 'key=$TokenServer',

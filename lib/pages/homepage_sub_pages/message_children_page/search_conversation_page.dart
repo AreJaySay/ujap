@@ -141,9 +141,6 @@ class _SearchConversationPageState extends State<SearchConversationPage> {
                         child: Text("Pas de messages"),
                       );
                     }
-                    return Center(
-                      child: CircularProgressIndicator(valueColor: AlwaysStoppedAnimation<Color>(kPrimaryColor),),
-                    );
                   }catch(e){
                     return Center(
                       child: Text("Oops! Something went wrong, please try again $e"),

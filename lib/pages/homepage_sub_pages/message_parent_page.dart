@@ -12,20 +12,11 @@ import 'package:ujap/globals/variables/messages_sub_pages_variables.dart';
 import 'package:ujap/globals/variables/other_variables.dart';
 import 'package:ujap/globals/widgets/appbar_icons.dart';
 import 'package:ujap/globals/widgets/curve_containers.dart';
-import 'package:ujap/globals/widgets/show_flushbar.dart';
-import 'package:ujap/globals/widgets/show_loader.dart';
-import 'package:ujap/pages/homepage_sub_pages/home_children_page/download_pdf%202.dart';
-import 'package:ujap/pages/homepage_sub_pages/message_children_page/create_new_group.dart';
-import 'package:ujap/pages/homepage_sub_pages/message_children_page/list_of_clients.dart';
-import 'package:ujap/pages/homepage_sub_pages/message_children_page/message_list_Data.dart';
 import 'package:ujap/pages/homepage_sub_pages/message_children_page/new_message_page.dart';
 import 'package:ujap/pages/homepage_sub_pages/message_children_page/slider.dart';
-import 'package:ujap/pages/homepage_sub_pages/message_children_page/tabbarView.dart';
 import 'package:ujap/services/api.dart';
 import 'package:ujap/services/conversation_listener.dart';
 import 'package:ujap/services/message_data.dart';
-import 'package:ujap/services/searches/messages_service.dart';
-import 'package:ujap/services/string_formatter.dart';
 
 final add_channelKey = GlobalKey<ScaffoldState>();
 bool isConversation = true;
@@ -144,7 +135,6 @@ class _Message_homepage_homepageState extends State<Message_homepage>
                                                       child: ClipPath(
                                                         clipper: CurvedBottom(),
                                                         child: Container(
-                                                          margin: EdgeInsets.all(40),
                                                           width:
                                                               MediaQuery.of(context).size.width,
                                                           height: screenwidth < 700
@@ -153,7 +143,7 @@ class _Message_homepage_homepageState extends State<Message_homepage>
                                                           decoration: BoxDecoration(
                                                               image: DecorationImage(
                                                             image:
-                                                                AssetImage("assets/new_app_icon.png"),
+                                                                AssetImage("assets/logo_shadow.png"),
                                                           )),
                                                         ),
                                                       ))),
@@ -252,7 +242,7 @@ class _Message_homepage_homepageState extends State<Message_homepage>
                                                               GestureDetector(
                                                                 onTap: (){
                                                                   WidgetsBinding.instance.addPostFrameCallback((_) {
-                                                                    Navigator.pushReplacement(context, MaterialPageRoute(builder: (_) => NewMessage()));
+                                                                    Navigator.push(context, MaterialPageRoute(builder: (_) => NewMessage()));
                                                                   });
                                                                 },
                                                                 child: Container(
@@ -348,7 +338,7 @@ class _Message_homepage_homepageState extends State<Message_homepage>
                                                                [
                                                                    Stack(
                                                                      children: [
-                                                                       Container(
+                                                                       locallistChecker.length != 0 ? Container() : Container(
                                                                          decoration: BoxDecoration(
                                                                              color: Colors.white,
                                                                              borderRadius: BorderRadius.vertical(top: Radius.circular(20))
@@ -358,7 +348,6 @@ class _Message_homepage_homepageState extends State<Message_homepage>
                                                                        ),
                                                                        Container(
                                                                          color: Colors.white,
-                                                                         height: screenheight,
                                                                          child: Column(
                                                                            children: [
                                                                              for(var x =0;x<snapshot.data.length;x++)...{
@@ -379,6 +368,7 @@ class _Message_homepage_homepageState extends State<Message_homepage>
                                                                              }
                                                                            ],
                                                                          ),
+                                                                         padding: EdgeInsets.only(bottom: 50),
                                                                        ),
                                                                      ],
                                                                    )
@@ -456,7 +446,6 @@ class _Message_homepage_homepageState extends State<Message_homepage>
     setState(() {
       selectedButton = index;
     });
-//    _pageController.animateToPage(index, duration: Duration(milliseconds: 600), curve: Curves.linear);
   }
   String contactName(List members, name){
     if(members.length > 2){

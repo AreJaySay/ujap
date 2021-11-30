@@ -1,5 +1,8 @@
 import 'dart:async';
 import 'dart:convert';
+import 'package:firebase_analytics/observer.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
@@ -20,14 +23,30 @@ import 'package:ujap/pages/homepage.dart';
 import 'package:ujap/pages/homepage_sub_pages/event_children/events_list_data.dart';
 import 'package:ujap/pages/homepage_sub_pages/message_children_page/create_new_group.dart';
 import 'package:ujap/services/message_data.dart';
-import 'package:ujap/services/push_notification_enable_listener.dart';
-import 'package:ujap/services/pushnotification.dart';
+import 'package:firebase_analytics/firebase_analytics.dart';
 
-void main() {
+Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
+  await Firebase.initializeApp();
+  print('Handling a background message ${message.messageId}');
+}
+
+void main() async{
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp();
+  FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
+  await FirebaseMessaging.instance
+      .setForegroundNotificationPresentationOptions(
+    alert: true,
+    badge: true,
+    sound: true,
+  );
   runApp(MyApp());
 }
 
 class MyApp extends StatelessWidget {
+  static FirebaseAnalytics analytics = FirebaseAnalytics();
+  static FirebaseAnalyticsObserver observer = FirebaseAnalyticsObserver(analytics: analytics);
+
   @override
   Widget build(BuildContext context) {
     SystemChrome.setPreferredOrientations([
@@ -121,7 +140,7 @@ class _SplashScreenState extends State<SplashScreen> {
       setState(() {
         savedPass = pass;
         savedEmail = user;
-        login(user, pass, context,null);
+        logcdin(user, pass, context,null,false);
         Navigator.of(context,).pop(null);
       });
 //      openLocationSetting();

@@ -41,10 +41,6 @@ class _View_message_tabbarState extends State<View_message_tabbar>  {
                 ],
                 onTap: (index){
                   setState(() {
-//                    messagebox_public.text = "";
-//                    messagebox_group.text = "";
-//                    file = null;
-//                    fileImage = null;
                     messageIndex = index.toString();
                   });
                 },

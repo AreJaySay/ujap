@@ -44,8 +44,8 @@ Map<String, String> headers = {
 // LOGIN FCM TOKEN
 
 sendFCM_token()async{
-  var token = await FirebaseMessaging().getToken();
-  await http.post('https://ujap.checkmy.dev/api/client/firebase/save',
+  var token = await FirebaseMessaging.instance.getToken();
+  await http.post(Uri.parse('https://ujap.checkmy.dev/api/client/firebase/save'),
       headers: {
         HttpHeaders.authorizationHeader: "Bearer $accesstoken",
         "Accept": "application/json"
@@ -61,7 +61,7 @@ String serverfcmToken = "";
 List<String> serverFcmTokens = List<String>();
 
 getServerFcmToken()async{
-  var response = await http.get("https://ujap.checkmy.dev/api/client/user-fcms",
+  var response = await http.get(Uri.parse("https://ujap.checkmy.dev/api/client/user-fcms"),
       headers: headers
   );
   List _serverToken = json.decode(response.body);
@@ -77,7 +77,7 @@ getServerFcmToken()async{
 }
 
 getTeams()async{
-  var response = await http.get('https://ujap.checkmy.dev/api/client/teams',
+  var response = await http.get(Uri.parse('https://ujap.checkmy.dev/api/client/teams'),
       headers: headers
   );
   String _eventsLocal = response.body.toString();
@@ -99,7 +99,7 @@ List finalEventAttended;
 List finalMeetingAttended;
 
 getEvents()async{
-  var response = await http.get('https://ujap.checkmy.dev/api/client/events',
+  var response = await http.get(Uri.parse('https://ujap.checkmy.dev/api/client/events'),
       headers: {
         HttpHeaders.authorizationHeader: "Bearer $accesstoken",
         "Accept": "application/json"
@@ -108,11 +108,6 @@ getEvents()async{
   var _localevents =  json.decode(response.body);
   if (response.statusCode == 200){
     List _events = _localevents;
-
-      // _events.sort((a, b) {
-      //     return a['sched_date'].toLowerCase().compareTo(b['sched_date'].toLowerCase());
-      // });
-      // matchservice.updateAll(data: _events);
       eventsfirstData = _events;
       eventsData = _events;
 
@@ -157,7 +152,7 @@ getEvents()async{
 }
 
 getEvents_status({String eventID = ""})async{
-  var response = await http.get('https://ujap.checkmy.dev/api/client/events-status',
+  var response = await http.get(Uri.parse('https://ujap.checkmy.dev/api/client/events-status'),
       headers: headers
   );
   var jsonData = json.decode(response.body);
@@ -235,14 +230,14 @@ getEvents_status({String eventID = ""})async{
 List client_backup;
 
 getEvents_clients(context)async{
-  var response = await http.get('https://ujap.checkmy.dev/api/client/clients',
+  var response = await http.get(Uri.parse('https://ujap.checkmy.dev/api/client/clients'),
       headers: headers
   );
   var jsonData = json.decode(response.body);
   if (response.statusCode == 200){
       events_clients = jsonData;
       client_backup = events_clients;
-      send_userEmail(context);
+      // send_userEmail(context);
   }
   else
   {
@@ -256,7 +251,7 @@ var selectedTicket = "";
 List myTicketrequest;
 
 getTicketData(localTicketID)async{
-  var response = await http.get('https://ujap.checkmy.dev/api/client/documents/get-ticket-documents-all/$localTicketID',
+  var response = await http.get(Uri.parse('https://ujap.checkmy.dev/api/client/documents/get-ticket-documents-all/$localTicketID'),
       headers: {
         HttpHeaders.authorizationHeader: "Bearer $accesstoken",
         "Accept": "application/pdf"
@@ -279,7 +274,7 @@ getTicketData(localTicketID)async{
 List ticket_requests;
 
 get_ticket_requests(context,_ticketID)async{
-  var response = await http.get('https://ujap.checkmy.dev/api/client/ticket-request/all',
+  var response = await http.get(Uri.parse('https://ujap.checkmy.dev/api/client/ticket-request/all'),
     headers: {
       HttpHeaders.authorizationHeader: "Bearer $accesstoken",
       "Accept": "application/pdf"
@@ -328,7 +323,7 @@ List ownMessages;
 getPersonMessage()async{
     try{
       var response = await http.get(
-          'https://ujap.checkmy.dev/api/client/member/channels/${userdetails['id'].toString()}',
+          Uri.parse('https://ujap.checkmy.dev/api/client/member/channels/${userdetails['id'].toString()}'),
           headers: headers
       );
       var jsonData = json.decode(response.body);
@@ -357,7 +352,7 @@ getPersonMessage()async{
 
 getCurrent_channel(channelId)async{
   var response = await http.get(
-      'https://ujap.checkmy.dev/api/client/channel/messages?channel_id=$channelId',
+      Uri.parse('https://ujap.checkmy.dev/api/client/channel/messages?channel_id=$channelId'),
       headers: {
         HttpHeaders.authorizationHeader: "Bearer $accesstoken",
         "Accept": "application/json"
@@ -379,7 +374,7 @@ List current_channel_messages;
 List ownMessages_backup;
 
 sendMessage_compose(context,sentTime,attachment)async {
-  var response = await http.post('https://ujap.checkmy.dev/api/client/chat/send',
+  var response = await http.post(Uri.parse('https://ujap.checkmy.dev/api/client/chat/send'),
     headers: headers,
     body: attachment.toString() == "null" ? {
       'receiver_id': receiverID_public.toString(),
@@ -419,7 +414,7 @@ var checkConnection = "";
 
 createChannel(context, bool isConversation,_groupChatName)async{
   print('asdasdasddfd :'+isConversation.toString());
-  var response = await http.post('https://ujap.checkmy.dev/api/client/channel/add',
+  var response = await http.post(Uri.parse('https://ujap.checkmy.dev/api/client/channel/add'),
     headers:
       headers,
     body: {
@@ -447,7 +442,7 @@ createChannel(context, bool isConversation,_groupChatName)async{
 
 AddChannel(context)async{
   print('asddfdfdfdf');
-  var response = await http.post('https://ujap.checkmy.dev/api/client/channel/add-member',
+  var response = await http.post(Uri.parse('https://ujap.checkmy.dev/api/client/channel/add-member'),
     headers: {
       HttpHeaders.authorizationHeader: "Bearer $accesstoken",
       "Accept": "application/json"
@@ -485,7 +480,7 @@ List chatmembers;
 
 mute_currentChat(context,String client_id,String status)async{
   showloader(context);
-  var response = await http.post('https://ujap.checkmy.dev/api/client/chat/mute-client',
+  var response = await http.post(Uri.parse('https://ujap.checkmy.dev/api/client/chat/mute-client'),
       headers: {
         HttpHeaders.authorizationHeader: "Bearer $accesstoken",
         "Accept": "application/json"
@@ -522,7 +517,7 @@ var success_deleted = "";
 delete_current_convo(context,_channelID)async{
   showloader(context);
   print(_channelID);
-  var response = await http.delete('https://ujap.checkmy.dev/api/client/channel/delete?id=${_channelID.toString()}',
+  var response = await http.delete(Uri.parse('https://ujap.checkmy.dev/api/client/channel/delete?id=${_channelID.toString()}'),
     headers: {
       HttpHeaders.authorizationHeader: "Bearer $accesstoken",
       "Accept": "application/json"
@@ -542,7 +537,7 @@ delete_current_convo(context,_channelID)async{
 
 Future getEventAttendess(e_id) async {
   try{
-    return await http.get('https://ujap.checkmy.dev/api/client/meeting/attendees/$e_id',headers: {
+    return await http.get(Uri.parse('https://ujap.checkmy.dev/api/client/meeting/attendees/$e_id'),headers: {
       HttpHeaders.authorizationHeader: "Bearer $accesstoken",
       "Accept": "application/json"
     }).then((value) {
@@ -558,7 +553,7 @@ Future getEventAttendess(e_id) async {
   }
 }
 get_mutedChat()async{
-  var response = await http.get('https://ujap.checkmy.dev/api/client/chat/muted-clients?client_id=${userdetails['id'].toString()}',
+  var response = await http.get(Uri.parse('https://ujap.checkmy.dev/api/client/chat/muted-clients?client_id=${userdetails['id'].toString()}'),
       headers: {
         HttpHeaders.authorizationHeader: "Bearer $accesstoken",
         "Accept": "application/json"
@@ -579,7 +574,7 @@ get_mutedChat()async{
 /////// PROFILE ///////////
 
 send_userEmail(context)async{
-  var response = await http.post('https://ujap.checkmy.dev/api/client/forgot-password',
+  var response = await http.post(Uri.parse('https://ujap.checkmy.dev/api/client/forgot-password'),
       headers: {
         HttpHeaders.authorizationHeader: "Bearer $accesstoken",
         "Accept": "application/json"
@@ -600,7 +595,7 @@ send_userEmail(context)async{
 bool passwordSuccess = false;
 
 changePassword(context)async{
-  var response = await http.post('https://ujap.checkmy.dev/api/client/password-reset',
+  var response = await http.post(Uri.parse('https://ujap.checkmy.dev/api/client/password-reset'),
       headers: {
         HttpHeaders.authorizationHeader: "Bearer $accesstoken",
         "Accept": "application/json"
@@ -629,7 +624,7 @@ changePassword(context)async{
 List backupAds;
 
  Future getall_Ads()async{
-  var response = await http.get('https://ujap.checkmy.dev/api/client/ads',
+  var response = await http.get(Uri.parse('https://ujap.checkmy.dev/api/client/ads'),
       headers: {
         HttpHeaders.authorizationHeader: "Bearer $accesstoken",
         "Accept": "application/json"
@@ -644,7 +639,7 @@ List backupAds;
           return s['status'].toString().contains('1');
         }).toList();
         if (get_ads.toString() != "[]"){
-          _deleteTask(get_ads[0]['id']);
+          deleteTask(get_ads[0]['id']);
           Future.delayed(const Duration(milliseconds: 500), () {
             addToDb(itemid: get_ads[0]['id'].toString(),messageTypes: 'Advertisement');
           });
@@ -658,7 +653,7 @@ List backupAds;
   return null;
 }
 
-void _deleteTask(int id) async {
+void deleteTask(int id) async {
   await DatabaseHelper.instance.delete(id);
     taskList.removeWhere((element) => element.itemid == id);
 }

@@ -9,16 +9,16 @@ showloader(context){
       builder: (_)=> Container(
         width: screenwidth,
         height: screenheight,
-        color: Colors.black54,
+        color: Colors.white.withOpacity(0.3),
         child: BackdropFilter(
-          filter: ImageFilter.blur(sigmaX: 4,sigmaY: 4),
+          filter: ImageFilter.blur(sigmaX: 6,sigmaY: 6),
           child: Container(
               width: screenwidth,
               height: screenheight,
               alignment: AlignmentDirectional.center,
               child: Image(
                 fit: BoxFit.contain,
-                width: screenwidth/2.5,
+                width: screenwidth/2,
                 image: AssetImage('assets/loaded-ujap.gif'),
               )
           ),

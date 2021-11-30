@@ -33,8 +33,8 @@ class GlobalSearchPage extends StatefulWidget {
 class _GlobalSearchPageState extends State<GlobalSearchPage> {
   TextEditingController searchBox = new TextEditingController();
   bool keyboardvisible = false;
-  List navigaTors = ['ALL','ÉVÉNEMENTS','RÉUNIONS','ALLUMETTES'];
-  List navMessage = ['ALL','MESSAGES','MESSAGES DE GROUPE'];
+  List navigaTors = ['TOUT','ÉVÉNEMENTS','RÉUNIONS','MATCHS'];
+  List navMessage = ['TOUT','MESSAGES','MESSAGES DE GROUPE'];
   List messageLocal;
   int navIndex = 0;
   List myeventsData = [];
@@ -50,14 +50,24 @@ class _GlobalSearchPageState extends State<GlobalSearchPage> {
       videoPlayerController.pause();
       chewieController.pause();
     }
-    KeyboardVisibility.onChange.listen((bool visible) {
-     setState(() {
-       keyboardvisible = visible;
-       // eventsData = eventsfirstData;
-       // attendedEventMatch = backup_attendedEventMatch;
-       // ownMessages = messageLocal;
-       navIndex = 0;
-     });
+    // keyboardVisibilityController.onChange.listen((bool visible) {
+    //  setState(() {
+    //    keyboardvisible = visible;
+    //    // eventsData = eventsfirstData;
+    //    // attendedEventMatch = backup_attendedEventMatch;
+    //    // ownMessages = messageLocal;
+    //    navIndex = 0;
+    //  });
+    // });
+    var keyboardVisibilityController = KeyboardVisibilityController();
+    keyboardVisibilityController.onChange.listen((bool visible) {
+      setState(() {
+        keyboardvisible = visible;
+        // eventsData = eventsfirstData;
+        // attendedEventMatch = backup_attendedEventMatch;
+        // ownMessages = messageLocal;
+        navIndex = 0;
+      });
     });
   }
 
@@ -83,7 +93,7 @@ class _GlobalSearchPageState extends State<GlobalSearchPage> {
                     child: Row(
                       children: <Widget>[
                         IconButton(
-                          icon: Icon(Icons.arrow_back,color: Colors.white,size: screenwidth < 700 ? screenwidth/15 : 35,),
+                          icon: Icon(Icons.arrow_back,color: Colors.white,size: 26,),
                           onPressed: (){
                             setState(() {
                               if (myeventsData.toString() != "[]"){
@@ -273,7 +283,7 @@ class _GlobalSearchPageState extends State<GlobalSearchPage> {
               Container(
                   child: Column(
                     children: [
-                      Text("Aucun messages trouvé".toUpperCase(),style: TextStyle(fontSize: screenwidth < 700 ? screenheight/65  : 20,fontFamily: 'Google-Bold',color: Colors.grey[700]),),
+                      Text("Aucun message trouvé".toUpperCase(),style: TextStyle(fontSize: screenwidth < 700 ? screenheight/65  : 20,fontFamily: 'Google-Bold',color: Colors.grey[700]),),
                       SizedBox(
                         height: 5,
                       ),

@@ -68,7 +68,7 @@ class ConversationService{
   }
   readMessageServer(int channelId) async {
     try{
-      await http.put("${this.urlString}/channel/read_message",headers: {
+      await http.put(Uri.parse("${this.urlString}/channel/read_message"),headers: {
         HttpHeaders.authorizationHeader : "Bearer $accesstoken",
         "accept" : "application/json"
       }, body: {
@@ -103,7 +103,7 @@ class ConversationService{
   }
   Future deleteChannel(int channelid) async {
     try{
-      final respo = await http.put("$urlString/channel/${channelid}/remove_for/${userdetails['id']}",headers: {
+      final respo = await http.put(Uri.parse("$urlString/channel/${channelid}/remove_for/${userdetails['id']}"),headers: {
         "accept" : "application/json",
          HttpHeaders.authorizationHeader : "Bearer $accesstoken"
       },);
@@ -113,7 +113,7 @@ class ConversationService{
   }
   Future deletegroupChannel(int id)async{
     try{
-      final respo = await http.delete("$urlString/channel/delete?id=$id",headers: {
+      final respo = await http.delete(Uri.parse("$urlString/channel/delete?id=$id"),headers: {
         "accept" : "application/json",
         HttpHeaders.authorizationHeader : "Bearer $accesstoken"
       },);
@@ -137,7 +137,7 @@ class ConversationService{
   }
   Future readServer() async {
     try{
-      await http.put("$urlString/channel/read_message",body: {
+      await http.put(Uri.parse("$urlString/channel/read_message"),body: {
 
       });
     }catch(e){
@@ -186,10 +186,10 @@ class ConversationService{
     }
     return false;
   }
-  Future addMember(int channelId, int id) async {
+  Future addMember(int channelId, int id, String name) async {
     try{
 
-      final respo = await http.post("$urlString/channel/add-member",headers: {
+      final respo = await http.post(Uri.parse("$urlString/channel/add-member"),headers: {
         HttpHeaders.authorizationHeader : "Bearer $accesstoken",
         "accept" : "application/json"
       }, body: {
@@ -199,7 +199,7 @@ class ConversationService{
       var data = json.decode(respo.body);
       if(respo.statusCode == 200){
         this.currentConvo.where((element) => int.parse(element['id'].toString()) == channelId).toList()[0]['members'].add(data);
-        messagecontroller.sendmessage('', 'Vous avez été ajouté à un groupe', id, true, "a_member",null);
+        messagecontroller.sendmessage('', 'Vous avez été ajouté à un groupe', id, true, "a_member",null, groupname: name);
         return data;
       }
       return null;
@@ -210,7 +210,7 @@ class ConversationService{
   }
   Future createChannel(List<int> memberIds) async {
     try{
-      final respo = await http.post("$urlString/channel/add",headers: {
+      final respo = await http.post(Uri.parse("$urlString/channel/add"),headers: {
         HttpHeaders.authorizationHeader : "Bearer $accesstoken",
         "accept" :"application/json"
       },body: {
@@ -218,10 +218,21 @@ class ConversationService{
         "client_id" : userdetails['id'].toString()
       });
       var data = json.decode(respo.body);
+      print("Created channel : $data");
       if(respo.statusCode == 200){
         this.append(data: data);
+        String name;
+        if(data['name'] != "ec0fc0100c4fc1ce4eea230c3dc10360"){
+          name = data['name'];
+        }else{
+          List names = [];
+          for(var member in data['members']){
+            names.add(member['detail']['name']);
+          }
+          name = names.join(',');
+        }
         for(var x in memberIds){
-          await this.addMember(data['id'], x);
+          await this.addMember(data['id'], x, name);
         }
         chatListener.updateAll(data: []);
         chatListener.updateChannelID(id: data['id']);

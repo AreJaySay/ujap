@@ -5,6 +5,7 @@ import 'package:page_transition/page_transition.dart';
 import 'package:ujap/globals/container_data.dart';
 import 'package:ujap/globals/user_data.dart';
 import 'package:ujap/globals/variables/other_variables.dart';
+import 'package:ujap/globals/widgets/show_loader.dart';
 import 'package:ujap/pages/homepage_sub_pages/message_children_page/new_compose_message.dart';
 import 'package:ujap/pages/homepage_sub_pages/message_children_page/new_group_page.dart';
 import 'package:ujap/pages/homepage_sub_pages/message_children_page/slider.dart';
@@ -46,67 +47,29 @@ class _NewMessageState extends State<NewMessage> {
           padding: const EdgeInsets.symmetric(horizontal: 20,vertical: 10),
           child: Column(
             children: [
-              // Container(
-              //   width: double.infinity,
-              //   child: Row(
-              //     children: [
-              //       Text("To:",style: TextStyle(
-              //         fontSize: screenwidth/33,
-              //         color: Colors.black54,
-              //         fontWeight: FontWeight.w600
-              //       ),),
-              //       const SizedBox(
-              //         width: 10,
-              //       ),
-              //       // Expanded(
-              //       //   child: TextField(
-              //       //     controller: _search,
-              //       //     onChanged: (text)=>setState(() {
-                    //       _clients=events_clients.where((element) => element['name'].toString().toLowerCase().contains(text.toLowerCase())).toList();
-                    //       if(text.isEmpty){
-                    //         selected = null;
-                    //       }
-              //       //     }),
-              //       //     style: TextStyle(
-              //       //       fontSize: screenwidth/31
-              //       //     ),
-              //       //     cursorColor: kPrimaryColor,
-              //       //     decoration: InputDecoration(
-              //       //       border: InputBorder.none,
-              //       //       hintText: "Tapez un nom"
-              //       //     ),
-              //       //   ),
-              //       // ),
-              //       selected == null ? Container() : Container(
-              //         width: 25,
-              //         height: 25,
-              //         decoration: BoxDecoration(
-              //           color: Colors.black26,
-              //           borderRadius: BorderRadius.circular(1000)
-              //         ),
-              //         child: FlatButton(
-              //           shape: RoundedRectangleBorder(
-              //             borderRadius: BorderRadius.circular(1000)
-              //           ),
-              //           padding: const EdgeInsets.all(0),
-              //           onPressed: ()async{
-              //             List<int> dd = [];
-              //             if(userdetails['id'] != selected['id']){
-              //               dd = [userdetails['id'],selected['id']];
-              //             }
-              //             await conversationService.checkConvoMembersExist(memberIds: dd).then((value) {
-              //               Navigator.of(context).pop(null);
-              //               Navigator.push(context, PageTransition(child: NewComposeMessage(value), type: PageTransitionType.leftToRightWithFade));
-              //             });
-              //           },
-              //           child: Center(
-              //             child: Icon(Icons.check,size: 20,color: Colors.white,),
-              //           ),
-              //         ),
-              //       )
-              //     ],
-              //   ),
-              // ),
+              Container(
+                width: double.infinity,
+                height: 50,
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  border: Border.all(color: Colors.grey.shade400),
+                  borderRadius: BorderRadius.circular(5),
+                ),
+                child: TextField(
+                  onChanged: (text){
+                    setState(() {
+                      _clients = events_clients.where((s){
+                        return s['name'].toString().toLowerCase().contains(text.toLowerCase());
+                      }).toList();
+                    });
+                  },
+                  decoration: InputDecoration(
+                    hintText: 'Rechercher un récepteur',
+                    border: InputBorder.none,
+                    prefixIcon: Icon(Icons.search)
+                  ),
+                ),
+              ),
               Expanded(
                 child: ListView(
                   children: [
@@ -154,6 +117,7 @@ class _NewMessageState extends State<NewMessage> {
                             List clientDetails;
 
                             List checkerList = ownMessages.where((s){
+                              print(contacts['id'].toString());
                               if (s['members'][1]['client_id'].toString() == contacts['id'].toString()){
                                 return s['members'][1]['client_id'].toString() == contacts['id'].toString()  && s['members'].length == 2;
                               }else{
@@ -163,7 +127,7 @@ class _NewMessageState extends State<NewMessage> {
 
 
                             if (checkerList.toString() == "[]"){
-                              print('DRE PA GINGAMIT '+ checkerList.toString());
+                              showloader(context);
                               selected = contacts;
                               if(userdetails['id'] != selected['id']){
                                 dd = [userdetails['id'],selected['id']];
@@ -198,7 +162,7 @@ class _NewMessageState extends State<NewMessage> {
                               }
                             }
                           },
-                          padding: const EdgeInsets.symmetric(vertical: 10,horizontal: 0),
+                          padding: const EdgeInsets.symmetric(vertical: 5,horizontal: 0),
                           child: Row(
                             children: [
                               Container(

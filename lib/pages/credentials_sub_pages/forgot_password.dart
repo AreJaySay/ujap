@@ -26,7 +26,7 @@ class _Forgot_passwordState extends State<Forgot_password> {
 
   _send_userEmail()async{
     showloader(context);
-    var response = await http.post('https://ujap.checkmy.dev/api/client/forgot-password',
+    var response = await http.post(Uri.parse('https://ujap.checkmy.dev/api/client/forgot-password'),
         headers: {
           HttpHeaders.authorizationHeader: "Bearer $accesstoken",
           "Accept": "application/json"
@@ -60,9 +60,9 @@ class _Forgot_passwordState extends State<Forgot_password> {
     // TODO: implement initState
     super.initState();
     SystemChannels.textInput.invokeMethod('TextInput.hide');
-    KeyboardVisibility.onChange.listen((bool visible) {
-      keyboardvisible = visible;
-    });
+    // KeyboardVisibility.onChange.listen((bool visible) {
+    //   keyboardvisible = visible;
+    // });
   }
 
   @override

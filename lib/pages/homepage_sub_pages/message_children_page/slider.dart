@@ -21,7 +21,6 @@ import 'package:ujap/services/string_formatter.dart';
 import 'package:http/http.dart' as http;
 
 List<String> channelMembersID = List<String>();
-// bool navigateNotific = false;
 
 class MySlider extends StatefulWidget {
   final int id;
@@ -185,7 +184,7 @@ class _MySliderState extends State<MySlider> {
                         ),
                         Container(
                           width: double.infinity,
-                          child: Text("${widget.data['last_convo'] == null ? "Pas de message" : "${widget.data['last_convo']['sender_id'] == userdetails['id'] ? "Toi" : widget.data['last_convo']['client']['name']} : ${widget.data['last_convo']['filename'] == null ? widget.data['last_convo']['message'] == null ? "" : widget.data['last_convo']['message'] : "A envoyé une pièce jointe"}"}",
+                          child: Text("${widget.data['last_convo'] == null ? "Pas de message" : widget.data['last_convo']['client'] == null ? "" : "${widget.data['last_convo']['sender_id'] == userdetails['id'] ? "Toi" : widget.data['last_convo']['client']['name']} : ${widget.data['last_convo']['filename'] == null ? widget.data['last_convo']['message'] == null ? "" : widget.data['last_convo']['message'] : "A envoyé une pièce jointe"}"}",
                             maxLines: 1,
                             overflow: TextOverflow.ellipsis,
                             style: TextStyle(
@@ -224,12 +223,12 @@ class _MySliderState extends State<MySlider> {
                         ),),
                       ),
                     ),
-                    widget.data['last_convo'] == null ? Container() : Container(
-                      child: dateBetween == 0 ? Text(DateFormat('kk:mm').format(DateTime.parse(widget.data['last_convo']['date_sent'])),style: TextStyle(fontSize: screenwidth < 700 ? 13 : 16,color: Colors.grey, fontFamily: "Google-medium")) :
-                      dateBetween == 1 ? Text('Yesterday',style: TextStyle(fontSize: screenwidth < 700 ? 13 : 16,color: Colors.grey, fontFamily: "Google-medium"),) :
+                    widget.data['last_convo'].toString() == "null" ? Container() : Container(
+                      child: dateBetween == 0 ? widget.data['last_convo']['created_at'] == null ? Container() : Text(DateFormat('kk:mm').format(DateTime.parse(widget.data['last_convo']['created_at']).toLocal()),style: TextStyle(fontSize: screenwidth < 700 ? 13 : 16,color: Colors.grey, fontFamily: "Google-medium")) :
+                      dateBetween == 1 ? Text('Hier',style: TextStyle(fontSize: screenwidth < 700 ? 13 : 16,color: Colors.grey, fontFamily: "Google-medium"),) :
                       dateBetween > 1 ? Text('${dateBetween.toString()} days ago',style: TextStyle(fontSize: screenwidth < 700 ? 13 : 16,color: Colors.grey, fontFamily: "Google-medium"),) :
-                      dateBetween > 7 ? Text('A week ago',style: TextStyle(fontSize: screenwidth < 700 ? 13 : 16,color: Colors.grey, fontFamily: "Google-medium"),) :
-                      Text(DateFormat("d").format(DateTime.parse(widget.data['last_convo']['date_sent'])).toString().toUpperCase()+' '+monthDate[int.parse(DateFormat("MM").format(DateTime.parse(widget.data['last_convo']['date_sent'])).toString())].toString()+'.'+' '+DateFormat("yyyy").format(DateTime.parse(widget.data['last_convo']['date_sent'])).toString().toUpperCase(),style: TextStyle(fontSize: screenwidth < 700 ? 13 : 16,color: Colors.grey, fontFamily: "Google-medium"),),
+                      dateBetween > 7 ? Text('Il y a une semaine',style: TextStyle(fontSize: screenwidth < 700 ? 13 : 16,color: Colors.grey, fontFamily: "Google-medium"),) :
+                      Text(DateFormat("d").format(DateTime.parse(widget.data['last_convo']['created_at']).toLocal()).toString().toUpperCase()+' '+monthDate[int.parse(DateFormat("MM").format(DateTime.parse(widget.data['last_convo']['created_at']).toLocal()).toString())].toString()+'.'+' '+DateFormat("yyyy").format(DateTime.parse(widget.data['last_convo']['created_at']).toLocal()).toString().toUpperCase(),style: TextStyle(fontSize: screenwidth < 700 ? 13 : 16,color: Colors.grey, fontFamily: "Google-medium"),),
                     )
                   ],
                 ),

@@ -84,6 +84,7 @@ class _ViewEventDetailsState extends State<ViewEventDetails> with SingleTickerPr
                     Expanded(
                       child: ListView(
                         padding: EdgeInsets.all(0),
+                        physics: NeverScrollableScrollPhysics(),
                         children: [
                           Hero(
                             transitionOnUserGestures: true,
@@ -414,13 +415,17 @@ class _ViewEventDetailsState extends State<ViewEventDetails> with SingleTickerPr
                             color: kPrimaryColor,
                             borderRadius: BorderRadius.circular(1000.0)
                         ),
-                        child: Icon(Icons.arrow_back, color: Colors.white,size: screenwidth < 700 ? screenwidth/13 : screenwidth/18,)),
+                        child: Icon(Icons.arrow_back, color: Colors.white,size: 26,)),
                     onTap: (){
                       setState(() {
                         filterSearchService.filter(past: pastTicketMatches);
+                        print(notifPage.toString());
                         if (notifPage){
                           Navigator.of(context).pop(null);
                         }else{
+                          if (taskList.toString() != "[]"){
+                            taskList.clear();
+                          }
                           Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=>MainScreen(false)));
                         }
                       });

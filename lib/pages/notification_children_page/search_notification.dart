@@ -62,7 +62,7 @@ class _SearchNotificationsState extends State<SearchNotifications> {
                         GestureDetector(
                           child: Container(
                               padding: EdgeInsets.all(3),
-                              child: Icon(Icons.arrow_back_rounded,color: kPrimaryColor,size: screenwidth/12,)),
+                              child: Icon(Icons.arrow_back_rounded,color: kPrimaryColor,size: 26,)),
                           onTap: (){
                             Navigator.of(context).pop(null);
                             setState(() {
@@ -108,9 +108,6 @@ class _SearchNotificationsState extends State<SearchNotifications> {
                                         'publicités'.toString().toLowerCase().contains(_searchbox.text.toString().toLowerCase()) ? s['type'].toString() == 'image' ||  s['type'].toString() == 'video' : s['type'].toString() == text.toString();
                                     // }).toList();;
                                   }).toList();
-                                  //     .where((s){
-                                  //   return 'publicités'.toString().toLowerCase().contains(text.toString().toLowerCase()) ? s['type'].toString() == 'image' ||  s['type'].toString() == 'video' : s['type'].toString() == text.toString();
-                                  // }).toList();
                                 });
                               },
                             ),
@@ -159,19 +156,6 @@ class _SearchNotificationsState extends State<SearchNotifications> {
                       padding: EdgeInsets.symmetric(vertical: 10),
                       itemCount: widget.datatoSearchEvents.length,
                       itemBuilder: (context, index){
-
-                        // if (taskList[index].messageType == 'Event'){
-                        //   eventDetails = snapshot.data.where((s){
-                        //     return s['id'].toString()+'.0' == taskList[index].itemid.toString();
-                        //   }).toList();
-                        //   datatoSearchEvents.add(eventDetails[0]);
-                        // }else{
-                        //   adverTisement = get_ads.where((s){
-                        //     return s['id'].toString()+'.0' == taskList[index].itemid.toString();
-                        //   }).toList();
-                        //   // datatoSearchEvents.add(adverTisement[0]);
-                        // }
-
                         return GestureDetector(
                           child: Container(
                             width: double.infinity,

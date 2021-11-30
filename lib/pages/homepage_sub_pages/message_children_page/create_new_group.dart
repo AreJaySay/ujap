@@ -48,7 +48,7 @@ class _CreateNewGroupState extends State<CreateNewGroup> {
 
   removeMember(context,clientName,clientID)async{
     showloader(context);
-    var response = await http.delete('https://ujap.checkmy.dev/api/client/channel/delete-member?id=${clientID.toString()}',
+    var response = await http.delete(Uri.parse('https://ujap.checkmy.dev/api/client/channel/delete-member?id=${clientID.toString()}'),
         headers: {
           HttpHeaders.authorizationHeader: "Bearer $accesstoken",
           "Accept": "application/json"
@@ -171,8 +171,6 @@ class _CreateNewGroupState extends State<CreateNewGroup> {
                                   setState(() {
                                     Navigator.push(context, PageTransition(child:  SpeechToText(
                                     ),type: PageTransitionType.rightToLeftWithFade,alignment: Alignment.center, curve: Curves.easeIn,duration: Duration(milliseconds: 500)));
-//                            Navigator.push(context, PageTransition(child: Speech_sample(
-//                            ),type: PageTransitionType.rightToLeft,alignment: Alignment.center, curve: Curves.easeIn,duration: Duration(milliseconds: 500)));
                                   });
                                 },
                               ),
@@ -442,43 +440,8 @@ class _CreateNewGroupState extends State<CreateNewGroup> {
                                             ],
                                           ),
                                         ),
-
-                                        onTap: () {
-                                          setState(() {
-//                      sendmessageTo = events_clients[index]
-//                      ['name']
-//                          .toString();
-//                      receiverID_public =
-//                          events_clients[index]['id']
-//                              .toString();
-//                      AddChannel(context);
-//                                Navigator.of(context).pop(null);
-                                          });
-                                        },
                                       );
                                     }),
-//                        !addMembers ? Container () : Container(
-//                          width: screenwidth,
-//                          padding: EdgeInsets.all(20),
-//                          height: screenheight,
-//                          alignment: Alignment.bottomRight,
-//                          child: Stack(
-//                            children: [
-//                              FloatingActionButton(
-//                                heroTag: 'btn5',
-//                                backgroundColor: kPrimaryColor,
-//                                child: Text('DONE',style: TextStyle(fontFamily: 'Google-Medium',fontSize: screenwidth < 700 ? screenheight/70 : screenheight/100)),
-//                                onPressed: (){
-//                                  setState(() {
-//                                    getAll_channel();
-//                                    Navigator.of(context).pop(null);
-//                                    message_compose_open = false;
-//                                  });
-//                                },
-//                              ),
-//                            ],
-//                          ),
-//                        )
                               ],
                             ),
                           ),

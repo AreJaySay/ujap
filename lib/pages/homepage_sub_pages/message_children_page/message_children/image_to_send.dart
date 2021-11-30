@@ -64,8 +64,6 @@ class _ImageToSendState extends State<ImageToSend> {
                           onTap: (){
                           },
                           onLongPress: ()async{
-                            print("LONG PRESS");
-                            print(await FirebaseMessaging().getToken());
                           },
                           child: Image.memory(base64.decode(widget.b64)),
                         ),

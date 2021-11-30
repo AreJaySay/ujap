@@ -34,6 +34,14 @@ class ChatListener {
       print("ERROR APPEND : $e");
     }
   }
+  removeLocals(){
+    try{
+      this.current.removeWhere((element) => element['foo'] != null && element['foo'] == "local");
+      _chats.add(this.current);
+    }catch(e){
+      print("ERROR REMOVAL: $e");
+    }
+  }
 
 }
 ChatListener chatListener = ChatListener();

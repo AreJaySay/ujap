@@ -265,12 +265,12 @@ class _View_events_tabbarState extends State<View_events_tabbar>  {
                                             mainAxisAlignment: MainAxisAlignment.start,
                                             crossAxisAlignment: CrossAxisAlignment.start,
                                             children: <Widget>[
-                                              Text(participant == 1 ? " ${participant.toString()} participant" : "${participant.toString()} participants",style: TextStyle(fontFamily: 'Google-Bold',fontSize: screenwidth < 700 ? screenheight/90 : 13,color: Colors.grey[600],),),
+                                              Text(participant == 0 || participant == 1 ? " ${participant.toString()} participant" : "${participant.toString()} participants",style: TextStyle(fontFamily: 'Google-Bold',fontSize: screenwidth < 700 ? screenheight/90 : 13,color: Colors.grey[600],),),
                                               SizedBox(
                                                 height: screenwidth < 700 ? 3 : 7,
                                               ),
                                               (allocation-participant) == 0 || (allocation-participant) == 1 ? Text(allocation < participant ? '0 billet disponible' : (allocation-participant).toString()+' billet disponible',style: TextStyle(fontFamily: 'Google-Bold',fontSize: screenwidth < 700 ? screenheight/90 : 13,color: Colors.grey[600],),)
-                                              : Text(allocation < participant ? '0 billet disponible' : (allocation-participant).toString()+' billets disponible',style: TextStyle(fontFamily: 'Google-Bold',fontSize: screenwidth < 700 ? screenheight/90 : 13,color: Colors.grey[600],),),
+                                              : Text(allocation < participant ? '0 billet disponible' : (allocation-participant).toString()+' billets disponibles',style: TextStyle(fontFamily: 'Google-Bold',fontSize: screenwidth < 700 ? screenheight/90 : 13,color: Colors.grey[600],),),
                                             ],
                                           )),
                                     ],
@@ -303,6 +303,7 @@ class _View_events_tabbarState extends State<View_events_tabbar>  {
                                    confirmation(context,ticketID,'0',widget.eventDetail);
                                    eventType = widget.type.toString();
                                    eventID = widget._matchID.toString();
+                                   attend_pass = "No";
                                  });
                                 },
                             ),

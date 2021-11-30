@@ -1,26 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
-import 'package:intl/intl.dart';
-import 'package:shared_preferences/shared_preferences.dart';
-import 'package:shimmer/shimmer.dart';
-import 'package:ujap/globals/container_data.dart';
-import 'package:ujap/globals/user_data.dart';
 import 'package:ujap/globals/variables/home_sub_pages_variables.dart';
 import 'package:ujap/globals/variables/other_variables.dart';
 import 'package:ujap/globals/widgets/banner.dart';
-import 'package:ujap/globals/widgets/view_events.dart';
-import 'package:ujap/globals/widgets/view_matches.dart';
-import 'package:ujap/pages/homepage.dart';
 import 'package:ujap/pages/homepage_sub_pages/home_children_page/event_listview.dart';
 import 'package:ujap/pages/homepage_sub_pages/home_children_page/matches.dart';
-import 'package:ujap/pages/homepage_sub_pages/home_children_page/no_data_fetch.dart';
 import 'package:ujap/pages/homepage_sub_pages/home_children_page/past_events_matches.dart';
 import 'package:ujap/services/ad_listener.dart';
-import 'package:ujap/services/api.dart';
-import 'package:ujap/services/push_notification_enable_listener.dart';
-import 'package:ujap/services/searches/search_service.dart';
-// import 'package:worm_indicator/shape.dart';
-// import 'package:worm_indicator/worm_indicator.dart';
 import 'package:http/http.dart' as http;
 
 class Home_parent extends StatefulWidget {
@@ -62,13 +47,6 @@ class _Home_parentState extends State<Home_parent> {
                                 shrinkWrap: true,
                                 controller: _scrollController,
                                 slivers: [
-//                                  SliverToBoxAdapter(
-//                                    child: bannerDisplay.position == 1 && snapshot.data ? Container(
-//                                      width: double.infinity,
-//                                      height: 60,
-//                                      color: kPrimaryColor.withOpacity(0.83),
-//                                    ) : Container(),
-//                                  ),
                                   SliverToBoxAdapter(
                                       child: snapshot.hasData && snapshot.data ? Container(
 //                                          margin: EdgeInsets.only(top: bannerDisplay.position == 1 ? 60 : 0),
@@ -80,9 +58,6 @@ class _Home_parentState extends State<Home_parent> {
                                     pinned: false,
                                     elevation: 0,
                                     floating: true,
-//                                    shape: ContinuousRectangleBorder(
-//                                      borderRadius: BorderRadius.vertical(bottom: Radius.circular(100))
-//                                    ),
                                     backgroundColor: Colors.white,
                                     forceElevated: false,
                                     automaticallyImplyLeading: false,

@@ -30,7 +30,7 @@ class _Reset_codeState extends State<Reset_code> {
 
   _sendCode()async{
     showloader(context);
-    var response = await http.get('https://ujap.checkmy.dev/api/client/check-code?code=${usernamecontroller.text.toString()}',
+    var response = await http.get(Uri.parse('https://ujap.checkmy.dev/api/client/check-code?code=${usernamecontroller.text.toString()}'),
       headers: {
         HttpHeaders.authorizationHeader: "Bearer $accesstoken",
         "Accept": "application/json"
@@ -68,9 +68,9 @@ class _Reset_codeState extends State<Reset_code> {
     // TODO: implement initState
     super.initState();
     SystemChannels.textInput.invokeMethod('TextInput.hide');
-    KeyboardVisibility.onChange.listen((bool visible) {
-        keyboardvisible = visible;
-    });
+    // KeyboardVisibility.onChange.listen((bool visible) {
+    //     keyboardvisible = visible;
+    // });
   }
 
   @override

@@ -24,7 +24,7 @@ import 'package:http/http.dart' as http;
 
 attedCurrentMeeting({context,eventID,clientID,status,Map data})async{
   try{
-    var response = await http.post('https://ujap.checkmy.dev/api/client/meeting-confirmation/save',
+    var response = await http.post(Uri.parse('https://ujap.checkmy.dev/api/client/meeting-confirmation/save'),
         headers: {
           HttpHeaders.authorizationHeader: "Bearer $accesstoken",
           "Accept": "application/json"
@@ -93,7 +93,7 @@ confirmMeeting(Map data,{context,String eventID,String clientID,status, String l
                       child: Container(
                         alignment: Alignment.center,
                         width: screenwidth,
-                        child: Text( currentindex == 0 ? type.toString() == "event" ? 'Vous souhaitez annuler votre participation à cet évènement?' : 'Vous souhaitez annuler votre participation à ce matc?' : attend_pass == 'No' ? 'Vous ne pourrez pas être présent au réunion ? Nous vous prions de nous confirmer ce choix. ?' : 'Confirmez-vous votre présence à ce réunion?',
+                        child: Text( currentindex == 0 ? 'Vous ne pourrez pas être présent ? Veuillez confirmer votre choix.' : attend_pass == 'No' ? 'Vous ne pourrez pas être présent au réunion ? Nous vous prions de nous confirmer ce choix. ?' : 'Souhaitez-vous confirmer votre présence?',
                           textAlign: TextAlign.center,
                           style: TextStyle(fontFamily: 'Google-Medium',color: Colors.black87,fontSize: screenwidth < 700 ? screenheight/53 : 25 ),
                         ),
@@ -138,29 +138,9 @@ confirmMeeting(Map data,{context,String eventID,String clientID,status, String l
                                       ),
                                     ),
                                     onTap: ()async{
-//                                        if (!attended_Meeting.toString().contains(eventID.toString()+userdetails['name'].toString())){
-//                                          if (attended_Meeting.toString() != "null"){
-//                                            List<String> _attend = List<String>();
-//
-//                                            // _attend.add(eventID.toString()+userdetails['name'].toString());
-//                                            attended_Meeting.add(eventID.toString()+userdetails['name'].toString().toString());
-//                                          }else{
-//                                            attended_Meeting = [eventID.toString()+userdetails['name'].toString()];
-//                                          }
-//
-//                                          print('ATTENDED :'+attended_Meeting.toString());s
-//                                        }else{
-//                                          print('MAY SULOD :'+attended_Meeting.toString());
-//                                          attended_Meeting.removeWhere((s){
-//                                            return s.toString().contains(eventID.toString()+userdetails['name'].toString());
-//                                          });
-//                                        }
-//
-//                                        SharedPreferences prefs_deleted = await SharedPreferences.getInstance();
-//                                        prefs_deleted.setStringList('clientmeetingAttend', attended_Meeting);
                                         attedCurrentMeeting(context: context,eventID: eventID,clientID: clientID,status: status,data: data);
-                                        attendCurrentmatch(data,context,localticketID,status);
-                                      // attedCurrentMeeting(context,eventID,userdetails['id'].toString(),status);
+                                        attendCurrentmatch(context,localticketID,status,data);
+                                      // attedCurrentMeeting(context,eventID,userdetails['id'].toString(),status);s
                                     }
                                 ),
                               ),

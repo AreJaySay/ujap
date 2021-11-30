@@ -42,9 +42,6 @@ class _Messages_listviewState extends State<Messages_listview> {
                         mainAxisAlignment: MainAxisAlignment.center,
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-//                          Container(
-//                              width: screenwidth,
-//                              child: Text(message_channel[index]['members'][0]['channel_id'].toString(),style: TextStyle(color: Colors.black,fontFamily: 'Google-Bold',fontSize: screenheight/65 ),overflow: TextOverflow.ellipsis,)),
                           SizedBox(
                             height: screenheight/170,
                           ),

@@ -3,26 +3,16 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:intl/intl.dart';
-import 'package:page_transition/page_transition.dart';
 import 'package:ujap/globals/container_data.dart';
-import 'package:ujap/globals/user_data.dart';
 import 'package:ujap/globals/variables/events_sub_pages_variables.dart';
-import 'package:ujap/globals/variables/home_sub_pages_variables.dart';
 import 'package:ujap/globals/variables/other_variables.dart';
 import 'package:ujap/globals/variables/video.dart';
 import 'package:ujap/globals/widgets/appbar_icons.dart';
 import 'package:ujap/globals/widgets/confirmation_attendance.dart';
 import 'package:ujap/globals/widgets/curve_containers.dart';
-import 'package:ujap/globals/widgets/show_snackbar.dart';
-import 'package:ujap/globals/widgets/view_events.dart';
-import 'package:ujap/globals/widgets/view_matches.dart';
-import 'package:ujap/pages/homepage.dart';
-import 'package:ujap/pages/homepage_sub_pages/event_children/events_list_data.dart';
 import 'package:ujap/pages/homepage_sub_pages/home_children_page/matches.dart';
 import 'package:ujap/pages/homepage_sub_pages/home_children_page/no_data_fetch.dart';
 import 'package:ujap/pages/homepage_sub_pages/home_children_page/past_events_matches.dart';
-import 'package:ujap/pages/homepage_sub_pages/home_children_page/view_ticket.dart';
-import 'package:ujap/pages/homepage_sub_pages/message_children_page/list_of_clients.dart';
 import 'package:ujap/services/ad_listener.dart';
 import 'package:ujap/services/api.dart';
 import 'package:ujap/services/navigate_match_events.dart';
@@ -170,7 +160,7 @@ class _EventsListState extends State<EventsList> {
                                   scrollPhysics: snapshot.data.length == 1 || snapshot.data.length == 0 ?  NeverScrollableScrollPhysics() : null,
                                 ),
                                 itemCount: snapshot.data.length,
-                                itemBuilder: (BuildContext context, int index) {
+                                itemBuilder: (context, int index, int pageViewIndex) {
                                   double _eventTicket = 0;
                                   var dayFormateDay_year = "";
 
@@ -253,55 +243,35 @@ class _EventsListState extends State<EventsList> {
                                                     borderRadius: BorderRadius.circular(10)
                                                 ),
                                                 child: Column(
+                                                  mainAxisAlignment: MainAxisAlignment.center,
+                                                  crossAxisAlignment: CrossAxisAlignment.center,
                                                   children: [
-                                                    Container(
-                                                      padding: EdgeInsets.symmetric(horizontal: 20),
-                                                      width: screenwidth,
-                                                      child: Row(
-                                                        mainAxisAlignment: MainAxisAlignment.center,
-                                                        crossAxisAlignment: CrossAxisAlignment.center,
-                                                       children: <Widget>[
-                                                         Text('Nom du match:'.toUpperCase(),style: TextStyle(fontSize: screenwidth < 700 ? screenwidth/38  : 18,fontFamily: 'Google-Bold',color: Colors.grey[700]),),
-                                                         SizedBox(
-                                                             width: screenwidth < 700 ? 5 : 10,
-                                                         ),
-                                                         Expanded(child: Container(
-                                                             child: Text(snapshot.data[index]['name'].toString().toUpperCase(),style: TextStyle(fontSize: screenwidth < 700 ? screenwidth/38  : 18,fontFamily: 'Google-Bold',color: Colors.grey[800]),maxLines: 1,overflow: TextOverflow.ellipsis,))),
-                                                       ],
-                                                      ),
-                                                    ),
+                                                    Text(snapshot.data[index]['name'].toString().toUpperCase(),style: TextStyle(fontSize: 14,fontFamily: 'Google-Bold',color: Colors.grey[800]),maxLines: 1,overflow: TextOverflow.ellipsis,),
                                                     SizedBox(
                                                       height: 3,
                                                     ),
-                                                    Container(
-                                                      padding: EdgeInsets.symmetric(horizontal: 20),
-                                                      width: screenwidth,
-                                                      child: Row(
-                                                        mainAxisAlignment: MainAxisAlignment.start,
-                                                        crossAxisAlignment: CrossAxisAlignment.start,
-                                                        children: <Widget>[
-                                                          Text('Date du match:'.toUpperCase(),style: TextStyle(fontSize: screenwidth < 700 ? screenwidth/38  : 18,fontFamily: 'Google-Bold',color: Colors.grey[700]),),
-                                                          SizedBox(
-                                                            width: screenwidth < 700 ? 5 : 10,
-                                                          ),
-                                                          Text(snapshot.data[index]['sched_date'] == null ? 'TBA' : dayFormateDay_year+' '+monthDate[int.parse(_dateConvertedString.toString())].toString()+'.'+' '+_dateConvertedDayYear.toString().toUpperCase(),style: TextStyle(fontSize: screenwidth < 700 ? screenwidth/38  : 18,fontFamily: 'Google-Bold',color: Colors.grey[800]),),
-                                                          SizedBox(
-                                                            width: screenwidth < 700 ? 5 : 15,
-                                                          ),
-                                                          Text(snapshot.data[index]['sched_time'] == null ? 'TBA' :  _timeConverted.toString()+':'+_timeConvertedString.toString(),style: TextStyle(fontSize: screenwidth < 700 ? screenwidth/38  : 18,fontFamily: 'Google-Bold',color: Colors.grey[800]),),
-                                                        ],
-                                                      ),
+                                                    Row(
+                                                      mainAxisAlignment: MainAxisAlignment.center,
+                                                      crossAxisAlignment: CrossAxisAlignment.center,
+                                                      children: <Widget>[
+                                                        Text(snapshot.data[index]['sched_date'] == null ? 'TBA' : dayFormateDay_year+' '+monthDate[int.parse(_dateConvertedString.toString())].toString()+'.'+' '+_dateConvertedDayYear.toString().toUpperCase(),style: TextStyle(fontSize: 14,fontFamily: 'Google-Medium',color: Colors.grey[800]),),
+                                                        SizedBox(
+                                                          width: screenwidth < 700 ? 5 : 15,
+                                                        ),
+                                                        Text(snapshot.data[index]['sched_time'] == null ? 'TBA' :  _timeConverted.toString()+':'+_timeConvertedString.toString(),style: TextStyle(fontSize: 14,fontFamily: 'Google-Medium',color: Colors.grey[800]),),
+                                                      ],
                                                     )
                                                   ],
-                                                  mainAxisAlignment: MainAxisAlignment.center,
-                                                  crossAxisAlignment: CrossAxisAlignment.center,
                                                 ),
+                                              ),
+                                              SizedBox(
+                                                height: screenwidth/35,
                                               ),
                                               Container(
                                                 width: screenwidth,
                                                 child: Row(
                                                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                                  crossAxisAlignment: CrossAxisAlignment.center,
                                                   children: [
                                                     Expanded(
                                                       child: Container(

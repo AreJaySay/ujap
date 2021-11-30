@@ -23,18 +23,13 @@ Future leaveGroup({int channelID, String message = "", List<int> receiverIds, St
       "date_sent": "${DateTime.now()}"
     };
     await http.post(
-        "${conversationService.urlString}/channel/send", headers: {
+        Uri.parse("${conversationService.urlString}/channel/send"), headers: {
       HttpHeaders.authorizationHeader: "Bearer $accesstoken",
       "accept": "application/json"
     }, body: body).then((respo) {
       var data = json.decode(respo.body);
       if (respo.statusCode == 200) {
         print('LEAVE CONVO SUCCESS');
-        // for(var id in receiverIds){
-        //   if(id != int.parse(userdetails['id'].toString())){
-        //     messagecontroller.sendmessage(data['result'],message, id,false, 'leavegroup',receiverIds);
-        //   }
-        // }
       } else {
         print('ERROR sss :' + respo.body.toString());
       }

@@ -5,30 +5,26 @@ import 'package:image_picker/image_picker.dart';
 import 'package:ujap/controllers/login_controller.dart';
 import 'package:ujap/globals/variables/other_variables.dart';
 import 'package:ujap/globals/variables/profile_variables.dart';
-
-import '../../globals/variables/other_variables.dart';
-import '../../globals/variables/other_variables.dart';
-import '../../globals/variables/other_variables.dart';
-import '../../globals/variables/other_variables.dart';
 import '../../globals/variables/other_variables.dart';
 
 // THIS IS FOR THE SAVE TO DATABASE
+final ImagePicker _picker = ImagePicker();
+
 Future _choosecamera() async {
-  var file = await ImagePicker.pickImage(
-      source: ImageSource.camera, maxHeight: 480, maxWidth: 640);
+  var file = await _picker.pickImage(source: ImageSource.camera, maxHeight: 480, maxWidth: 640);
 //   BinaryImage = await file.toByteData(format: ImageByteFormat.png);
 }
 
 Future _choosegallery() async {
-  var file = await ImagePicker.pickImage(
+  var file = await _picker.pickImage(
       source: ImageSource.gallery, maxHeight: 480, maxWidth: 640);
-  ClientImagefile = file;
+  ClientImagefile = file as File;
 }
 
 showAlertDialog(BuildContext context) {
-  showDialog(
+   showDialog(
       context: context,
-      child: Container(
+      builder: (context) => Container(
         padding: EdgeInsets.all(0),
         width: screenwidth,
         height: screenheight,
@@ -38,7 +34,7 @@ showAlertDialog(BuildContext context) {
             height: screenwidth < 700 ? 140 : 180,
             width: screenwidth,
             margin:
-                EdgeInsets.symmetric(horizontal: screenwidth < 700 ? 30 : 100),
+            EdgeInsets.symmetric(horizontal: screenwidth < 700 ? 30 : 100),
             decoration: BoxDecoration(
               color: Colors.white,
               borderRadius: BorderRadius.circular(10),
@@ -69,7 +65,7 @@ showAlertDialog(BuildContext context) {
                           )),
                       Container(
                         margin:
-                            EdgeInsets.only(right: screenwidth < 700 ? 0 : 10),
+                        EdgeInsets.only(right: screenwidth < 700 ? 0 : 10),
                         width: 50,
                         child: FlatButton(
                           child: Icon(
@@ -210,5 +206,6 @@ showAlertDialog(BuildContext context) {
             ),
           ),
         ),
-      ));
+      )
+   );
 }

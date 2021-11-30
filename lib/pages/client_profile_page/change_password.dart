@@ -36,9 +36,9 @@ class _UpdatePasswordState extends State<UpdatePassword> {
     // TODO: implement initState
     super.initState();
     passwordSuccess = false;
-    KeyboardVisibility.onChange.listen((bool visible) {
-        keyboardvisible = visible;
-    });
+    // KeyboardVisibility.onChange.listen((bool visible) {
+    //     keyboardvisible = visible;
+    // });
   }
 
   @override
@@ -149,7 +149,7 @@ class _UpdatePasswordState extends State<UpdatePassword> {
                                   borderRadius: BorderRadius.circular(1000.0)
                               ),
                               padding: EdgeInsets.all(screenwidth < 700 ? 2 : 3),
-                              child: Icon(Icons.arrow_back_rounded,color: Colors.white,size: screenwidth < 700 ? screenwidth/12 : screenwidth/18,)),
+                              child: Icon(Icons.arrow_back_rounded,color: Colors.white,size: 26,)),
                           onTap: (){
                             setState(() {
                               Navigator.of(context).pop(null);
@@ -196,7 +196,7 @@ class _UpdatePasswordState extends State<UpdatePassword> {
                                           style: TextStyle(fontFamily: 'Google-Medium',fontSize: screenwidth < 700 ? screenheight/55 : 22,color: Colors.black87.withOpacity(0.7)),
                                           decoration: InputDecoration(
                                               hintText: index == 0 ? 'Insérez votre mot de passe actuel'.toString().toLowerCase() : index == 1 ? 'Insérez le nouveau mot de passe' : 'Réinsérez votre nouveau mot de passe',
-                                              hintStyle: TextStyle(color: Colors.grey[300],fontFamily: 'Google-Regular',fontSize: screenwidth < 700 ? screenheight/60 : 22),
+                                              hintStyle: TextStyle(color: Colors.grey[500],fontFamily: 'Google-Regular',fontSize: screenwidth < 700 ? screenheight/60 : 22),
                                               contentPadding: EdgeInsets.symmetric(horizontal: screenwidth < 700 ? 20 : 40,vertical: screenwidth < 700 ? 0 : 20),
                                               border: InputBorder.none,
                                               enabledBorder: OutlineInputBorder(

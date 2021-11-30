@@ -106,29 +106,30 @@ class BannerDisplay {
                       )
                   ),
                   for (var x = 0; x < 2; x++)
-                  Container(
-                    padding: EdgeInsets.only(top: 3),
-                    margin: EdgeInsets.symmetric(horizontal: 8),
-                    alignment: Alignment.topRight,
-                    child: GestureDetector(
-                      child: Container(
-                          decoration: BoxDecoration(
-                              color: kPrimaryColor,
-                              borderRadius: BorderRadius.circular(1000)
-                          ),
-                          child: Icon(Icons.close,color: Colors.white,size: 25,)),
-                      onTap: (){
-                        print(_.data['content'].toString());
-                        adListener.update(false);
-                      },
-                    ),
-                  )
+                    Container(
+                      padding: EdgeInsets.only(top: 3),
+                      margin: EdgeInsets.symmetric(horizontal: 8),
+                      alignment: Alignment.topRight,
+                      child: GestureDetector(
+                        child: Container(
+                            decoration: BoxDecoration(
+                                color: kPrimaryColor,
+                                borderRadius: BorderRadius.circular(1000)
+                            ),
+                            child: Icon(Icons.close,color: Colors.white,size: screenwidth <  700 ? 25 : 35,)),
+                        onTap: (){
+                          print(_.data['content'].toString());
+                          adListener.update(false);
+                        },
+                      ),
+                    )
                 ],
               ),
             );
           }
           return Container();
         }
+
 
     );
   }

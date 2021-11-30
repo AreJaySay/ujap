@@ -98,10 +98,7 @@ class _TicketActionsState extends State<TicketActions> {
                               uploadPDF();
                               Navigator.push(context, PageTransition(child:  SendGmail(
                               ),type: PageTransitionType.leftToRightWithFade,alignment: Alignment.center, curve: Curves.easeIn,duration: Duration(milliseconds: 500)));
-
-                            // Navigator.push(context, PageTransition(child: Clients_list(
-                              // ),type: PageTransitionType.rightToLeft,alignment: Alignment.center, curve: Curves.easeIn,duration: Duration(milliseconds: 500)));
-                          },
+                              },
                         ),
                       ),
                     ],

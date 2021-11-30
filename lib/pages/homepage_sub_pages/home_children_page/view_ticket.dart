@@ -162,7 +162,7 @@ class _Ticket_homepageState extends State<Ticket_homepage> {
                                           borderRadius: BorderRadius.circular(1000.0)
                                       ),
                                       padding: EdgeInsets.all(screenwidth < 700 ? 2 : 3),
-                                      child: Icon(Icons.arrow_back_rounded,color: Colors.white,size: screenwidth < 700 ? screenwidth/12 : screenwidth/18,)),
+                                      child: Icon(Icons.arrow_back_rounded,color: Colors.white,size: 26,)),
                                   onTap: (){
                                     setState(() {
                                       showticket = false;
@@ -198,48 +198,25 @@ class _Ticket_homepageState extends State<Ticket_homepage> {
                                                 borderRadius: BorderRadius.circular(10)
                                             ),
                                             child: Column(
+                                              mainAxisAlignment: MainAxisAlignment.center,
+                                              crossAxisAlignment: CrossAxisAlignment.center,
                                               children: [
-                                                Container(
-                                                  padding: EdgeInsets.symmetric(horizontal: 25),
-                                                  width: screenwidth,
-                                                  child: Row(
-                                                    mainAxisAlignment: MainAxisAlignment.center,
-                                                    crossAxisAlignment: CrossAxisAlignment.center,
-                                                    children: <Widget>[
-                                                      Text('Nom du match:'.toUpperCase(),style: TextStyle(fontSize: screenwidth < 700 ? screenwidth/38  : 18,fontFamily: 'Google-Bold',color: Colors.grey[700]),),
-                                                      SizedBox(
-                                                        width: screenwidth < 700 ? 5 : 10,
-                                                      ),
-                                                      Expanded(child: Container(
-                                                          child: Text(widget.matchName.toString().toUpperCase(),style: TextStyle(fontSize: screenwidth < 700 ? screenwidth/38  : 18,fontFamily: 'Google-Bold',color: Colors.grey[800]),maxLines: 1,overflow: TextOverflow.ellipsis,))),
-                                                    ],
-                                                  ),
-                                                ),
+                                                Text(widget.matchName.toString().toUpperCase(),style: TextStyle(fontSize: 14,fontFamily: 'Google-Bold',color: Colors.grey[800]),maxLines: 1,overflow: TextOverflow.ellipsis,),
                                                 SizedBox(
                                                   height: 3,
                                                 ),
-                                                Container(
-                                                  padding: EdgeInsets.symmetric(horizontal: 25),
-                                                  width: screenwidth,
-                                                  child: Row(
-                                                    mainAxisAlignment: MainAxisAlignment.start,
-                                                    crossAxisAlignment: CrossAxisAlignment.start,
-                                                    children: <Widget>[
-                                                      Text('Date du match:'.toUpperCase(),style: TextStyle(fontSize: screenwidth < 700 ? screenwidth/38  : 18,fontFamily: 'Google-Bold',color: Colors.grey[700]),),
-                                                      SizedBox(
-                                                        width: screenwidth < 700 ? 5 : 10,
-                                                      ),
-                                                      Text(matchDate.toString(),style: TextStyle(fontSize: screenwidth < 700 ? screenwidth/38  : 18,fontFamily: 'Google-Bold',color: Colors.grey[800]),),
-                                                      SizedBox(
-                                                        width: screenwidth < 700 ? 5 : 15,
-                                                      ),
-                                                      Text(matchTime.toString(),style: TextStyle(fontSize: screenwidth < 700 ? screenwidth/38  : 18,fontFamily: 'Google-Bold',color: Colors.grey[800]),),
-                                                    ],
-                                                  ),
+                                                Row(
+                                                  mainAxisAlignment: MainAxisAlignment.center,
+                                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                                  children: <Widget>[
+                                                    Text(matchDate.toString(),style: TextStyle(fontSize: 14,fontFamily: 'Google-Medium',color: Colors.grey[800]),),
+                                                    SizedBox(
+                                                      width: screenwidth < 700 ? 5 : 15,
+                                                    ),
+                                                    Text(matchTime.toString(),style: TextStyle(fontSize: 14,fontFamily: 'Google-Medium',color: Colors.grey[800]),),
+                                                  ],
                                                 )
                                               ],
-                                              mainAxisAlignment: MainAxisAlignment.center,
-                                              crossAxisAlignment: CrossAxisAlignment.center,
                                             ),
                                           ),
                                           SizedBox(

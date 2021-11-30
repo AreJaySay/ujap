@@ -10,6 +10,7 @@ import 'package:ujap/globals/user_data.dart';
 import 'package:ujap/globals/variables/home_sub_pages_variables.dart';
 import 'package:ujap/globals/widgets/show_loader.dart';
 import 'package:ujap/globals/widgets/show_snackbar.dart';
+import 'package:ujap/pages/client_profile_page/profile_information.dart';
 import 'package:ujap/pages/client_profile_page/profile_page.dart';
 import 'package:ujap/pages/client_profile_page/update_picture.dart';
 import 'package:ujap/pages/credentials_sub_pages/loginpage.dart';
@@ -18,9 +19,9 @@ import 'package:ujap/services/pushnotification.dart';
 
 bool editProfile = false;
 
-Future login(String username, String password,context,bool loader)async{
+Future login(String username, String password,context,bool loader,bool profileinformation)async{
   showloader(context);
-  var response = await http.post('https://ujap.checkmy.dev/api/client/login',
+  var response = await http.post(Uri.parse('https://ujap.checkmy.dev/api/client/login'),
       headers: {
         HttpHeaders.authorizationHeader: "Bearer $accesstoken",
         "Accept": "application/json"
@@ -31,7 +32,7 @@ Future login(String username, String password,context,bool loader)async{
       }
   );
   var data = json.decode(response.body);
-  print('RETURN '+response.statusCode.toString());
+  print('RETURN '+response.body.toString());
   if(response.statusCode == 200){
     currentindex = 1;
     indexListener.update(data: 1);
@@ -45,7 +46,11 @@ Future login(String username, String password,context,bool loader)async{
     isCollapsed = true;
     usernamecontroller.text = "";
     passwordcontroller.text = "";
-    if (changeProfilePict){
+    if(profileinformation){
+      Navigator.pushReplacement(context, PageTransition(child: ProfileInformation(
+      ),type: PageTransitionType.rightToLeftWithFade,alignment: Alignment.center, curve: Curves.easeIn,duration: Duration(milliseconds: 500)));
+    }
+    else if (changeProfilePict){
       Navigator.push(context, PageTransition(child: ProfilePage(
       ),type: PageTransitionType.rightToLeftWithFade,alignment: Alignment.center, curve: Curves.easeIn,duration: Duration(milliseconds: 500)));
     }else{
@@ -72,6 +77,6 @@ Future login(String username, String password,context,bool loader)async{
         showSnackBar(context, 'Problème de connexion. Veuillez vérifier à nouveau votre adresse e-mail et votre mot de passe.');
       }
     }
-    Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=>Loginpage()));
+    Navigator.of(context).pop(null);
   }
 }

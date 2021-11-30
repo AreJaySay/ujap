@@ -43,9 +43,12 @@ class _LoginpageState extends State<Loginpage> {
     super.initState();
     showpassword = null;
     showpassword_or_not = true;
-    KeyboardVisibility.onChange.listen((bool visible) {
+    var keyboardVisibilityController = KeyboardVisibilityController();
+    keyboardVisibilityController.onChange.listen((bool visible) {
+      setState(() {
         keyboardvisible = visible;
         _showemailsHistory = false;
+      });
     });
   }
 
@@ -95,14 +98,13 @@ class _LoginpageState extends State<Loginpage> {
                                     ))),
                             Container(
                               width: screenwidth,
-                              margin: EdgeInsets.only(bottom: screenwidth < 700 ? 30 : 20),
                               alignment: Alignment.bottomCenter,
                               child: Container(
-                                width: screenwidth < 700 ? screenwidth/2.7 : screenwidth/3.5,
-                                height: screenwidth < 700 ? screenwidth/2.7 : screenwidth/3.5,
+                                width: screenwidth < 700 ? screenwidth/2 : screenwidth/3.5,
+                                height: screenwidth < 700 ? screenwidth/2 : screenwidth/3.5,
                                 decoration: BoxDecoration(
                                   image: DecorationImage(
-                                      image: AssetImage('assets/new_app_icon.png')
+                                      image: AssetImage('assets/logo_shadow.png')
 
 
 
@@ -149,7 +151,7 @@ class _LoginpageState extends State<Loginpage> {
                                         child: TextField(
                                           autofocus: true,
                                           controller: usernamecontroller,
-                                          style: TextStyle(fontFamily: 'Google-Medium',color: Colors.black.withOpacity(0.7),fontSize: screenwidth < 700 ? screenheight/55 : 20),
+                                          style: TextStyle(fontFamily: 'Google-Regular',color: Colors.black.withOpacity(0.7)),
                                           decoration: InputDecoration(
                                               contentPadding: EdgeInsets.symmetric(horizontal:  screenwidth < 700 ? 15 : 25,vertical: screenwidth < 700 ? 0 : 20),
                                               hintText: 'EMAIL',
@@ -179,7 +181,7 @@ class _LoginpageState extends State<Loginpage> {
                                         child: TextField(
                                           autofocus: true,
                                           controller: passwordcontroller,
-                                          style: TextStyle(fontFamily: 'Google-Medium',color: Colors.black.withOpacity(0.7),fontSize: screenwidth < 700 ? screenheight/55 : 20),
+                                          style: TextStyle(fontFamily: 'Google-Regular',color: Colors.black.withOpacity(0.7)),
                                           obscureText: showpassword_or_not,
                                           decoration: InputDecoration(
                                               suffixIcon: _userpassword == null || _userpassword == "" ?
@@ -247,7 +249,7 @@ class _LoginpageState extends State<Loginpage> {
                                       GestureDetector(
                                         child: Container(
                                           width: screenwidth,
-                                          child: Text('Mot de passe oublié',style: TextStyle(fontSize: screenwidth < 700 ? screenheight/65 : 23,color: Colors.grey[350],fontFamily: 'Google-Medium'),),
+                                          child: Text('Mot de passe oublié',style: TextStyle(fontSize: screenwidth < 700 ? 13 : 23,color: Colors.grey[400],fontFamily: 'Google-Medium'),),
                                         ),
                                         onTap: (){
                                           Navigator.push(context, PageTransition(child: Forgot_password(
@@ -319,7 +321,7 @@ class _LoginpageState extends State<Loginpage> {
                                     setState(() {
                                       List<String> _firstcommit = [];
                                       if(usernamecontroller.text.isNotEmpty && passwordcontroller.text.isNotEmpty){
-                                        login(usernamecontroller.text, passwordcontroller.text,context,null);
+                                        login(usernamecontroller.text, passwordcontroller.text,context,null,false);
                                         _firstcommit.add(usernamecontroller.text.toString());
                                         emailsHistory = _firstcommit;
                                         print(emailsHistory.toString());

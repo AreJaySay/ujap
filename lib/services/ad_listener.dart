@@ -26,7 +26,7 @@ class AdListener{
     VideoPlayerController _videoController;
     ChewieController _chewieController;
     try{
-      if(data['type'] != 'image' && data['ad_type'] != 1 && data['content'].toString() != "null"){
+      if(data['type'] != 'image' && data['ad_type'] == 2 && data['content'].toString() != "null"){
         print('NASULOD GAD HIYA DIDI');
         _videoController = VideoPlayerController.network('${StringFormatter().cleaner(StringFormatter().strToObj(data['content'])['location'])}');
         await _videoController.initialize();

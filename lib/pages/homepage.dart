@@ -17,6 +17,7 @@ import 'package:ujap/globals/variables/other_variables.dart';
 import 'package:ujap/globals/variables/video.dart';
 import 'package:ujap/globals/widgets/appbar_icons.dart';
 import 'package:ujap/globals/widgets/banner.dart';
+import 'package:ujap/globals/widgets/show_loader.dart';
 import 'package:ujap/pages/client_profile_page/view_profile_pict.dart';
 import 'package:ujap/pages/homepage_sub_pages/event_children/filter_events.dart';
 import 'package:ujap/pages/homepage_sub_pages/event_parent_page.dart';
@@ -36,9 +37,6 @@ bool notificationIndicator = false;
 bool notificationIndicatiorMessages = false;
 List<String> ads = List<String>();
 bool showProfilePict = false;
-
-
-//bool show_ads = false;
 
 class Homepage extends StatefulWidget {
   bool showAds;
@@ -61,25 +59,6 @@ class _HomepageState extends State<Homepage> {
     });
     yield itemindex;
   }
-//  Future<Widget> initVideo(String url) async {
-//    try{
-//      _videoPlayerController = VideoPlayerController.network('https://cdn.biteable.com/social/renders/383255/2637438/1057559/37b811dbe5ee52840319f18a2a8abb878c9802b4.mp4');
-//      await _videoPlayerController.initialize();
-//      _chewieController = ChewieController(
-//        videoPlayerController: _videoPlayerController,
-//        autoPlay: true,
-//        looping: false,
-//        showControls: false,
-//        showControlsOnInitialize: false,
-//      );
-//      return Chewie(controller: _chewieController);
-//    }
-//    catch(e){
-//      print("ERROR : $e");
-//      return Container();
-//    }
-//  }
-
 
   List<Widget> pagecontents = [
     Event_parent(),
@@ -162,7 +141,7 @@ class _HomepageState extends State<Homepage> {
       convertedDate_filter = 0;
       convertedDate_filter_to = 99999999999;
       try{
-        PushNotification().initListen(context);
+        PushNotification().initialize(context);
       }catch(e){
         print("PUSH NOTIFICATION ERROR : $e");
       }
@@ -199,7 +178,7 @@ class _HomepageState extends State<Homepage> {
                 resizeToAvoidBottomInset: true,
                 body: Stack(
                   children: [
-                    snapshot.data == null ? Container() : pagecontents[snapshot.data],
+                    pagecontents[snapshot.data],
                     Container(
                       child: get_ads == null || get_ads.length == 0 || get_ads[0]['filename'].toString() == "null" ?
                       Container() :
@@ -211,7 +190,7 @@ class _HomepageState extends State<Homepage> {
                           child: StreamBuilder<bool>(
                             stream: adListener.stream$,
                             builder: (context, snapshot) => snapshot.hasData && snapshot.data ? Container(
-                              height: 400,
+                              height: screenwidth < 700 ? screenwidth/1.8 : screenwidth/2.7,
                               alignment: Alignment.bottomCenter,
                               child: bannerDisplay.showBanner(context, position: 3),
                             ) : Container(),
@@ -296,23 +275,6 @@ class _HomepageState extends State<Homepage> {
                                   color: currentindex == 2 ? Color.fromRGBO(5, 93, 157, 0.6) : Colors.grey,
                                   image: AssetImage('assets/home_icons/chat.png'),
                                 ),
-//                        Positioned(
-//                          right: 0,
-//                          child: Container(
-//                            width: screenwidth < 700 ? screenwidth/34 : screenwidth/50,
-//                            height: screenwidth < 700 ? screenwidth/34 : screenwidth/50,
-//                            padding: const EdgeInsets.all(2),
-//                            decoration: BoxDecoration(
-//                                color: Colors.red,
-//                                borderRadius: BorderRadius.circular(1000)
-//                            ),
-//                            child: FittedBox(
-//                              child: Text("${nMessageCounter.current}",style: TextStyle(
-//                                  color: Colors.white
-//                              ),),
-//                            ),
-//                          ),
-//                        )
                                 snapshot.data != 0 ? Positioned(
                                     right: 0,
                                     child: Container(
@@ -366,10 +328,10 @@ class _HomepageState extends State<Homepage> {
                       });
                     },
                     child: new Container(
-                      padding: EdgeInsets.all(10),
+                      padding: EdgeInsets.all(3),
                       child: Image(
                         fit: BoxFit.cover,
-                          image: AssetImage('assets/new_app_icon.png')
+                          image: AssetImage('assets/logo_shadow.png')
                       ),
                     ),
                   ),
@@ -395,29 +357,6 @@ class _HomepageState extends State<Homepage> {
                 },
               ),
               Events_filter(),
-              // ViewProfilePicture(showProfilePict)
-//          Ticket_homepage(),
-//           checkConnection == "" && message_compose_open ? Container(
-//             width: screenwidth,
-//             height: screenheight,
-//             color: Colors.black.withOpacity(0.7),
-//             child: Center(
-//               child: Column(
-//                 mainAxisAlignment: MainAxisAlignment.center,
-//                 crossAxisAlignment: CrossAxisAlignment.center,
-//                 children: <Widget>[
-//                   Container(
-//                     child: CircularProgressIndicator(),
-//                   ),
-//                   SizedBox(
-//                     height: 15,
-//                   ),
-//                   Text("Préparation à la création d'un message",style: TextStyle(color: Colors.white,fontFamily: 'Google-Bold',fontSize: screenwidth < 700 ?  screenheight/53 : 26),)
-//                 ],
-//               ),
-//             ),
-//           ) :
-
             ],
           ),
           onTap: (){

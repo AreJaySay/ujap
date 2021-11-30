@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:page_transition/page_transition.dart';
 import 'package:ujap/controllers/home.dart';
 import 'package:ujap/controllers/login_controller.dart';
 import 'package:ujap/globals/user_data.dart';
@@ -8,6 +9,7 @@ import 'package:ujap/globals/variables/messages_sub_pages_variables.dart';
 import 'package:ujap/globals/variables/other_variables.dart';
 import 'package:ujap/globals/variables/video.dart';
 import 'package:ujap/globals/widgets/appbar_icons.dart';
+import 'package:ujap/pages/all_clients_pages/all_clients_homepage.dart';
 import 'package:ujap/pages/drawer_parameters.dart';
 import 'package:ujap/pages/homepage.dart';
 import 'package:ujap/services/ad_listener.dart';
@@ -134,6 +136,8 @@ class _MainScreenState extends State<MainScreen> with SingleTickerProviderStateM
                 width: screenwidth,
                 alignment: Alignment.center,
                 child: Container(
+                  width: screenwidth/1.2,
+                  height:  screenwidth/1.2,
                   decoration: BoxDecoration(
                     image: DecorationImage(
                         image: AssetImage('assets/new_app_icon.png')
@@ -350,6 +354,31 @@ class _MainScreenState extends State<MainScreen> with SingleTickerProviderStateM
                                       width: screenwidth < 700 ? screenwidth/17 : 30,
                                       height: screenwidth < 700 ? screenwidth/17 : 30,
                                       margin: EdgeInsets.symmetric(horizontal: 10),
+                                      child: Icon(Icons.contacts_outlined,color: Colors.white,)
+                                    ),
+                                    Container(
+                                        margin: EdgeInsets.symmetric(horizontal: screenwidth/40),
+                                        alignment: Alignment.centerLeft,
+                                        child: Text('Annuaire',style: TextStyle(color: Colors.white,fontSize: screenwidth < 700 ? screenheight/55 : 20,fontFamily: 'Google-Bold'),))
+                                  ],
+                                ),
+                              ),
+                              onPressed: (){
+                                Navigator.push(context,PageTransition(child: AllClientsHomePage(),type: PageTransitionType.rightToLeftWithFade));
+                              },
+                            ),
+                          ),
+                          Expanded(
+                            child: FlatButton(
+                              child: Container(
+                                width: screenwidth,
+                                height: screenheight/4,
+                                child: Row(
+                                  children: [
+                                    Container(
+                                      width: screenwidth < 700 ? screenwidth/17 : 30,
+                                      height: screenwidth < 700 ? screenwidth/17 : 30,
+                                      margin: EdgeInsets.symmetric(horizontal: 10),
                                       child: Image(
                                         color: Colors.white,
                                         image: AssetImage('assets/home_icons/setting.png'),
@@ -381,22 +410,6 @@ class _MainScreenState extends State<MainScreen> with SingleTickerProviderStateM
                       alignment: Alignment.centerLeft,
                       child: userdetails == null ? Container() : Parameters(),
                     ),
-                    // Expanded(
-                    //     child: GestureDetector(
-                    //       child: Container(
-                    //           margin: EdgeInsets.only(bottom: screenheight/20),
-                    //           width: screenwidth,
-                    //           height: screenheight,
-                    //           alignment: Alignment.bottomCenter,
-                    //           child: Text('Déconnexion',style: TextStyle(color: Colors.white,fontSize: screenwidth < 700 ? screenheight/50 : 20,fontFamily: 'Google-Bold'),)),
-                    //       onTap: (){
-                    //         setState(() {
-                    //
-                    //         });
-                    //       },
-                    //     )
-                    // ),
-
                   ],
                 ),
               ),
@@ -434,7 +447,7 @@ class _MainScreenState extends State<MainScreen> with SingleTickerProviderStateM
                 body: Stack(
                   children: [
                     Homepage(widget.showAds),
-                   SafeArea(
+                    SafeArea(
                       child: Container(
                         height: screenheight,
                         width: screenwidth,

@@ -1,12 +1,11 @@
 import 'dart:io';
-
 import 'package:dio/dio.dart';
-import 'package:ext_storage/ext_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:ujap/globals/user_data.dart';
-import 'package:ujap/globals/variables/home_sub_pages_variables.dart';
+import 'package:external_path/external_path.dart';
+
 
 var ticketFilename = "";
 var ticketdownloadID = "";
@@ -22,7 +21,8 @@ var dio = Dio();
 
 
 getPermission()async{
-  await PermissionHandler().requestPermissions([PermissionGroup.storage]);
+  var _permission = await Permission.storage.request();
+  print("PERMISSION ${_permission.toString()}");
 }
 
 Future download2(Dio dio, String url, String savePath)async{
@@ -69,8 +69,8 @@ Future download2(Dio dio, String url, String savePath)async{
 uploadPDF()async{
     String path;
     if(Platform.isAndroid) {
-      path = await ExtStorage.getExternalStoragePublicDirectory(
-          ExtStorage.DIRECTORY_DOWNLOADS);
+      path = await ExternalPath.getExternalStoragePublicDirectory(
+          ExternalPath.DIRECTORY_DOWNLOADS);
     } else {
       Directory tempDir = await getTemporaryDirectory();
       path = tempDir.path;

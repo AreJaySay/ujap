@@ -49,7 +49,7 @@ class _Appbar_iconsState extends State<Appbar_icons> {
                   icon: Transform(
                     alignment: Alignment.center,
                     transform: Matrix4.rotationY(math.pi),
-                    child: Icon(Icons.search,color: Colors.white,size: screenwidth < 700 ? screenwidth/ 17 : 35,),
+                    child: Icon(Icons.search,color: Colors.white,size: 26,),
                   ),
                   onPressed: (){
                     setState(() {
@@ -69,7 +69,7 @@ class _Appbar_iconsState extends State<Appbar_icons> {
                     IconButton(
                       icon: Stack(
                         children: [
-                          Icon(Icons.notifications_none,color: Colors.white,size: screenwidth < 700 ? screenwidth/ 17 : 35,),
+                          Icon(Icons.notifications_none,color: Colors.white,size: 26,),
                           Positioned(
                             right: 1.0,
                             child: Icon(Icons.brightness_1,
@@ -80,7 +80,6 @@ class _Appbar_iconsState extends State<Appbar_icons> {
                         ],
                       ),
                       onPressed: (){
-                        addToDb(itemid: notificID.toString(),messageTypes: notificType.toString());
                         notificationIndicator = false;
                         adListener.update(false);
                         Navigator.push(context, PageTransition(child:  Notifications(
@@ -96,7 +95,7 @@ class _Appbar_iconsState extends State<Appbar_icons> {
                   icon: Transform(
                     alignment: Alignment.center,
                     transform: Matrix4.rotationY(math.pi),
-                    child: Icon(Icons.person,color: Colors.white,size: screenwidth < 700 ? screenwidth/ 17 : 35,),
+                    child: Icon(Icons.person,color: Colors.white,size: 26,),
                   ),
                   onPressed: (){
                     eventsSearch = false;
