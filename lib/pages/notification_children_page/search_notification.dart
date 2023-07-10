@@ -223,10 +223,8 @@ class _SearchNotificationsState extends State<SearchNotifications> {
                                 ],
                             ),
                              onTap: ()async{
-                               String url = '${StringFormatter().cleaner(StringFormatter().strToObj(widget.datatoSearchEvents[index]['content'])['location'])}';
-                               if (await canLaunch(url)) {
-                                 await launch(url);
-                               } else {
+                               String url = '${widget.datatoSearchEvents[index]["link"]}';
+                               if (!await launchUrl(Uri.parse(url),mode: LaunchMode.externalApplication,)) {
                                  throw 'Could not launch $url';
                                }
                              },

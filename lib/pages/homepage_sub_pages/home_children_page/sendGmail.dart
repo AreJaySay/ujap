@@ -24,13 +24,11 @@ class _SendGmailState extends State<SendGmail> {
   List<String> _receipents = [];
   var _reciepent = "";
   String platformResponse;
-
   TextEditingController _recipientController = new TextEditingController();
   final _subjectController = TextEditingController(text: 'Billet UJAP Match');
   final _bodyController = TextEditingController(
     text: "Bonjour, c'est le ticket pour le match entre l'équipe UJAP et $opponentTeam équipe.",
   );
-
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
 
   Future<void> send() async {
@@ -45,21 +43,23 @@ class _SendGmailState extends State<SendGmail> {
     try {
       await FlutterEmailSender.send(email);
         print('here dapat');
+        showSnackBar(context, "L'e-mail a bien été envoyé!");
         platformResponse = "L'e-mail a bien été envoyé.".toString();
-      Future.delayed(Duration(seconds: 2)).then((_) {
-        // this code is executed after the future ends.
-        Navigator.of(context).pop(null);
-        _scaffoldKey.currentState.showSnackBar( SnackBar(content: Text("SNACKBAR") ) );
-      } );
+        Future.delayed(Duration(seconds: 2)).then((_) {
+          setState(() {
+            _receipents.clear();
+          });
+          Navigator.of(context).pop(null);
+        } );
     } catch (error) {
        platformResponse = "Connectez-vous d'abord à votre compte Gmail pour continuer.".toString();
        print(error.toString());
     }
 
     if (!mounted) return;
-    _scaffoldKey.currentState.showSnackBar(SnackBar(
-      content: Text(platformResponse),
-    ));
+    // _scaffoldKey.currentState.showSnackBar(SnackBar(
+    //   content: Text(platformResponse),
+    // ));
   }
 
   @override
@@ -71,9 +71,9 @@ class _SendGmailState extends State<SendGmail> {
             backgroundColor: kPrimaryColor,
             centerTitle: true,
             title: Container(
-                child: Text('Envoyer un ticket par e-mail',style: TextStyle(fontFamily: 'Google-Bold',color: Colors.white,fontSize: screenwidth < 700 ? screenheight/40 : 20 ),textAlign: TextAlign.center,)),
+                child: Text('Envoyer un ticket par e-mail',style: TextStyle(fontFamily: 'Google-Bold',color: Colors.white,fontSize: 18 ),textAlign: TextAlign.center,)),
             actions: <Widget>[
-              Builder(
+             _receipents.isEmpty ? Container() : Builder(
                 builder:(context)=> IconButton(
                   onPressed: (){
                     setState(() {
@@ -258,10 +258,8 @@ class _SendGmailState extends State<SendGmail> {
                   onTap: ()async{
                     print('CLICK');
                     const url = 'https://apps.apple.com/us/app/gmail-email-by-google/id422689480';
-                    if (await canLaunch(url)) {
-                    await launch(url);
-                    } else {
-                    throw 'Could not launch $url';
+                    if (!await launchUrl(Uri.parse(url),mode: LaunchMode.externalApplication,)) {
+                      throw 'Could not launch $url';
                     }
                   },
                 ),

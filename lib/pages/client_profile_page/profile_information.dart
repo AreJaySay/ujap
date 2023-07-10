@@ -85,591 +85,367 @@ class _ProfileInformationState extends State<ProfileInformation> {
 
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
-      child: Stack(
+    return Scaffold(
+      appBar: AppBar(
+        backgroundColor: kPrimaryColor,
+        elevation: 0,
+        centerTitle: true,
+        title: Text('Informations sur le profil', style: TextStyle(fontSize:  16, color: Colors.white, fontFamily: 'Google-Medium'),),
+        actions: [
+          Builder(
+            builder:(context)=> IconButton(
+              icon: Icon(Icons.edit, color: _editinformation ?  Colors.transparent : Colors.white,
+                size: 22,),
+              onPressed: () {
+                setState(() {
+                  _editinformation = true;
+                  showSnackBar(context, 'Vous pouvez maintenant éditer les informations');
+                });
+              },
+            ),
+          ),
+        ],
+      ),
+      body: Stack(
         children: [
-          Scaffold(
-            body: Container(
-              width: double.infinity,
-              height: double.infinity,
-              child: Stack(
-                children: [
-                  Container(
-                    child: ListView(
-                      children: [
-                        Container(
-                          width: screenwidth,
-                          height: screenwidth < 700 ? screenheight : screenheight,
-                          decoration: BoxDecoration(),
-                          child: Stack(
-                            children: [
-                              Container(
-                                  width: screenwidth,
-                                  child: Padding(
-                                      padding: const EdgeInsets.only(bottom: 2.0),
-                                      child: ClipPath(
-                                        clipper: CurvedBottom(),
-                                        child: Container(
-                                          margin: EdgeInsets.all(100),
-                                          width: MediaQuery.of(context).size.width,
-                                          decoration: BoxDecoration(
-                                              image: DecorationImage(
-                                                image: AssetImage("assets/new_app_icon.png"),
-                                              )),
-                                        ),
-                                      ))),
-                              Container(
-                                width: screenwidth,
-                                child: Padding(
-                                    padding:
-                                    const EdgeInsets.only(bottom: 2.0),
-                                    child: Container(
-                                      padding: EdgeInsets.all(10),
-                                      alignment: Alignment.topLeft,
-                                      color: kPrimaryColor,
-                                      width: MediaQuery.of(context).size.width,
-                                      height: screenheight,
-                                      child: SafeArea(
-                                        child: Column(
-                                          children: [
-                                            Row(
-                                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                              children: [
-                                                GestureDetector(
-                                                  child: Container(
-                                                      decoration: BoxDecoration(
-                                                          color: kPrimaryColor,
-                                                          borderRadius: BorderRadius.circular(1000.0)
-                                                      ),
-                                                      padding: EdgeInsets.all(screenwidth < 700 ? 2 : 3),
-                                                      child: Icon(Icons.arrow_back_rounded,color: Colors.white,size: 26,)),
-                                                  onTap: (){
-                                                    Navigator.pushReplacement(context,PageTransition(child: MainScreen(true),type: PageTransitionType.fade));
-                                                  },
-                                                ),
-                                                Text('Informations sur le profil', style: TextStyle(fontSize:  20, color: Colors.white, fontFamily: 'Google-Medium'),),
-                                                Builder(
-                                                  builder:(context)=> IconButton(
-                                                    icon: Icon(Icons.edit, color: _editinformation ?  Colors.transparent : Colors.white,
-                                                      size: screenwidth < 700 ? 25 : 30,),
-                                                    onPressed: () {
-                                                      setState(() {
-                                                        _editinformation = true;
-                                                        showSnackBar(context, 'Vous pouvez maintenant éditer les informations');
-                                                      });
-                                                    },
-                                                  ),
-                                                ),
-                                              ],
-                                            ),
-                                            Center(
-                                              child: GestureDetector(
-                                                child: Stack(
-                                                  children: [
-                                                    Container(
-                                                      margin: EdgeInsets.only(top: 10),
-                                                      width: 150,
-                                                      height: 150,
-                                                      decoration: BoxDecoration(
-                                                          color: Colors.grey[300],
-                                                          border: Border.all(color: Colors.white,width: 2),
-                                                          borderRadius: BorderRadius.circular(1000),
-                                                          image: DecorationImage(
-                                                            fit: BoxFit.cover,
-                                                              image: userdetails['filename'].toString() == "null" ||  userdetails['filename'].toString() == "" ? AssetImage('assets/messages_icon/no_profile.png') : NetworkImage('https://ujap.checkmy.dev/storage/clients/${userdetails['filename']}')
-                                                          )
-                                                      ),
-                                                    ),
-                                                  Container(
-                                                    width: 150,
-                                                    height: 150,
-                                                    padding: EdgeInsets.all(5),
-                                                    alignment: Alignment.bottomRight,
-                                                    child: Container(
-                                                      padding: EdgeInsets.all(10),
-                                                      decoration: BoxDecoration(
-                                                        color: Colors.blue,
-                                                        borderRadius: BorderRadius.circular(1000)
-                                                      ),
-                                                      child: Icon(Icons.camera_alt,color: Colors.white,)
-                                                    ),
-                                                  )
-                                                  ],
-                                                ),
-                                                onTap: (){
-                                                  setState(() {
-                                                    showProfilePict = true;
-                                                  });
-                                                },
-                                              ),
-                                            ),
-                                          ],
-                                        ),
-                                      ),
-                                    )),),
-                            ],
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                  Container(
-                    height: double.infinity,
-                    width: double.infinity,
-                    alignment: Alignment.center,
-                    margin: EdgeInsets.only(left: 20,right: 20,top: screenwidth/1.6,bottom: 50),
-                    child: Container(
-                      width: screenwidth,
-                      margin: EdgeInsets.only(top: screenwidth/8),
-                      child: ListView(
-                        padding: EdgeInsets.all(0),
-                        children: [
-                          Container(
-                            width: screenwidth,
-                            margin: EdgeInsets.symmetric(vertical: screenwidth < 700 ? 10 : 20),
-                            child: TextFormField(
-                              controller: Fname,
-                              style: TextStyle(fontSize: screenwidth < 700 ? screenheight / 55 : 25, color: Colors.white, fontFamily: 'Google-Medium'),
-                              enabled: _editinformation,
-                              decoration: InputDecoration(
-                                border: InputBorder.none,
-                                labelText: 'Prénom',
-                                labelStyle: TextStyle(color: Colors.white.withOpacity(0.8)),
-                                enabledBorder: OutlineInputBorder(
-                                  borderSide: BorderSide(color: Colors.grey)
-                                ),
-                                  focusedBorder: OutlineInputBorder(
-                                      borderSide: BorderSide(color: Colors.grey)
-                                  ),
-                                  disabledBorder: OutlineInputBorder(
-                                      borderSide: BorderSide(color: Colors.grey)
-                                  )
-                              ),
-                            ),
-                          ),
-                          Container(
-                            width: screenwidth,
-                            margin: EdgeInsets.symmetric(vertical: screenwidth < 700 ? 10 : 20),
-                            child: TextFormField(
-                              controller: Lname,
-                              enabled: _editinformation,
-                              style: TextStyle(fontSize: screenwidth < 700 ? screenheight / 55 : 25, color: Colors.white, fontFamily: 'Google-Medium'),
-                              decoration: InputDecoration(
-                                  border: InputBorder.none,
-                                  labelText: 'Nom',
-                                  labelStyle: TextStyle(color: Colors.white.withOpacity(0.8)),
-                                  enabledBorder: OutlineInputBorder(
-                                      borderSide: BorderSide(color: Colors.grey)
-                                  ),
-                                  focusedBorder: OutlineInputBorder(
-                                      borderSide: BorderSide(color: Colors.grey)
-                                  ),
-                                  disabledBorder: OutlineInputBorder(
-                                      borderSide: BorderSide(color: Colors.grey)
-                                  )
-                              ),
-                            ),
-                          ),
-                          Container(
-                            width: screenwidth,
-                            margin: EdgeInsets.symmetric(vertical: screenwidth < 700 ? 10 : 20),
-                            child: TextFormField(
-                              controller: telephone,
-                              enabled: _editinformation,
-                              style: TextStyle(fontSize: screenwidth < 700 ? screenheight / 55 : 25, color: Colors.white, fontFamily: 'Google-Medium'),
-                              decoration: InputDecoration(
-                                  border: InputBorder.none,
-                                  labelText: 'Telephone',
-                                  labelStyle: TextStyle(color: Colors.white.withOpacity(0.8)),
-                                  enabledBorder: OutlineInputBorder(
-                                      borderSide: BorderSide(color: Colors.grey)
-                                  ),
-                                  focusedBorder: OutlineInputBorder(
-                                      borderSide: BorderSide(color: Colors.grey)
-                                  ),
-                                  disabledBorder: OutlineInputBorder(
-                                      borderSide: BorderSide(color: Colors.grey)
-                                  )
-                              ),
-                              keyboardType: TextInputType.number,
-                            ),
-                          ),
-                          Container(
-                            width: screenwidth,
-                            margin: EdgeInsets.symmetric(vertical: screenwidth < 700 ? 10 : 20),
-                            child: TextFormField(
-                              controller: email,
-                              enabled: _editinformation,
-                              style: TextStyle(fontSize: screenwidth < 700 ? screenheight / 55 : 25, color: Colors.white.withOpacity(0.9), fontFamily: 'Google-Medium'),
-                              decoration: InputDecoration(
-                                  border: InputBorder.none,
-                                  labelText: 'Email',
-                                  labelStyle: TextStyle(color: Colors.white.withOpacity(0.8)),
-                                  enabledBorder: OutlineInputBorder(
-                                      borderSide: BorderSide(color: Colors.grey)
-                                  ),
-                                  focusedBorder: OutlineInputBorder(
-                                      borderSide: BorderSide(color: Colors.grey)
-                                  ),
-                                  disabledBorder: OutlineInputBorder(
-                                      borderSide: BorderSide(color: Colors.grey)
-                                  )
-                              ),
-                            ),
-                          ),
-                          Container(
-                            width: screenwidth,
-                            margin: EdgeInsets.symmetric(vertical: screenwidth < 700 ? 10 : 20),
-                            child: TextFormField(
-                              controller: address,
-                              enabled: _editinformation,
-                              style: TextStyle(fontSize: screenwidth < 700 ? screenheight / 55 : 25, color: Colors.white.withOpacity(0.9), fontFamily: 'Google-Medium'),
-                              decoration: InputDecoration(
-                                contentPadding: EdgeInsets.symmetric(vertical: 20,horizontal: 10),
-                                  border: InputBorder.none,
-                                  labelText: 'Adresse',
-                                  labelStyle: TextStyle(color: Colors.white.withOpacity(0.8)),
-                                  enabledBorder: OutlineInputBorder(
-                                      borderSide: BorderSide(color: Colors.grey)
-                                  ),
-                                  focusedBorder: OutlineInputBorder(
-                                      borderSide: BorderSide(color: Colors.grey)
-                                  ),
-                                  disabledBorder: OutlineInputBorder(
-                                      borderSide: BorderSide(color: Colors.grey)
-                                  )
-                              ),
-                              maxLines: null,
-                            ),
-                          ),
-                          Container(
-                            width: screenwidth,
-                            margin: EdgeInsets.symmetric(vertical: screenwidth < 700 ? 10 : 20),
-                            child: TextFormField(
-                              enabled: _editinformation,
-                              controller: city,
-                              style: TextStyle(fontSize: screenwidth < 700 ? screenheight / 55 : 25, color: Colors.white.withOpacity(0.9), fontFamily: 'Google-Medium'),
-                              decoration: InputDecoration(
-                                  border: InputBorder.none,
-                                  labelText: 'Ville',
-                                  labelStyle: TextStyle(color: Colors.white.withOpacity(0.8)),
-                                  enabledBorder: OutlineInputBorder(
-                                      borderSide: BorderSide(color: Colors.grey)
-                                  ),
-                                  focusedBorder: OutlineInputBorder(
-                                      borderSide: BorderSide(color: Colors.grey)
-                                  ),
-                                  disabledBorder: OutlineInputBorder(
-                                      borderSide: BorderSide(color: Colors.grey)
-                                  )
-                              ),
-                            ),
-                          ),
-                          Container(
-                            width: screenwidth,
-                            margin: EdgeInsets.symmetric(vertical: screenwidth < 700 ? 10 : 20),
-                            child: TextFormField(
-                              controller: company,
-                              enabled: _editinformation,
-                              style: TextStyle(fontSize: screenwidth < 700 ? screenheight / 55 : 25, color: Colors.white.withOpacity(0.9), fontFamily: 'Google-Medium'),
-                              decoration: InputDecoration(
-                                  border: InputBorder.none,
-                                  labelText: 'Société',
-                                  labelStyle: TextStyle(color: Colors.white.withOpacity(0.8)),
-                                  enabledBorder: OutlineInputBorder(
-                                      borderSide: BorderSide(color: Colors.grey)
-                                  ),
-                                  focusedBorder: OutlineInputBorder(
-                                      borderSide: BorderSide(color: Colors.grey)
-                                  ),
-                                  disabledBorder: OutlineInputBorder(
-                                      borderSide: BorderSide(color: Colors.grey)
-                                  )
-                              ),
-                            ),
-                          ),
-                          // Container(
-                          //   width: screenwidth,
-                          //   margin: EdgeInsets.symmetric(vertical: screenwidth < 700 ? 10 : 20),
-                          //   child: TextFormField(
-                          //     controller: position,
-                          //     enabled: _editinformation,
-                          //     style: TextStyle(fontSize: screenwidth < 700 ? screenheight / 55 : 25, color: Colors.white.withOpacity(0.9), fontFamily: 'Google-Medium'),
-                          //     decoration: InputDecoration(
-                          //         border: InputBorder.none,
-                          //         labelText: 'Positionner',
-                          //         labelStyle: TextStyle(color: Colors.white.withOpacity(0.8)),
-                          //         enabledBorder: OutlineInputBorder(
-                          //             borderSide: BorderSide(color: Colors.grey)
-                          //         ),
-                          //         focusedBorder: OutlineInputBorder(
-                          //             borderSide: BorderSide(color: Colors.grey)
-                          //         ),
-                          //         disabledBorder: OutlineInputBorder(
-                          //             borderSide: BorderSide(color: Colors.grey)
-                          //         )
-                          //     ),
-                          //   ),
-                          // ),
-                          Container(
-                            width: screenwidth,
-                            margin: EdgeInsets.symmetric(vertical: screenwidth < 700 ? 10 : 20),
-                            child: TextFormField(
-                              controller: country,
-                              enabled: _editinformation,
-                              style: TextStyle(fontSize: screenwidth < 700 ? screenheight / 55 : 25, color: Colors.white.withOpacity(0.9), fontFamily: 'Google-Medium'),
-                              decoration: InputDecoration(
-                                  border: InputBorder.none,
-                                  labelText: 'Pays',
-                                  labelStyle: TextStyle(color: Colors.white.withOpacity(0.8)),
-                                  enabledBorder: OutlineInputBorder(
-                                      borderSide: BorderSide(color: Colors.grey)
-                                  ),
-                                  focusedBorder: OutlineInputBorder(
-                                      borderSide: BorderSide(color: Colors.grey)
-                                  ),
-                                  disabledBorder: OutlineInputBorder(
-                                      borderSide: BorderSide(color: Colors.grey)
-                                  )
-                              ),
-                            ),
-                          ),
-                          SizedBox(
-                            height: 20,
-                          ),
-                          !_editinformation ? Container() :
-                           Builder(
-                             builder:(context)=> GestureDetector(
-                                child: Container(
-                                  height: screenwidth < 700 ? screenwidth/8 : screenwidth/13,
-                                  width: screenwidth,
-                                  decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(5),
-                                    color: kPrimaryColor,
-                                  ),
-                                  child: Center(
-                                    child: Text('Mettre à jour les informations',style: TextStyle(fontSize: screenwidth < 700 ? screenheight / 42 : 25, color: Colors.white, fontFamily: 'Google-Medium'),)
-                                  ),
-                                ),
-                                onTap: ()async{
-                                  if (Fname.text.isEmpty){
-                                    showSnackBar(context, "Le prénom ne doit pas être vide.");
-                                  }else if (Lname.text.isEmpty){
-                                    showSnackBar(context, "Le nom de famille ne doit pas être vide.");
-                                  }
-                                  else if (telephone.text.isEmpty){
-                                    showSnackBar(context, "Le téléphone ne doit pas être vide.");
-                                  }
-                                  else if (email.text.isEmpty){
-                                    showSnackBar(context, "L'adresse e-mail ne doit pas être vide.");
-                                  }
-                                  else if (address.text.isEmpty){
-                                    showSnackBar(context, "L'adresse ne doit pas être vide.");
-                                  }
-                                  else if (city.text.isEmpty){
-                                    showSnackBar(context, "La ville ne doit pas être vide.");
-                                  }
-                                  else if (company.text.isEmpty){
-                                    showSnackBar(context, "L'entreprise ne doit pas être vide.");
-                                  }
-                                  else if (position.text.isEmpty){
-                                    showSnackBar(context, "La position ne doit pas être vide.");
-                                  }
-                                  else if (country.text.isEmpty){
-                                    showSnackBar(context, "Le pays ne doit pas être vide.");
-                                  }else{
-                                    setState(() {
-                                      _isLoading = true;
-                                    });
-
-                                    var rng = new Random();
-                                    Directory tempDir = await getTemporaryDirectory();
-                                    String tempPath = tempDir.path;
-                                    File file = new File('$tempPath'+ (rng.nextInt(100)).toString() +'.png');
-                                    http.Response response = await http.get(Uri.parse('https://ujap.checkmy.dev/storage/clients/${userdetails['filename'].toString()}'));
-                                    File result = await file.writeAsBytes(response.bodyBytes);
-
-                                    String _userdetails = '{"id":${userdetails['id'].toString()},"name":"${Fname.text.toString()}","telephone":"${telephone.text.toString()}","email":"${email.text.toString()}","address":"${address.text.toString().replaceAll('\n', "")}","city":"${city.text.toString()}","company":"${company.text.toString()}","position":"${position.text.toString()}","country":"${country.text.toString()}","lastname":"${Lname.text.toString()}"}';
-
-                                    print('INFO :'+_userdetails.toString());
-                                    print('PROFILE :'+result.toString());
-
-                                    UploadImage().upload(files: result,user: _userdetails).then((value) {
-                                      if(value){
-                                        setState(() {
-                                          userdetails = json.decode(_userdetails);
-                                          isCollapsed = true;
-
-                                          drawerController.reverse();
-                                          borderRadius = 0.0;
-                                          print('CHANGE PROFILE :'+userdetails.toString());
-                                        });
-                                        _editinformation = false;
-                                        showSnackBar(context, 'Informations mises à jour avec succès');
-                                        // Navigator.of(context).pop(null);
-                                      }else{
-                                        print('NOT HERE');
-                                        setState(() {
-                                          _file = null;
-                                          binaryImage = null;
-                                        });
-                                      }
-                                    }).whenComplete(() => setState(() => _isLoading = false));
-                                  }
-                                },
-                              ),
-                           ),
-                        ],
-                      ),
-                    ),
-                  )
-                ],
+          Container(
+            width: double.infinity,
+            height: double.infinity,
+            child: Center(
+              child: Image(
+                width: 230,
+                image: AssetImage("assets/new_app_icon.png"),
               ),
             ),
           ),
-          _isLoading ? WillPopScope(
-            onWillPop: () async => false,
-            child: BackdropFilter(
-              filter: ImageFilter.blur(sigmaY: 4.0,sigmaX: 4.0),
-              child: Container(
-                width: double.infinity,
-                color: Colors.black54,
-                child: Center(
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      CircularProgressIndicator(valueColor: AlwaysStoppedAnimation<Color>(Colors.white),strokeWidth: 3,),
-                      SizedBox(
-                        height: 20,
-                      ),
-                      Text('Veuillez patienter un instant...',style: TextStyle(fontSize: screenwidth < 700 ? screenheight / 45 : 25, color: Colors.grey[200], fontFamily: 'Google-Medium',decoration: TextDecoration.none),)
-                    ],
-                  ),
-                ),
+          Container(
+            width: double.infinity,
+            height: double.infinity,
+            color: kPrimaryColor.withOpacity(0.8),
+          ),
+          ListView(
+            padding: EdgeInsets.symmetric(horizontal: 20),
+            children: [
+              SizedBox(
+                height: 10,
               ),
-            ),
-          ) : Container(),
-          !showProfilePict ? Container() :
-          GestureDetector(
-            child: Container(
-              width: screenwidth,
-              height: screenheight,
-              alignment: Alignment.bottomCenter,
-              color: Colors.black.withOpacity(0.4),
-              child: AnimatedContainer(
-                duration: Duration(milliseconds: 300),
-                width: screenwidth,
-                height: !showProfilePict ? 0 : screenwidth < 700 ? screenwidth/1.8 : screenwidth/3.5,
-                padding: EdgeInsets.symmetric(vertical: 20),
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.only(
-                    topRight: Radius.circular(20.0),
-                    topLeft: Radius.circular(20.0),
-                  ),
-                ),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: <Widget>[
-                    FlatButton(
-                      child: Container(
-                        padding: EdgeInsets.symmetric(vertical: 7),
-                        child: Row(
-                          children: <Widget>[
-                            Container(
-                              child: Icon(Icons.contacts_outlined),
-                              decoration: BoxDecoration(
-                                  color: Colors.grey[300],
-                                  borderRadius: BorderRadius.circular(1000.0)
-                              ),
-                              padding: EdgeInsets.all(7),
-                            ),
-                            SizedBox(
-                              width: 10,
-                            ),
-                            Text('Voir la photo de profil',style: TextStyle(fontFamily: 'Google-medium',fontSize: screenwidth < 700 ? screenwidth/27 : screenwidth/33,color: Colors.grey[800]),)
-                          ],
-                        ),
+              Align(
+                alignment: Alignment.center,
+                child: Stack(
+                  children: [
+                    Container(
+                      margin: EdgeInsets.only(top: 10),
+                      width: 130,
+                      height: 130,
+                      decoration: BoxDecoration(
+                          color: Colors.grey[300],
+                          border: Border.all(color: kPrimaryColor,width: 3),
+                          borderRadius: BorderRadius.circular(1000),
+                          image: DecorationImage(
+                              fit: BoxFit.cover,
+                              image: userdetails['filename'].toString() == "null" ||  userdetails['filename'].toString() == "" ? AssetImage('assets/messages_icon/no_profile.png') : NetworkImage('https://ujap.checkmy.dev/storage/clients/${userdetails['filename']}')
+                          )
                       ),
-                      onPressed: (){
-                        Navigator.push(context, PageTransition(child:  ViewMessageImages(
-                            userdetails['filename'].toString() == "null" || userdetails['filename'].toString() == "" ? "null" : "https://ujap.checkmy.dev/storage/clients/${userdetails['filename']}"
-                        ),type: PageTransitionType.leftToRightWithFade,alignment: Alignment.center, curve: Curves.easeIn,duration: Duration(milliseconds: 500)));
-                      },
                     ),
-                    FlatButton(
+                    Container(
+                      width: 140,
+                      height: 140,
+                      padding: EdgeInsets.all(5),
+                      alignment: Alignment.bottomRight,
                       child: Container(
-                        padding: EdgeInsets.symmetric(vertical: 7),
-                        child: Row(
-                          children: <Widget>[
-                            Container(
-                              child: Icon(Icons.camera_alt),
-                              decoration: BoxDecoration(
-                                  color: Colors.grey[300],
-                                  borderRadius: BorderRadius.circular(1000.0)
-                              ),
-                              padding: EdgeInsets.all(7),
-                            ),
-                            SizedBox(
-                              width: 10,
-                            ),
-                            Text('Prendre une photo',style: TextStyle(fontFamily: 'Google-medium',fontSize:  screenwidth < 700 ? screenwidth/27 : screenwidth/33,color: Colors.grey[800]),)
-                          ],
-                        ),
+                          padding: EdgeInsets.all(10),
+                          decoration: BoxDecoration(
+                              color: kPrimaryColor,
+                              borderRadius: BorderRadius.circular(1000)
+                          ),
+                          child: Icon(Icons.camera_alt,color: Colors.white,)
                       ),
-                      onPressed: (){
-                        setState(() {
-                          Navigator.push(context, PageTransition(child: UpdatePicture(
-                              "TakePhoto","profileinformation"
-                          )));
-                        });
-                      },
                     ),
-                    FlatButton(
-                      child: Container(
-                        padding: EdgeInsets.symmetric(vertical: 7),
-                        child: Row(
-                          children: <Widget>[
-                            Container(
-                              child: Icon(Icons.folder_open),
-                              decoration: BoxDecoration(
-                                  color: Colors.grey[300],
-                                  borderRadius: BorderRadius.circular(1000.0)
-                              ),
-                              padding: EdgeInsets.all(7),
-                            ),
-                            SizedBox(
-                              width: 10,
-                            ),
-                            Text('Photo depuis la galerie',style: TextStyle(fontFamily: 'Google-medium',fontSize:  screenwidth < 700 ? screenwidth/27 : screenwidth/33,color: Colors.grey[800]),)
-                          ],
-                        ),
-                      ),
-                      onPressed: (){
-                        setState(() {
-                          Navigator.push(context, PageTransition(child: UpdatePicture(
-                              "UploadPhoto","profileinformation"
-                          )));
-                        });
-                      },
-                    )
                   ],
                 ),
               ),
-            ),
-            onTap: (){
-              setState(() {
-                showProfilePict = false;
-              });
-            },
-          )
+              SizedBox(
+                height: 10,
+              ),
+              Container(
+                width: screenwidth,
+                margin: EdgeInsets.symmetric(vertical: screenwidth < 700 ? 10 : 20),
+                child: TextFormField(
+                  controller: Fname,
+                  style: TextStyle(fontSize: screenwidth < 700 ? screenheight / 55 : 25, color: Colors.white, fontFamily: 'Google-Medium'),
+                  enabled: _editinformation,
+                  decoration: InputDecoration(
+                      border: InputBorder.none,
+                      labelText: 'Prénom',
+                      labelStyle: TextStyle(color: Colors.white.withOpacity(0.8),fontSize: 15),
+                      enabledBorder: OutlineInputBorder(
+                          borderSide: BorderSide(color: Colors.grey)
+                      ),
+                      focusedBorder: OutlineInputBorder(
+                          borderSide: BorderSide(color: Colors.grey)
+                      ),
+                      disabledBorder: OutlineInputBorder(
+                          borderSide: BorderSide(color: Colors.grey)
+                      )
+                  ),
+                ),
+              ),
+              Container(
+                width: screenwidth,
+                margin: EdgeInsets.symmetric(vertical: screenwidth < 700 ? 10 : 20),
+                child: TextFormField(
+                  controller: Lname,
+                  enabled: _editinformation,
+                  style: TextStyle(fontSize: screenwidth < 700 ? screenheight / 55 : 25, color: Colors.white, fontFamily: 'Google-Medium'),
+                  decoration: InputDecoration(
+                      border: InputBorder.none,
+                      labelText: 'Nom',
+                      labelStyle: TextStyle(color: Colors.white.withOpacity(0.8),fontSize: 15),
+                      enabledBorder: OutlineInputBorder(
+                          borderSide: BorderSide(color: Colors.grey)
+                      ),
+                      focusedBorder: OutlineInputBorder(
+                          borderSide: BorderSide(color: Colors.grey)
+                      ),
+                      disabledBorder: OutlineInputBorder(
+                          borderSide: BorderSide(color: Colors.grey)
+                      )
+                  ),
+                ),
+              ),
+              Container(
+                width: screenwidth,
+                margin: EdgeInsets.symmetric(vertical: screenwidth < 700 ? 10 : 20),
+                child: TextFormField(
+                  controller: telephone,
+                  enabled: _editinformation,
+                  style: TextStyle(fontSize: screenwidth < 700 ? screenheight / 55 : 25, color: Colors.white, fontFamily: 'Google-Medium'),
+                  decoration: InputDecoration(
+                      border: InputBorder.none,
+                      labelText: 'Telephone',
+                      labelStyle: TextStyle(color: Colors.white.withOpacity(0.8),fontSize: 15),
+                      enabledBorder: OutlineInputBorder(
+                          borderSide: BorderSide(color: Colors.grey)
+                      ),
+                      focusedBorder: OutlineInputBorder(
+                          borderSide: BorderSide(color: Colors.grey)
+                      ),
+                      disabledBorder: OutlineInputBorder(
+                          borderSide: BorderSide(color: Colors.grey)
+                      )
+                  ),
+                  keyboardType: TextInputType.number,
+                ),
+              ),
+              Container(
+                width: screenwidth,
+                margin: EdgeInsets.symmetric(vertical: screenwidth < 700 ? 10 : 20),
+                child: TextFormField(
+                  controller: email,
+                  enabled: _editinformation,
+                  style: TextStyle(fontSize: screenwidth < 700 ? screenheight / 55 : 25, color: Colors.white.withOpacity(0.9), fontFamily: 'Google-Medium'),
+                  decoration: InputDecoration(
+                      border: InputBorder.none,
+                      labelText: 'Email',
+                      labelStyle: TextStyle(color: Colors.white.withOpacity(0.8),fontSize: 15),
+                      enabledBorder: OutlineInputBorder(
+                          borderSide: BorderSide(color: Colors.grey)
+                      ),
+                      focusedBorder: OutlineInputBorder(
+                          borderSide: BorderSide(color: Colors.grey)
+                      ),
+                      disabledBorder: OutlineInputBorder(
+                          borderSide: BorderSide(color: Colors.grey)
+                      )
+                  ),
+                ),
+              ),
+              Container(
+                width: screenwidth,
+                margin: EdgeInsets.symmetric(vertical: screenwidth < 700 ? 10 : 20),
+                child: TextFormField(
+                  controller: address,
+                  enabled: _editinformation,
+                  style: TextStyle(fontSize: screenwidth < 700 ? screenheight / 55 : 25, color: Colors.white.withOpacity(0.9), fontFamily: 'Google-Medium'),
+                  decoration: InputDecoration(
+                      contentPadding: EdgeInsets.symmetric(vertical: 20,horizontal: 10),
+                      border: InputBorder.none,
+                      labelText: 'Adresse',
+                      labelStyle: TextStyle(color: Colors.white.withOpacity(0.8),fontSize: 15),
+                      enabledBorder: OutlineInputBorder(
+                          borderSide: BorderSide(color: Colors.grey)
+                      ),
+                      focusedBorder: OutlineInputBorder(
+                          borderSide: BorderSide(color: Colors.grey)
+                      ),
+                      disabledBorder: OutlineInputBorder(
+                          borderSide: BorderSide(color: Colors.grey)
+                      )
+                  ),
+                  maxLines: null,
+                ),
+              ),
+              Container(
+                width: screenwidth,
+                margin: EdgeInsets.symmetric(vertical: screenwidth < 700 ? 10 : 20),
+                child: TextFormField(
+                  enabled: _editinformation,
+                  controller: city,
+                  style: TextStyle(fontSize: screenwidth < 700 ? screenheight / 55 : 25, color: Colors.white.withOpacity(0.9), fontFamily: 'Google-Medium'),
+                  decoration: InputDecoration(
+                      border: InputBorder.none,
+                      labelText: 'Ville',
+                      labelStyle: TextStyle(color: Colors.white.withOpacity(0.8),fontSize: 15),
+                      enabledBorder: OutlineInputBorder(
+                          borderSide: BorderSide(color: Colors.grey)
+                      ),
+                      focusedBorder: OutlineInputBorder(
+                          borderSide: BorderSide(color: Colors.grey)
+                      ),
+                      disabledBorder: OutlineInputBorder(
+                          borderSide: BorderSide(color: Colors.grey)
+                      )
+                  ),
+                ),
+              ),
+              Container(
+                width: screenwidth,
+                margin: EdgeInsets.symmetric(vertical: screenwidth < 700 ? 10 : 20),
+                child: TextFormField(
+                  controller: company,
+                  enabled: _editinformation,
+                  style: TextStyle(fontSize: screenwidth < 700 ? screenheight / 55 : 25, color: Colors.white.withOpacity(0.9), fontFamily: 'Google-Medium'),
+                  decoration: InputDecoration(
+                      border: InputBorder.none,
+                      labelText: 'Société',
+                      labelStyle: TextStyle(color: Colors.white.withOpacity(0.8),fontSize: 15),
+                      enabledBorder: OutlineInputBorder(
+                          borderSide: BorderSide(color: Colors.grey)
+                      ),
+                      focusedBorder: OutlineInputBorder(
+                          borderSide: BorderSide(color: Colors.grey)
+                      ),
+                      disabledBorder: OutlineInputBorder(
+                          borderSide: BorderSide(color: Colors.grey)
+                      )
+                  ),
+                ),
+              ),
+              Container(
+                width: screenwidth,
+                margin: EdgeInsets.symmetric(vertical: screenwidth < 700 ? 10 : 20),
+                child: TextFormField(
+                  controller: country,
+                  enabled: _editinformation,
+                  style: TextStyle(fontSize: screenwidth < 700 ? screenheight / 55 : 25, color: Colors.white.withOpacity(0.9), fontFamily: 'Google-Medium'),
+                  decoration: InputDecoration(
+                      border: InputBorder.none,
+                      labelText: 'Pays',
+                      labelStyle: TextStyle(color: Colors.white.withOpacity(0.8),fontSize: 15),
+                      enabledBorder: OutlineInputBorder(
+                          borderSide: BorderSide(color: Colors.grey)
+                      ),
+                      focusedBorder: OutlineInputBorder(
+                          borderSide: BorderSide(color: Colors.grey)
+                      ),
+                      disabledBorder: OutlineInputBorder(
+                          borderSide: BorderSide(color: Colors.grey)
+                      )
+                  ),
+                ),
+              ),
+              SizedBox(
+                height: 30,
+              ),
+              !_editinformation ? Container() :
+              Builder(
+                builder:(context)=> GestureDetector(
+                  child: Container(
+                    height: 55,
+                    width: screenwidth,
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(5),
+                      color: kPrimaryColor,
+                    ),
+                    child: Center(
+                        child: Text('Mettre à jour les informations',style: TextStyle(fontSize: screenwidth < 700 ? screenheight / 42 : 25, color: Colors.white, fontFamily: 'Google-Medium'),)
+                    ),
+                  ),
+                  onTap: ()async{
+                    if (Fname.text.isEmpty){
+                      showSnackBar(context, "Le prénom ne doit pas être vide.");
+                    }else if (Lname.text.isEmpty){
+                      showSnackBar(context, "Le nom de famille ne doit pas être vide.");
+                    }
+                    else if (telephone.text.isEmpty){
+                      showSnackBar(context, "Le téléphone ne doit pas être vide.");
+                    }
+                    else if (email.text.isEmpty){
+                      showSnackBar(context, "L'adresse e-mail ne doit pas être vide.");
+                    }
+                    else if (address.text.isEmpty){
+                      showSnackBar(context, "L'adresse ne doit pas être vide.");
+                    }
+                    else if (city.text.isEmpty){
+                      showSnackBar(context, "La ville ne doit pas être vide.");
+                    }
+                    else if (company.text.isEmpty){
+                      showSnackBar(context, "L'entreprise ne doit pas être vide.");
+                    }
+                    else if (position.text.isEmpty){
+                      showSnackBar(context, "La position ne doit pas être vide.");
+                    }
+                    else if (country.text.isEmpty){
+                      showSnackBar(context, "Le pays ne doit pas être vide.");
+                    }else{
+                      setState(() {
+                        _isLoading = true;
+                      });
+
+                      var rng = new Random();
+                      Directory tempDir = await getTemporaryDirectory();
+                      String tempPath = tempDir.path;
+                      File file = new File('$tempPath'+ (rng.nextInt(100)).toString() +'.png');
+                      http.Response response = await http.get(Uri.parse('https://ujap.checkmy.dev/storage/clients/${userdetails['filename'].toString()}'));
+                      File result = await file.writeAsBytes(response.bodyBytes);
+
+                      String _userdetails = '{"id":${userdetails['id'].toString()},"name":"${Fname.text.toString()}","telephone":"${telephone.text.toString()}","email":"${email.text.toString()}","address":"${address.text.toString().replaceAll('\n', "")}","city":"${city.text.toString()}","company":"${company.text.toString()}","position":"${position.text.toString()}","country":"${country.text.toString()}","lastname":"${Lname.text.toString()}"}';
+
+                      print('INFO :'+_userdetails.toString());
+                      print('PROFILE :'+result.toString());
+
+                      UploadImage().upload(files: result,user: _userdetails).then((value) {
+                        if(value){
+                          setState(() {
+                            userdetails = json.decode(_userdetails);
+                            isCollapsed = true;
+
+                            drawerController.reverse();
+                            borderRadius = 0.0;
+                            print('CHANGE PROFILE :'+userdetails.toString());
+                          });
+                          _editinformation = false;
+                          showSnackBar(context, 'Informations mises à jour avec succès');
+                          // Navigator.of(context).pop(null);
+                        }else{
+                          print('NOT HERE');
+                          setState(() {
+                            _file = null;
+                            binaryImage = null;
+                          });
+                        }
+                      }).whenComplete(() => setState(() => _isLoading = false));
+                    }
+                  },
+                ),
+              ),
+              SizedBox(
+                height: 50,
+              )
+            ],
+          ),
         ],
       ),
-      onTap: (){
-       setState(() {
-         SystemChannels.textInput.invokeMethod('TextInput.hide');
-       });
-      },
     );
   }
 }

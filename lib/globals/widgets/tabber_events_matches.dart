@@ -30,15 +30,6 @@ class View_events_tabbar extends StatefulWidget {
 }
 
 class _View_events_tabbarState extends State<View_events_tabbar>  {
-  TabController _tabController;
-  var _clientName = "";
-  var _clientLastname = "";
-  var _clientTelephone = "";
-  var _clientEmail = "";
-  var _clientCountry = "";
-  var _attend_pass = "No";
-  List _clientsAttended;
-  List _local;
 
   List _attendedMeeting;
   
@@ -47,18 +38,11 @@ class _View_events_tabbarState extends State<View_events_tabbar>  {
       eventStatusEvents = widget.eventStatus.where((s) {
         return s['event_id'].toString().toLowerCase() == widget._matchID.toString().toLowerCase();
       }).toList();
-
        events_attendedEvents = double.parse( eventStatusEvents[0]['accepted_clients'].length.toString());
         participant = int.parse(eventStatusEvents[0]['accepted_clients'].length.toString());
        events_allocationEvents = double.parse(eventStatusEvents[0]['allocation'].toString());
         allocation = int.parse(eventStatusEvents[0]['allocation'].toString());
        eventsAttended_clientEvents =  eventStatusEvents[0]['accepted_clients'];
-
-      // _attendedMeeting = attended_Meeting.where((s){
-      //   print('MEETING ID'+s.toString().replaceAll(userdetails.toString(), '').toString());
-      //   return s.toString().replaceAll(userdetails.toString(), '') == widget._matchID.toString();
-      // }).toList();
-      //
       print('MEETING CURRENT ATTENDED :'+eventsAttended_clientEvents.toString());
     });
   }
@@ -97,7 +81,7 @@ class _View_events_tabbarState extends State<View_events_tabbar>  {
               children: <Widget>[
                 Container(
                   padding: EdgeInsets.symmetric(horizontal: screenwidth/20),
-                  constraints: BoxConstraints.expand(height: screenwidth < 700 ? 40 : 60,),
+                  constraints: BoxConstraints.expand(height: 50,),
                   child: TabBar(
                     physics: NeverScrollableScrollPhysics(),
                     isScrollable: false,
@@ -106,7 +90,7 @@ class _View_events_tabbarState extends State<View_events_tabbar>  {
                     unselectedLabelColor: Colors.grey[300],
                     labelColor: Colors.black,
                     labelPadding: EdgeInsets.only(left: screenheight/400),
-                    labelStyle:  TextStyle(fontFamily: 'Google-Bold',fontSize: screenwidth < 700 ? screenheight/60 : 20),
+                    labelStyle:  TextStyle(fontFamily: 'Google-Bold'),
                     tabs: [
                       Container(
                         width: screenwidth < 700 ? screenwidth/7 : screenwidth/5,
@@ -140,17 +124,18 @@ class _View_events_tabbarState extends State<View_events_tabbar>  {
                         height: screenheight,
                         child: ListView(
                           padding: EdgeInsets.all(0),
+                          physics: NeverScrollableScrollPhysics(),
                           children: [
                             Container(
                               width: screenwidth,
-                              height: screenwidth < 700 ? screenheight/10 : screenheight/11,
+                              height: screenwidth < 700 ? 100 : screenheight/11,
                               child: Column(
                                 children: [
                                   Container(
                                     padding: EdgeInsets.symmetric(horizontal: screenwidth/20),
                                     width: screenwidth,
                                     alignment: Alignment.centerLeft,
-                                    child: Text("Nom du match".toUpperCase(),style: TextStyle(fontFamily: 'Google-Bold',fontSize: screenwidth < 700 ? screenheight/100 : 13,color: Color.fromRGBO(44, 87, 122, 0.9),),),
+                                    child: Text("Nom du match".toUpperCase(),style: TextStyle(fontFamily: 'Google-Bold',fontSize: 13,color: Color.fromRGBO(44, 87, 122, 0.9),),),
                                   ),
                                   SizedBox(
                                     height: 5,
@@ -158,7 +143,7 @@ class _View_events_tabbarState extends State<View_events_tabbar>  {
                                   Container(
                                     padding: EdgeInsets.only(left: screenwidth/20),
                                     alignment: Alignment.centerLeft,
-                                    child: Text(widget.matchName.toString(),style: TextStyle(fontFamily: 'Google-Bold',fontSize: screenwidth < 700 ? screenheight/60 : 22,color: Colors.black,),),
+                                    child: Text(widget.matchName.toString(),style: TextStyle(fontFamily: 'Google-Bold',fontSize: 12,color: Colors.black,),),
                                   ),
                                   SizedBox(
                                     height: 10,
@@ -167,7 +152,7 @@ class _View_events_tabbarState extends State<View_events_tabbar>  {
                                     padding: EdgeInsets.symmetric(horizontal: screenwidth/20),
                                     width: screenwidth,
                                     alignment: Alignment.centerLeft,
-                                    child: Text("Date du match".toUpperCase(),style: TextStyle(fontFamily: 'Google-Bold',fontSize: screenwidth < 700 ? screenheight/100 : 13,color: Color.fromRGBO(44, 87, 122, 0.9),),),
+                                    child: Text("Date du match".toUpperCase(),style: TextStyle(fontFamily: 'Google-Bold',fontSize: 13,color: Color.fromRGBO(44, 87, 122, 0.9),),),
                                   ),
                                   SizedBox(
                                     height: 5,
@@ -179,7 +164,7 @@ class _View_events_tabbarState extends State<View_events_tabbar>  {
                                           Container(
                                             padding: EdgeInsets.only(left: screenwidth/20),
                                             alignment: Alignment.centerLeft,
-                                            child: Text(matchDate.toString(),style: TextStyle(fontFamily: 'Google-Bold',fontSize: screenwidth < 700 ? screenheight/60 : 22,color: Colors.black,),),
+                                            child: Text(matchDate.toString(),style: TextStyle(fontFamily: 'Google-Bold',fontSize: 12,color: Colors.black,),),
                                           )
                                         ),
                                         Expanded(
@@ -188,7 +173,7 @@ class _View_events_tabbarState extends State<View_events_tabbar>  {
                                             width: screenwidth/2,
                                             padding: EdgeInsets.only(left: screenwidth < 700 ? 20 : 40),
                                             alignment: Alignment.centerLeft,
-                                            child: Text( matchTime.toString(),style: TextStyle(fontFamily: 'Google-Bold',fontSize: screenwidth < 700 ? screenheight/60  : 22,color: Colors.black,),),
+                                            child: Text( matchTime.toString(),style: TextStyle(fontFamily: 'Google-Bold',fontSize: 12,color: Colors.black,),),
                                             decoration: BoxDecoration(
                                                 border: Border(left: BorderSide(color: Colors.black))
                                             ),
@@ -217,7 +202,7 @@ class _View_events_tabbarState extends State<View_events_tabbar>  {
                                     padding: EdgeInsets.symmetric(horizontal: screenwidth/20),
                                     width: screenwidth,
                                     alignment: Alignment.centerLeft,
-                                    child: Text('Participants inscrits'.toUpperCase(),style: TextStyle(fontFamily: 'Google-Bold',fontSize: screenwidth < 700 ? screenheight/100 : 13,color: Colors.black,),),
+                                    child: Text('Participants inscrits'.toUpperCase(),style: TextStyle(fontFamily: 'Google-Bold',fontSize: 12,color: Colors.black,),),
                                   ),
                                   SizedBox(
                                     height: screenheight/100,
@@ -265,12 +250,12 @@ class _View_events_tabbarState extends State<View_events_tabbar>  {
                                             mainAxisAlignment: MainAxisAlignment.start,
                                             crossAxisAlignment: CrossAxisAlignment.start,
                                             children: <Widget>[
-                                              Text(participant == 0 || participant == 1 ? " ${participant.toString()} participant" : "${participant.toString()} participants",style: TextStyle(fontFamily: 'Google-Bold',fontSize: screenwidth < 700 ? screenheight/90 : 13,color: Colors.grey[600],),),
+                                              Text(participant == 0 || participant == 1 ? " ${participant.toString()} participant" : "${participant.toString()} participants",style: TextStyle(fontFamily: 'Google-Medium',fontSize: 11,color: Colors.grey[600],),),
                                               SizedBox(
                                                 height: screenwidth < 700 ? 3 : 7,
                                               ),
-                                              (allocation-participant) == 0 || (allocation-participant) == 1 ? Text(allocation < participant ? '0 billet disponible' : (allocation-participant).toString()+' billet disponible',style: TextStyle(fontFamily: 'Google-Bold',fontSize: screenwidth < 700 ? screenheight/90 : 13,color: Colors.grey[600],),)
-                                              : Text(allocation < participant ? '0 billet disponible' : (allocation-participant).toString()+' billets disponibles',style: TextStyle(fontFamily: 'Google-Bold',fontSize: screenwidth < 700 ? screenheight/90 : 13,color: Colors.grey[600],),),
+                                              (allocation-participant) == 0 || (allocation-participant) == 1 ? Text(allocation < participant ? '0 billet disponible' : (allocation-participant).toString()+' billet disponible',style: TextStyle(fontFamily: 'Google-Medium',fontSize: 11,color: Colors.grey[600],),)
+                                              : Text(allocation < participant ? '0 billet disponible' : (allocation-participant).toString()+' billets disponibles',style: TextStyle(fontFamily: 'Google-Medium',fontSize: 11,color: Colors.grey[600],),),
                                             ],
                                           )),
                                     ],
@@ -426,12 +411,10 @@ class _View_events_tabbarState extends State<View_events_tabbar>  {
                             mainAxisAlignment: MainAxisAlignment.center,
                             crossAxisAlignment: CrossAxisAlignment.center,
                             children: [
-                              Container(
-                                padding: EdgeInsets.symmetric(horizontal: screenwidth < 700 ? screenwidth/5 : screenwidth/3.5),
-                                child: Image(
-                                  color: Colors.grey[600],
-                                  image: AssetImage('assets/no_clients_attended.png'),
-                                ),
+                              Image(
+                                width: 200,
+                                color: Colors.grey[400],
+                                image: AssetImage('assets/no_clients_attended.png'),
                               ),
                               SizedBox(
                                 height: screenwidth/30,

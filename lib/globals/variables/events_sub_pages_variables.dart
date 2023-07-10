@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 
 bool showcalendar = false;
-bool events_filter_open = false;
 double scrollPosition;
 bool hideFloatingbutton = false;
 bool myEventFloatingbutton = false;

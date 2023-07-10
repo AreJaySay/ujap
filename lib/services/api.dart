@@ -125,13 +125,10 @@ getEvents()async{
       middlematchEvents = eventsfirstData.where((s){
         return int.parse(DateFormat("yyyyMMdd").format(DateTime.parse(s['sched_date'].toString().toLowerCase().replaceAll(new RegExp(r'[^\w\s]+'),'')))) < int.parse(DateFormat("yyyyMMdd").format(DateTime.now()));
       }).toList();
+      middlematchEvents.sort((a, b) {
+        return a['sched_date'].compareTo(b['sched_date']) ;
+      });
       middleservice.addData(event: middlematchEvents);
-
-      if (middlematchEvents != null){
-        middlematchEvents.sort((a, b) {
-          return a['sched_date'].toLowerCase().compareTo(b['sched_date'].toLowerCase()) ;
-        });
-      }
 
       matchData = eventsfirstData.where((s){
         return s['type'].toString().toLowerCase() == 'event'.toString().toLowerCase() && int.parse(DateFormat("yyyyMMdd").format(DateTime.parse(s['sched_date'].toString().toLowerCase().replaceAll(new RegExp(r'[^\w\s]+'),'')))) >= int.parse(DateFormat("yyyyMMdd").format(DateTime.now())) || s['type'].toString().toLowerCase() == 'meeting'.toString().toLowerCase() && int.parse(DateFormat("yyyyMMdd").format(DateTime.parse(s['sched_date'].toString().toLowerCase().replaceAll(new RegExp(r'[^\w\s]+'),'')))) >= int.parse(DateFormat("yyyyMMdd").format(DateTime.now()));
@@ -250,7 +247,7 @@ List pdfData;
 var selectedTicket = "";
 List myTicketrequest;
 
-getTicketData(localTicketID)async{
+Future getTicketData(localTicketID)async{
   var response = await http.get(Uri.parse('https://ujap.checkmy.dev/api/client/documents/get-ticket-documents-all/$localTicketID'),
       headers: {
         HttpHeaders.authorizationHeader: "Bearer $accesstoken",
@@ -260,10 +257,8 @@ getTicketData(localTicketID)async{
   var jsonData = json.decode(response.body);
   if (response.statusCode == 200){
     pdfData = jsonData;
-    // uploadPDF();
     ticketdownloadID = localTicketID.toString();
-    ticketFilename = pdfData[0]['filename'];
-    print('TICKET DETAIS :'+ticketFilename.toString());
+    return jsonData;
   }
   else
   {

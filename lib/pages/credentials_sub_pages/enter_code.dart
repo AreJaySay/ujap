@@ -75,7 +75,6 @@ class _Reset_codeState extends State<Reset_code> {
 
   @override
   Widget build(BuildContext context) {
-    SystemChrome.setEnabledSystemUIOverlays([]);
     return StreamBuilder<Object>(
       stream: codeExpired(),
       builder: (context, snapshot) {

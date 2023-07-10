@@ -259,12 +259,14 @@ class _SpeechToTextState extends State<SpeechToText> {
 
   Widget _buildButton({String label, VoidCallback onPressed}) => new Padding(
       padding: new EdgeInsets.all(12.0),
-      child: new RaisedButton(
-        color: Colors.cyan.shade600,
-        onPressed: onPressed,
-        child: new Text(
-          label,
-          style: const TextStyle(color: Colors.white),
+      child: InkWell(
+        onTap: onPressed,
+        child: Container(
+          color: Colors.cyan.shade600,
+          child: new Text(
+            label,
+            style: const TextStyle(color: Colors.white),
+          ),
         ),
       ));
 

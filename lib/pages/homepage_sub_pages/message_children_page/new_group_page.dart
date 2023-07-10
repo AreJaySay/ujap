@@ -64,8 +64,8 @@ class _NewGroupPageState extends State<NewGroupPage> {
           backgroundColor: kPrimaryColor,
           title: Text("Ajouter des participants"),
           actions: [
-            FlatButton(
-              onPressed: widget.toAdd ? _toAdd.length > 0 ? () async {
+            InkWell(
+              onTap: widget.toAdd ? _toAdd.length > 0 ? () async {
                 print("ADD");
 
                 for(var add in _toAdd){
@@ -279,10 +279,11 @@ class _NewGroupPageState extends State<NewGroupPage> {
                 children: [
                   for(var client in _clients)...{
                     Container(
+                      padding: const EdgeInsets.symmetric(vertical: 10,horizontal: 20),
                       width: double.infinity,
                       margin: const EdgeInsets.only(bottom: 10),
-                      child: FlatButton(
-                        onPressed: (){
+                      child: InkWell(
+                        onTap: (){
                           setState(() {
 //                      selected = contacts;
 //                      _search.text = contacts['name'];
@@ -301,7 +302,6 @@ class _NewGroupPageState extends State<NewGroupPage> {
                             }
                           });
                         },
-                        padding: const EdgeInsets.symmetric(vertical: 10,horizontal: 20),
                         child: Row(
                           children: [
                             Container(

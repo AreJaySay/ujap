@@ -1,14 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:grouped_list/grouped_list.dart';
-import 'package:intl/intl.dart';
-import 'package:ujap/globals/container_data.dart';
 import 'package:ujap/globals/variables/other_variables.dart';
-import 'package:ujap/services/api.dart';
-// import 'package:url_launcher/url_launcher.dart';
 
 showSnackBar(BuildContext context, msg) {
   final snackBar = SnackBar(content: Text(msg));
-  Scaffold.of(context).showSnackBar(snackBar);
+  ScaffoldMessenger.of(context).showSnackBar(snackBar);
 }
 
 showSnackBar_Ads(BuildContext context, _imageLink,_httpLink){
@@ -65,7 +60,7 @@ showSnackBar_Ads(BuildContext context, _imageLink,_httpLink){
                       ),
                     ),
                     onTap: (){
-                      Scaffold.of(context).hideCurrentSnackBar();
+                      ScaffoldMessenger.of(context).hideCurrentSnackBar();
                     },
                   ),
                 ],
@@ -86,7 +81,7 @@ showSnackBar_Ads(BuildContext context, _imageLink,_httpLink){
     elevation: 0,
   );
 
-  Scaffold.of(context).showSnackBar(snackbar);
+  ScaffoldMessenger.of(context).showSnackBar(snackbar);
 }
 
 // _openLink(String _httpLink)async{

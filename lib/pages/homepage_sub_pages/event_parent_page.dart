@@ -9,6 +9,8 @@ import 'package:ujap/globals/widgets/curve_containers.dart';
 import 'package:ujap/pages/homepage_sub_pages/event_children/events_list_data.dart';
 import 'package:http/http.dart' as http;
 
+import 'event_children/filter_events.dart';
+
 class Event_parent extends StatefulWidget {
   @override
   _Event_parentState createState() => _Event_parentState();
@@ -148,7 +150,7 @@ class _Event_parentState extends State<Event_parent> {
                               children: [
                                 GestureDetector(
                                   child: Container(
-                                    child: Text('Historique',style: TextStyle(fontFamily: 'Google-Bold',color: !history_eventsmatches ? Colors.white.withOpacity(0.3) :  Colors.white,fontSize: screenwidth < 700 ? history_eventsmatches ? screenheight/55 : screenheight/60 : 23),),
+                                    child: Text('Historique',style: TextStyle(fontFamily: 'Google-Bold',color: !history_eventsmatches ? Colors.white.withOpacity(0.3) :  Colors.white),),
                                   ),
                                   onTap: (){
                                     setState(() {
@@ -160,7 +162,7 @@ class _Event_parentState extends State<Event_parent> {
                                   child: Container(
                                     width:  screenwidth < 700 ? screenwidth/1.7 : 400,
                                     padding: const EdgeInsets.all(10),
-                                    child: Text('Évènements et matchs auxquels vous allez assister.',style: TextStyle(fontFamily: 'Google-Bold',color:  history_eventsmatches ? Colors.white.withOpacity(0.3) :  Colors.white,fontSize: screenwidth < 700 ?  history_eventsmatches ? screenheight/60 : screenheight/55 : 23),
+                                    child: Text('Évènements et matchs auxquels vous allez assister.',style: TextStyle(fontFamily: 'Google-Bold',color:  history_eventsmatches ? Colors.white.withOpacity(0.3) :  Colors.white),
                                     textAlign: TextAlign.center,
                                     ),
                                   ),
@@ -172,8 +174,7 @@ class _Event_parentState extends State<Event_parent> {
                                 ),
                                 IconButton(
                                   icon: Container(
-                                    width: screenwidth < 700 ? screenwidth/20 : 30,
-                                    height: screenwidth < 700 ? screenwidth/20 : 30,
+                                    width: 25,
                                     child: Image(
                                       color: Colors.white,
                                       image: AssetImage('assets/home_icons/filter.png'),
@@ -182,14 +183,16 @@ class _Event_parentState extends State<Event_parent> {
                                   onPressed: (){
                                     setState(() {
                                       showsearchBox = false;
-                                     if (events_filter_open == true){
-                                        print('ADFASDASD');
-                                        events_filter_open = false;
-                                      }
-                                      else{
-                                        events_filter_open = true;
-                                        print('ADFASDASDdfdfd');
-                                      }
+                                      showModalBottomSheet(
+                                        backgroundColor: Colors.white,
+                                          shape: RoundedRectangleBorder(
+                                            borderRadius: BorderRadius.vertical(
+                                              top: Radius.circular(20),
+                                            ),
+                                          ),
+                                        context: context, builder: (context){
+                                        return Events_filter();
+                                      });
                                     });
                                   },
                                 )

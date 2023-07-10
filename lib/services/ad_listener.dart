@@ -55,35 +55,26 @@ class AdListener{
                   child: AlertDialog(
                     backgroundColor: Colors.transparent,
                     elevation: 0,
-                    contentPadding: const EdgeInsets.all(0),
-                    content: data['type'] == 'image' ? Container(
+                    contentPadding: EdgeInsets.zero,
+                    content: data['type'] == 'image' ?
+                    Container(
                       width: double.infinity,
-//                    height: MediaQuery.of(context).size.height/1.5,
-                      child: Stack(
-                        children: [
-                          Container(
-                            width: double.infinity,
-                            padding: const EdgeInsets.symmetric(horizontal: 20,vertical: 15),
-                            child: Text("${data['name']}"),
-                          ),
-                          Container(
-                            width: double.infinity,
-                            decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(16)
-                            ),
-                            child: GestureDetector(
-                                onTap: () async {
-                                  String url = '${StringFormatter().cleaner(StringFormatter().strToObj(data['content'])['location'])}';
-                                  if (await canLaunch(url)) {
-                                    await launch(url);
-                                  } else {
-                                    throw 'Could not launch $url';
-                                  }
-                                },
-                                child: Image.network('${StringFormatter().cleaner(StringFormatter().strToObj(data['content'])['location'])}',fit: BoxFit.cover,)
-                            ),
-                          ),
-                        ],
+                      padding: const EdgeInsets.symmetric(horizontal: 15,vertical: 20),
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                          borderRadius: BorderRadius.circular(10)
+                      ),
+                      child: Container(
+                        width: double.infinity,
+                        child: GestureDetector(
+                            onTap: () async {
+                              String url = '${data["link"]}';
+                              if (!await launchUrl(Uri.parse(url),mode: LaunchMode.externalApplication,)) {
+                                throw 'Could not launch $url';
+                              }
+                            },
+                            child: Image.network('${StringFormatter().cleaner(StringFormatter().strToObj(data['content'])['location'])}',fit: BoxFit.cover,)
+                        ),
                       ),
                     ) : Container(
                         width: double.infinity,
@@ -93,9 +84,7 @@ class AdListener{
                             GestureDetector(
                               onTap: () async {
                                 String url = '${StringFormatter().cleaner(StringFormatter().strToObj(data['content'])['location'])}';
-                                if (await canLaunch(url)) {
-                                  await launch(url);
-                                } else {
+                                if (!await launchUrl(Uri.parse(url),mode: LaunchMode.externalApplication,)) {
                                   throw 'Could not launch $url';
                                 }
                               },
@@ -112,8 +101,8 @@ class AdListener{
                                     color: Colors.white54,
                                     borderRadius: BorderRadius.circular(1000)
                                 ),
-                                child: FlatButton(
-                                  onPressed: (){
+                                child: InkWell(
+                                  onTap: (){
                                     Navigator.of(context).pop(null);
                                     if(_videoController != null && _chewieController != null && _chewieController.isPlaying){
                                       try{
@@ -124,7 +113,6 @@ class AdListener{
                                       }
                                     }
                                   },
-                                  padding: const EdgeInsets.all(0),
                                   child: Center(
                                     child: Icon(Icons.close,size: 15,color: Colors.grey[700],),
                                   ),

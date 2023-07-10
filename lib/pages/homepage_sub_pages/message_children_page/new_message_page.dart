@@ -76,9 +76,8 @@ class _NewMessageState extends State<NewMessage> {
                     Container(
                       width: double.infinity,
                       height: 50,
-                      child: FlatButton(
-                        onPressed: ()=> Navigator.push(context, PageTransition(child: NewGroupPage(toAdd: false,), type: PageTransitionType.bottomToTop)),
-                        padding: const EdgeInsets.all(0),
+                      child: InkWell(
+                        onTap: ()=> Navigator.push(context, PageTransition(child: NewGroupPage(toAdd: false,), type: PageTransitionType.bottomToTop)),
                         child: Row(
                           children: [
                             Container(
@@ -108,11 +107,13 @@ class _NewMessageState extends State<NewMessage> {
                       ),),
                     ),
                     for(var contacts in _clients)...{
-                      contacts['email'].toString() == userdetails['email'].toString() ? Container() : Container(
+                      contacts['email'].toString() == userdetails['email'].toString() ? Container() :
+                      Container(
                         width: double.infinity,
                         margin: const EdgeInsets.only(bottom: 10),
-                        child: FlatButton(
-                          onPressed: ()async{
+                        padding: const EdgeInsets.symmetric(vertical: 5,horizontal: 0),
+                        child: InkWell(
+                          onTap: ()async{
                             List<int> dd = [];
                             List clientDetails;
 
@@ -162,7 +163,6 @@ class _NewMessageState extends State<NewMessage> {
                               }
                             }
                           },
-                          padding: const EdgeInsets.symmetric(vertical: 5,horizontal: 0),
                           child: Row(
                             children: [
                               Container(

@@ -64,16 +64,15 @@ showAlertDialog(BuildContext context) {
                             textAlign: TextAlign.center,
                           )),
                       Container(
-                        margin:
-                        EdgeInsets.only(right: screenwidth < 700 ? 0 : 10),
+                        margin: EdgeInsets.only(right: screenwidth < 700 ? 0 : 10),
                         width: 50,
-                        child: FlatButton(
+                        child: InkWell(
                           child: Icon(
                             Icons.close,
                             size: screenheight / 30,
                             color: Colors.white,
                           ),
-                          onPressed: () {
+                          onTap: () {
                             Navigator.of(context).pop(null);
                           },
                         ),

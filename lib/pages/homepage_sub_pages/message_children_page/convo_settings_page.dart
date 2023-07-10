@@ -184,6 +184,7 @@ class _ConvoSettingsPageState extends State<ConvoSettingsPage> {
                       child: Container(
                         width: 30,
                         height: 30,
+                        padding: const EdgeInsets.all(5),
                         decoration: BoxDecoration(
                           color: Colors.grey[400],
                           borderRadius: BorderRadius.circular(1000),
@@ -194,8 +195,8 @@ class _ConvoSettingsPageState extends State<ConvoSettingsPage> {
                             )
                           ]
                         ),
-                        child: FlatButton(
-                          onPressed: (){
+                        child: InkWell(
+                          onTap: (){
                             List members = [];
                             for(var m in widget.data['members']){
                               for(var x in events_clients){
@@ -207,10 +208,10 @@ class _ConvoSettingsPageState extends State<ConvoSettingsPage> {
                             members.removeWhere((element) => element['id'] == userdetails['id']);
                             Navigator.push(context, PageTransition(child: NewGroupPage(participateWith: members,toAdd: true,channelId: widget.channelId,), type: PageTransitionType.bottomToTop));
                           },
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(1000)
-                          ),
-                          padding: const EdgeInsets.all(5),
+                          // shape: RoundedRectangleBorder(
+                          //   borderRadius: BorderRadius.circular(1000)
+                          // ),
+                          // padding: const EdgeInsets.all(5),
                           child: FittedBox(
                             child: Icon(Icons.person_add,color: Colors.black54,),
                           ),
@@ -226,8 +227,8 @@ class _ConvoSettingsPageState extends State<ConvoSettingsPage> {
                     ) : Container(),
                     widget.data['members'].length > 2 ? Container(
                         width: double.infinity,
-                        child: FlatButton(
-                          onPressed: (){
+                        child: InkWell(
+                          onTap: (){
                             setState(() {
                               changeName = true;
                             });
@@ -244,9 +245,9 @@ class _ConvoSettingsPageState extends State<ConvoSettingsPage> {
                     ) : Container(),
                     widget.data['members'].length > 2 ? Container(
                         width: double.infinity,
-                        child: FlatButton(
+                        child: InkWell(
 //              padding: const EdgeInsets.symmetric(horizontal: 0),
-                          onPressed: (){
+                          onTap: (){
                             setState(() {
                               _showMembers = !_showMembers;
                             });
@@ -263,9 +264,8 @@ class _ConvoSettingsPageState extends State<ConvoSettingsPage> {
                     ) : Container(),
                     Container(
                       width: double.infinity,
-                      child: FlatButton(
-//              padding: const EdgeInsets.symmetric(horizontal: 0),
-                        onPressed: (){
+                      child: InkWell(
+                        onTap: (){
                           Navigator.push(context, PageTransition(child: ViewChannelPhotos(widget.channelId), type: PageTransitionType.bottomToTop));
                         },
                         child: Row(
@@ -297,9 +297,8 @@ class _ConvoSettingsPageState extends State<ConvoSettingsPage> {
 //                 ),
                     widget.data['members'].length == 2 ? Container(
                         width: double.infinity,
-                        child: FlatButton(
-//              padding: const EdgeInsets.symmetric(horizontal: 0),
-                          onPressed: (){
+                        child: InkWell(
+                          onTap: (){
                             List participant = events_clients.where((element) => element['name'] == channelName()).toList();
                             Navigator.push(context, PageTransition(child: NewGroupPage(participateWith: participant,toAdd: false,), type: PageTransitionType.bottomToTop));
                           },

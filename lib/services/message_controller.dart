@@ -1,7 +1,4 @@
 import 'dart:convert';
-import 'dart:io';
-import 'package:firebase_core/firebase_core.dart';
-import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:http/http.dart' as http;
 import 'package:ujap/globals/user_data.dart';
 import 'package:ujap/globals/widgets/show_flushbar.dart';
@@ -13,6 +10,7 @@ import 'package:ujap/services/pushnotification.dart';
 
 class Messagecontroller{
   NotificationDisplayer notificationDisplayer = new NotificationDisplayer();
+  final PushNotification _notification = new PushNotification();
   sendmessage(data, String messagetoSend,int receiverId, bool refresh, String reason, List<int> recievers, {String groupname})async{
     print(groupname.toString());
     try{
@@ -20,7 +18,7 @@ class Messagecontroller{
         Uri.parse('https://fcm.googleapis.com/fcm/send'),
         headers: <String, String>{
           'Content-Type': 'application/json',
-          'Authorization': 'key=$TokenServer',
+          'Authorization': 'key=${_notification.serverToken}',
         },
         body: jsonEncode(
           <String, dynamic>{
@@ -123,7 +121,7 @@ class Messagecontroller{
           Uri.parse('https://fcm.googleapis.com/fcm/send'),
           headers: <String, String>{
             'Content-Type': 'application/json',
-            'Authorization': 'key=$TokenServer',
+            'Authorization': 'key=${_notification.serverToken}',
           },
           body: jsonEncode(
             <String, dynamic>{

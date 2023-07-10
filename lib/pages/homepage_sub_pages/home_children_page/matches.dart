@@ -3,23 +3,15 @@ import 'package:flutter/rendering.dart';
 import 'package:intl/intl.dart';
 import 'package:page_transition/page_transition.dart';
 import 'package:ujap/globals/container_data.dart';
-import 'package:ujap/globals/user_data.dart';
 import 'package:ujap/globals/variables/other_variables.dart';
 import 'package:ujap/globals/variables/video.dart';
 import 'package:ujap/globals/widgets/view_events.dart';
-import 'package:ujap/pages/homepage.dart';
-import 'package:ujap/pages/homepage_sub_pages/event_children/events_list_data.dart';
 import 'package:ujap/pages/homepage_sub_pages/event_children/view_event.dart';
 import 'package:ujap/pages/homepage_sub_pages/home_children_page/no_data_fetch.dart';
 import 'package:ujap/pages/homepage_sub_pages/home_children_page/past_events_matches.dart';
 import 'package:ujap/services/ad_listener.dart';
-import 'package:ujap/services/api.dart';
 import 'package:ujap/services/event_listener.dart';
-import 'package:ujap/services/navigate_match_events.dart';
 import 'package:ujap/services/notifications.dart';
-import 'package:ujap/services/searches/search_service.dart';
-import 'package:http/http.dart' as http;
-
 List monthDate = ['','Jan','Fèvr','Mars','Avril','Mai','Juin','Juil','Août','Sept','Oct','Nov','Déc'];
 
 class Bottom_listview_data extends StatefulWidget {
@@ -28,17 +20,6 @@ class Bottom_listview_data extends StatefulWidget {
 }
 
 class _Bottom_listview_dataState extends State<Bottom_listview_data> {
-  bool _pastornot = false;
-
-  var _finaleventsTime;
-  var _timeConvertedString= "";
-  int _timeConverted;
-  int _finalTimeEvent;
-  var _dateConvertedString = "";
-  var _dateConvertedDayYear = "";
-  List _teamName;
-  int _daysbetween;
-
   @override
   void initState() {
     // TODO: implement initState
@@ -98,7 +79,7 @@ class _Bottom_listview_dataState extends State<Bottom_listview_data> {
             ),
           ) : ListView.builder(
             shrinkWrap: true,
-            padding: EdgeInsets.symmetric(vertical: 10),
+            padding: EdgeInsets.only(top: 10,bottom: 30),
             physics: NeverScrollableScrollPhysics(),
             itemCount: snapshot.data.length,
             itemBuilder: (context, int index){
@@ -112,7 +93,7 @@ class _Bottom_listview_dataState extends State<Bottom_listview_data> {
                     children: [
                       Container(
                           padding: snapshot.data[index]['filename'].toString() == "null" || snapshot.data[index]['filename'].toString() == "" ? EdgeInsets.all(20) : EdgeInsets.all(0),
-                          height: screenwidth < 700 ? screenheight/4.8 : screenheight/4.5,
+                          height: 150,
                           width: screenwidth,
                           decoration: BoxDecoration(
                               color: Colors.grey[300],
@@ -124,7 +105,7 @@ class _Bottom_listview_dataState extends State<Bottom_listview_data> {
                           ) : null
                           ),
                           child: snapshot.data[index]['filename'].toString() == "null" || snapshot.data[index]['filename'].toString() == ""  ? Image(
-                            color:  Colors.grey[800],
+                            color: kPrimaryColor,
                             fit:  BoxFit.contain,
                             image: AssetImage('assets/no_image_available.png'),
                           ) : null,
@@ -134,12 +115,14 @@ class _Bottom_listview_dataState extends State<Bottom_listview_data> {
                         margin: EdgeInsets.symmetric(horizontal: screenwidth < 700 ? 0 : 20 ),
                         padding: EdgeInsets.symmetric(horizontal: 20),
                         child: Row(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Text( snapshot.data[index]['type'].toString().toLowerCase() == 'event' ? "NOM DE L'évènement:".toUpperCase() : "Nom de la réunion:".toUpperCase() ,style: TextStyle(fontSize: screenwidth < 700 ? screenheight/70  : 20,fontFamily: 'Google-Bold',color: Colors.grey[600]),),
+                            Text( snapshot.data[index]['type'].toString().toLowerCase() == 'event' ? "NOM DE L'évènement:".toUpperCase() : "Nom de la réunion:".toUpperCase() ,style: TextStyle(fontFamily: 'Google-Medium',color: Colors.grey,fontSize: 13),),
                             SizedBox(
                               width: 5,
                             ),
-                            Text(snapshot.data[index]['name'].toString().toUpperCase(),style: TextStyle(fontSize: screenwidth < 700 ? screenheight/70  : 20,fontFamily: 'Google-Bold',color: Colors.grey[800]),),
+                            Expanded(child: Text(snapshot.data[index]['name'].toString().toUpperCase(),style: TextStyle(fontFamily: 'Google-Medium',color: Colors.black,fontSize: 13),)),
                           ],
                         ),
                       ),
@@ -151,15 +134,15 @@ class _Bottom_listview_dataState extends State<Bottom_listview_data> {
                         padding: EdgeInsets.symmetric(horizontal: 20),
                         child: Row(
                           children: [
-                            Text( snapshot.data[index]['type'].toString().toLowerCase() == 'event' ? "date de l'évènement:".toUpperCase() : "Date de la réunion:".toUpperCase(),style: TextStyle(fontSize: screenwidth < 700 ? screenheight/70  : 20,fontFamily: 'Google-Bold',color: Colors.grey[600]),),
+                            Text( snapshot.data[index]['type'].toString().toLowerCase() == 'event' ? "date de l'évènement:".toUpperCase() : "Date de la réunion:".toUpperCase(),style: TextStyle(fontSize: 13,fontFamily: 'Google-Medium',color: Colors.grey),),
                             SizedBox(
                               width: 5,
                             ),
-                            Text(DateFormat("d").format(DateTime.parse(snapshot.data[index]['sched_date'])).toString().toUpperCase()+' '+monthDate[int.parse(DateFormat("MM").format(DateTime.parse(snapshot.data[index]['sched_date'])).toString())].toString()+'.'+' '+DateFormat("yyyy").format(DateTime.parse(snapshot.data[index]['sched_date'])).toString().toUpperCase(),style: TextStyle(fontSize: screenwidth < 700 ? screenheight/70  : 20,fontFamily: 'Google-Bold',color: Colors.grey[800]),),
+                            Text(DateFormat("d").format(DateTime.parse(snapshot.data[index]['sched_date'])).toString().toUpperCase()+' '+monthDate[int.parse(DateFormat("MM").format(DateTime.parse(snapshot.data[index]['sched_date'])).toString())].toString()+'.'+' '+DateFormat("yyyy").format(DateTime.parse(snapshot.data[index]['sched_date'])).toString().toUpperCase(),style: TextStyle(fontSize: 13,fontFamily: 'Google-Medium',color: Colors.black),),
                             SizedBox(
                               width: 10,
                             ),
-                            Text(snapshot.data[index]['sched_time'].toString().substring(0,5),style: TextStyle(fontSize: screenwidth < 700 ? screenheight/70  : 20,fontFamily: 'Google-Bold',color: Colors.grey[800]),),
+                            Text(snapshot.data[index]['sched_time'].toString().substring(0,5),style: TextStyle(fontSize: 13,fontFamily: 'Google-Medium',color: Colors.black),),
                             SizedBox(
                               width: 5,
                             ),

@@ -29,9 +29,6 @@ class MainScreen extends StatefulWidget {
 
 class _MainScreenState extends State<MainScreen> with SingleTickerProviderStateMixin {
   final Duration duration = const Duration(milliseconds: 200);
-
-  AppBar appBar = AppBar();
-
   int _navBarIndex = 0;
   TabController tabController;
   double borderRadius = 0.0;
@@ -184,226 +181,196 @@ class _MainScreenState extends State<MainScreen> with SingleTickerProviderStateM
                         },
                       ),
                     ),
-                    Container(
-                      height: screenheight/4,
-                      width: screenwidth,
-                      child: Column(
-                        children: [
-                          Expanded(
-                            child: FlatButton(
-                              child: Container(
-                                width: screenwidth,
-                                height: screenheight/4,
-                                child: Row(
-                                  children: [
-                                    Container(
-                                      width: screenwidth < 700 ? screenwidth/17 : 30,
-                                      height: screenwidth < 700 ? screenwidth/17 : 30,
-                                      margin: EdgeInsets.symmetric(horizontal: 10),
-                                      child: Image(
-                                        color: Colors.white,
-                                        image: AssetImage('assets/home_icons/home.png'),
-                                      ),
-                                    ),
-                                    Container(
-                                        margin: EdgeInsets.symmetric(horizontal: screenwidth/40),
-                                        alignment: Alignment.centerLeft,
-                                        child: Text('Accueil',style: TextStyle(color: Colors.white,fontSize: screenwidth < 700 ? screenheight/55 : 20,fontFamily: 'Google-Bold'),))
-                                  ],
-                                ),
+                    InkWell(
+                      child: Container(
+                        width: screenwidth,
+                        margin: EdgeInsets.only(left: 10),
+                        height: 55,
+                        child: Row(
+                          children: [
+                            Container(
+                              width: 25,
+                              child: Image(
+                                color: Colors.white,
+                                image: AssetImage('assets/home_icons/home.png'),
                               ),
-                              onPressed: (){
-                                setState(() {
-                                  currentindex = 1;
-                                  indexListener.update(data: 1);
-                                  if (isCollapsed) {
-                                    drawerController.forward();
-
-                                    borderRadius = 30.0;
-                                  } else {
-                                    drawerController.reverse();
-
-
-                                    view_message_convo = false;
-                                    view_message_convo_group = false;
-
-                                    borderRadius = 0.0;
-                                  }
-                                  showcalendar = false;
-                                  events_filter_open = false;
-                                  message_compose_open = false;
-                                  view_message_convo = false;
-                                  floating_action = false;
-                                  attend_pass = "";
-                                  showticket = false;
-                                  isCollapsed = !isCollapsed;
-                                });
-                              },
                             ),
-                          ),
-                          Expanded(
-                            child: FlatButton(
-                              child: Container(
-                                width: screenwidth,
-                                height: screenheight/4,
-                                child: Row(
-                                  children: [
-                                    Container(
-                                      width: screenwidth < 700 ? screenwidth/17 : 30,
-                                      height: screenwidth < 700 ? screenwidth/17 : 30,
-                                      margin: EdgeInsets.symmetric(horizontal: 10),
-                                      child: Image(
-                                        color: Colors.white,
-                                        image: AssetImage('assets/home_icons/events.png'),
-                                      ),
-                                    ),
-                                    Container(
-                                        margin: EdgeInsets.symmetric(horizontal: screenwidth/40),
-                                        alignment: Alignment.centerLeft,
-                                        child: Text('Évènements et matchs',style: TextStyle(color: Colors.white,fontSize: screenwidth < 700 ? screenheight/55 : 20,fontFamily: 'Google-Bold'),))
-                                  ],
-                                ),
-                              ),
-                              onPressed: (){
-                                setState(() {
-                                  currentindex = 0;
-                                  indexListener.update(data: 0);
-                                  if (isCollapsed) {
-                                    drawerController.forward();
-
-                                    borderRadius = 30.0;
-                                  } else {
-                                    drawerController.reverse();
-
-                                    view_message_convo = false;
-                                    view_message_convo_group = false;
-
-                                    borderRadius = 0.0;
-                                  }
-                                  showcalendar = false;
-                                  events_filter_open = false;
-                                  message_compose_open = false;
-                                  view_message_convo = false;
-                                  floating_action = false;
-                                  attend_pass = "";
-                                  showticket = false;
-                                  isCollapsed = !isCollapsed;
-                                });
-                              },
+                            SizedBox(
+                              width: 10,
                             ),
-                          ),
-                          Expanded(
-                            child: FlatButton(
-                              child: Container(
-                                width: screenwidth,
-                                height: screenheight/4,
-                                child: Row(
-                                  children: [
-                                    Container(
-                                      width: screenwidth < 700 ? screenwidth/17 : 30,
-                                      height: screenwidth < 700 ? screenwidth/17 : 30,
-                                      margin: EdgeInsets.symmetric(horizontal: 10),
-                                      child: Image(
-                                        color: Colors.white,
-                                        image: AssetImage('assets/home_icons/chat.png'),
-                                      ),
-                                    ),
-                                    Container(
-                                        margin: EdgeInsets.symmetric(horizontal: screenwidth/40),
-                                        alignment: Alignment.centerLeft,
-                                        child: Text('Messages',style: TextStyle(color: Colors.white,fontSize: screenwidth < 700 ? screenheight/55 : 20,fontFamily: 'Google-Bold'),))
-                                  ],
-                                ),
-                              ),
-                              onPressed: (){
-                                setState(() {
-                                  if (isCollapsed) {
-                                    drawerController.forward();
-
-                                    borderRadius = 30.0;
-                                  } else {
-                                    drawerController.reverse();
-
-                                    view_message_convo = false;
-                                    view_message_convo_group = false;
-
-                                    borderRadius = 0.0;
-                                  }
-                                  currentindex = 2;
-                                  indexListener.update(data: 2);
-                                  showcalendar = false;
-                                  events_filter_open = false;
-                                  message_compose_open = false;
-                                  view_message_convo = false;
-                                  floating_action = false;
-                                  attend_pass = "";
-                                  showticket = false;
-                                  isCollapsed = !isCollapsed;
-                                });
-                              },
-                            ),
-                          ),
-                          Expanded(
-                            child: FlatButton(
-                              child: Container(
-                                width: screenwidth,
-                                height: screenheight/4,
-                                child: Row(
-                                  children: [
-                                    Container(
-                                      width: screenwidth < 700 ? screenwidth/17 : 30,
-                                      height: screenwidth < 700 ? screenwidth/17 : 30,
-                                      margin: EdgeInsets.symmetric(horizontal: 10),
-                                      child: Icon(Icons.contacts_outlined,color: Colors.white,)
-                                    ),
-                                    Container(
-                                        margin: EdgeInsets.symmetric(horizontal: screenwidth/40),
-                                        alignment: Alignment.centerLeft,
-                                        child: Text('Annuaire',style: TextStyle(color: Colors.white,fontSize: screenwidth < 700 ? screenheight/55 : 20,fontFamily: 'Google-Bold'),))
-                                  ],
-                                ),
-                              ),
-                              onPressed: (){
-                                Navigator.push(context,PageTransition(child: AllClientsHomePage(),type: PageTransitionType.rightToLeftWithFade));
-                              },
-                            ),
-                          ),
-                          Expanded(
-                            child: FlatButton(
-                              child: Container(
-                                width: screenwidth,
-                                height: screenheight/4,
-                                child: Row(
-                                  children: [
-                                    Container(
-                                      width: screenwidth < 700 ? screenwidth/17 : 30,
-                                      height: screenwidth < 700 ? screenwidth/17 : 30,
-                                      margin: EdgeInsets.symmetric(horizontal: 10),
-                                      child: Image(
-                                        color: Colors.white,
-                                        image: AssetImage('assets/home_icons/setting.png'),
-                                      ),
-                                    ),
-                                    Container(
-                                        margin: EdgeInsets.symmetric(horizontal: screenwidth/40),
-                                        alignment: Alignment.centerLeft,
-                                        child: Text('Paramètres',style: TextStyle(color: Colors.white,fontSize: screenwidth < 700 ? screenheight/55 : 20,fontFamily: 'Google-Bold'),))
-                                  ],
-                                ),
-                              ),
-                              onPressed: (){
-                                setState(() {
-                                  if (showparameters == false){
-                                    showparameters = true;
-                                  }else{
-                                    showparameters = false;
-                                  }
-                                });
-                              },
-                            ),
-                          ),
-                        ],
+                            Text('Accueil',style: TextStyle(color: Colors.white,fontSize: 16,fontFamily: 'Google-Bold'),)
+                          ],
+                        ),
                       ),
+                      onTap: (){
+                        setState(() {
+                          currentindex = 1;
+                          indexListener.update(data: 1);
+                          if (isCollapsed) {
+                            drawerController.forward();
+                            borderRadius = 30.0;
+                          } else {
+                            drawerController.reverse();
+                            view_message_convo = false;
+                            view_message_convo_group = false;
+                            borderRadius = 0.0;
+                          }
+                          showcalendar = false;
+                          message_compose_open = false;
+                          view_message_convo = false;
+                          floating_action = false;
+                          attend_pass = "";
+                          showticket = false;
+                          isCollapsed = !isCollapsed;
+                        });
+                      },
+                    ),
+                    InkWell(
+                      child: Container(
+                        margin: EdgeInsets.only(left: 10),
+                        width: screenwidth,
+                        height: 55,
+                        child: Row(
+                          children: [
+                            Container(
+                              width: 25,
+                              child: Image(
+                                color: Colors.white,
+                                image: AssetImage('assets/home_icons/events.png'),
+                              ),
+                            ),
+                            SizedBox(
+                              width: 10,
+                            ),
+                            Text('Évènements et matchs',style: TextStyle(color: Colors.white,fontSize: 16,fontFamily: 'Google-Bold'),)
+                          ],
+                        ),
+                      ),
+                      onTap: (){
+                        setState(() {
+                          currentindex = 0;
+                          indexListener.update(data: 0);
+                          if (isCollapsed) {
+                            drawerController.forward();
+
+                            borderRadius = 30.0;
+                          } else {
+                            drawerController.reverse();
+
+                            view_message_convo = false;
+                            view_message_convo_group = false;
+
+                            borderRadius = 0.0;
+                          }
+                          showcalendar = false;
+                          message_compose_open = false;
+                          view_message_convo = false;
+                          floating_action = false;
+                          attend_pass = "";
+                          showticket = false;
+                          isCollapsed = !isCollapsed;
+                        });
+                      },
+                    ),
+                    InkWell(
+                      child: Container(
+                        width: screenwidth,
+                        margin: EdgeInsets.only(left: 10),
+                        height: 55,
+                        child: Row(
+                          children: [
+                            Container(
+                              width: 25,
+                              child: Image(
+                                color: Colors.white,
+                                image: AssetImage('assets/home_icons/chat.png'),
+                              ),
+                            ),
+                            SizedBox(
+                              width: 10,
+                            ),
+                            Text('Messages',style: TextStyle(color: Colors.white,fontSize: 16,fontFamily: 'Google-Bold'),)
+                          ],
+                        ),
+                      ),
+                      onTap: (){
+                        setState(() {
+                          if (isCollapsed) {
+                            drawerController.forward();
+
+                            borderRadius = 30.0;
+                          } else {
+                            drawerController.reverse();
+
+                            view_message_convo = false;
+                            view_message_convo_group = false;
+
+                            borderRadius = 0.0;
+                          }
+                          currentindex = 2;
+                          indexListener.update(data: 2);
+                          showcalendar = false;
+                          message_compose_open = false;
+                          view_message_convo = false;
+                          floating_action = false;
+                          attend_pass = "";
+                          showticket = false;
+                          isCollapsed = !isCollapsed;
+                        });
+                      },
+                    ),
+                    InkWell(
+                      child: Container(
+                        width: screenwidth,
+                        margin: EdgeInsets.only(left: 10),
+                        height: 55,
+                        child: Row(
+                          children: [
+                            Container(
+                              width: 25,
+                              child: Icon(Icons.contacts_outlined,color: Colors.white,)
+                            ),
+                            SizedBox(
+                              width: 10,
+                            ),
+                            Text('Annuaire',style: TextStyle(color: Colors.white,fontSize: 16,fontFamily: 'Google-Bold'),)
+                          ],
+                        ),
+                      ),
+                      onTap: (){
+                        Navigator.push(context,PageTransition(child: AllClientsHomePage(),type: PageTransitionType.rightToLeftWithFade));
+                      },
+                    ),
+                    InkWell(
+                      child: Container(
+                        width: screenwidth,
+                        height: 55,
+                        margin: EdgeInsets.only(left: 10),
+                        child: Row(
+                          children: [
+                            Container(
+                              width: 25,
+                              child: Image(
+                                color: Colors.white,
+                                image: AssetImage('assets/home_icons/setting.png'),
+                              ),
+                            ),
+                            SizedBox(
+                              width: 10,
+                            ),
+                            Text('Paramètres',style: TextStyle(color: Colors.white,fontSize: 16,fontFamily: 'Google-Bold'),)
+                          ],
+                        ),
+                      ),
+                      onTap: (){
+                        setState(() {
+                          if (showparameters == false){
+                            showparameters = true;
+                          }else{
+                            showparameters = false;
+                          }
+                        });
+                      },
                     ),
                    !showparameters ? Container() : Container(
                       width: screenwidth,
@@ -443,50 +410,47 @@ class _MainScreenState extends State<MainScreen> with SingleTickerProviderStateM
             return Scaffold(
               backgroundColor: kPrimaryColor,
               resizeToAvoidBottomInset: true,
-//            ),
                 body: Stack(
                   children: [
                     Homepage(widget.showAds),
-                    SafeArea(
-                      child: Container(
-                        height: screenheight,
-                        width: screenwidth,
-                        alignment: Alignment.topCenter,
-                        child: Row(
-                          children: [
-                            Container(
-                              padding: EdgeInsets.only(left: screenwidth/25),
-                              child: IconButton(
-                                  icon: !isCollapsed ? IconButton(
-                                    icon: Icon(Icons.menu, color: Colors.white,size: screenwidth < 700 ? screenwidth/17 : 35,),
-                                  ) :  AnimatedIcon(
-                                    icon: AnimatedIcons.menu_close,
-                                    progress: drawerController,
-                                    color: Colors.white,size: screenwidth < 700 ? screenwidth/17 : 35,
-                                  ),
-                                  onPressed: () {
-                                    setState(() {
-                                      adListener.update(false);
-                                      if (isCollapsed) {
-                                        drawerController.forward();
-                                        showparameters = false;
-                                        borderRadius = 30.0;
-                                      } else {
-                                        drawerController.reverse();
+                    Container(
+                      height: screenheight,
+                      width: screenwidth,
+                      alignment: Alignment.topCenter,
+                      child: Row(
+                        children: [
+                          Container(
+                            padding: EdgeInsets.only(left: screenwidth/25),
+                            child: IconButton(
+                                icon: !isCollapsed ? IconButton(
+                                  icon: Icon(Icons.menu, color: Colors.white,size: screenwidth < 700 ? screenwidth/17 : 35,),
+                                ) :  AnimatedIcon(
+                                  icon: AnimatedIcons.menu_close,
+                                  progress: drawerController,
+                                  color: Colors.white,size: screenwidth < 700 ? screenwidth/17 : 35,
+                                ),
+                                onPressed: () {
+                                  setState(() {
+                                    adListener.update(false);
+                                    if (isCollapsed) {
+                                      drawerController.forward();
+                                      showparameters = false;
+                                      borderRadius = 30.0;
+                                    } else {
+                                      drawerController.reverse();
 
-                                        borderRadius = 0.0;
-                                      }
-                                      isCollapsed = !isCollapsed;
-                                      if(videoPlayerController != null && chewieController != null && chewieController.isPlaying){
-                                        videoPlayerController.pause();
-                                        chewieController.pause();
-                                      }
-                                    });
-                                  }),
-                            ),
-                            Appbar_icons()
-                          ],
-                        ),
+                                      borderRadius = 0.0;
+                                    }
+                                    isCollapsed = !isCollapsed;
+                                    if(videoPlayerController != null && chewieController != null && chewieController.isPlaying){
+                                      videoPlayerController.pause();
+                                      chewieController.pause();
+                                    }
+                                  });
+                                }),
+                          ),
+                          Appbar_icons()
+                        ],
                       ),
                     ),
                     isCollapsed ? Container() :

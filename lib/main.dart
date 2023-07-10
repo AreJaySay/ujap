@@ -1,22 +1,16 @@
 import 'dart:async';
-import 'dart:convert';
 import 'package:firebase_analytics/observer.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
-import 'package:permission_handler/permission_handler.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:ujap/controllers/home.dart';
 import 'package:ujap/controllers/login_controller.dart';
-import 'package:ujap/globals/container_data.dart';
 import 'package:ujap/globals/user_data.dart';
 import 'package:ujap/globals/variables/credential_variables.dart';
 import 'package:ujap/globals/variables/events_sub_pages_variables.dart';
-import 'package:ujap/globals/variables/home_sub_pages_variables.dart';
 import 'package:ujap/globals/variables/other_variables.dart';
-import 'package:ujap/globals/widgets/view_events.dart';
 import 'package:ujap/pages/credentials_sub_pages/loginpage.dart';
 import 'package:ujap/pages/drawer_parameters.dart';
 import 'package:ujap/pages/homepage.dart';
@@ -44,7 +38,7 @@ void main() async{
 }
 
 class MyApp extends StatelessWidget {
-  static FirebaseAnalytics analytics = FirebaseAnalytics();
+  static FirebaseAnalytics analytics = FirebaseAnalytics.instance;
   static FirebaseAnalyticsObserver observer = FirebaseAnalyticsObserver(analytics: analytics);
 
   @override
@@ -53,6 +47,9 @@ class MyApp extends StatelessWidget {
       DeviceOrientation.portraitUp,
       DeviceOrientation.portraitDown,
     ]);
+    SystemChrome.setEnabledSystemUIOverlays([]);
+    SystemChrome.setEnabledSystemUIMode(SystemUiMode.immersive);
+    SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
     return MaterialApp(
         localizationsDelegates: [
           GlobalMaterialLocalizations.delegate
@@ -98,13 +95,30 @@ class _SplashScreenState extends State<SplashScreen> {
         width: screenwidth,
         height: screenheight,
         color: Colors.white,
-        child: Center(
-          child: Container(
-            width: screenwidth < 700 ? screenwidth/1.9 : screenwidth/2.5,
-            child: Image(
-              image: AssetImage('assets/logo_shadow.png'),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            Container(
+              width: 180,
+              height: 200,
+              child: Image(
+                fit: BoxFit.fitWidth,
+                image: AssetImage('assets/logo_shadow.png'),
+              ),
             ),
-          ),
+            SizedBox(
+              height: 10,
+            ),
+            SizedBox(
+              width: 30,
+              height: 30,
+              child: CircularProgressIndicator(
+                color: kPrimaryColor,
+                strokeWidth: 3,
+              ),
+            )
+          ],
         ),
 
       ),
@@ -140,7 +154,7 @@ class _SplashScreenState extends State<SplashScreen> {
       setState(() {
         savedPass = pass;
         savedEmail = user;
-        logcdin(user, pass, context,null,false);
+        login(username: user, password: pass, context: context,loader: null,profileinformation: false);
         Navigator.of(context,).pop(null);
       });
 //      openLocationSetting();

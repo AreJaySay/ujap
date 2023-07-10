@@ -66,7 +66,6 @@ class _Enter_new_credentialsState extends State<Enter_new_credentials> {
 
   @override
   Widget build(BuildContext context) {
-    SystemChrome.setEnabledSystemUIOverlays([]);
     return Scaffold(
       body: Container(
         width: screenwidth,

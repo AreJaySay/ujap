@@ -13,13 +13,12 @@ import 'package:ujap/globals/widgets/show_snackbar.dart';
 import 'package:ujap/pages/client_profile_page/profile_information.dart';
 import 'package:ujap/pages/client_profile_page/profile_page.dart';
 import 'package:ujap/pages/client_profile_page/update_picture.dart';
-import 'package:ujap/pages/credentials_sub_pages/loginpage.dart';
 import 'package:ujap/pages/drawer_page.dart';
 import 'package:ujap/services/pushnotification.dart';
 
 bool editProfile = false;
 
-Future login(String username, String password,context,bool loader,bool profileinformation)async{
+Future login({String username = "", String password = "",context,bool loader,bool profileinformation})async{
   showloader(context);
   var response = await http.post(Uri.parse('https://ujap.checkmy.dev/api/client/login'),
       headers: {
@@ -44,8 +43,6 @@ Future login(String username, String password,context,bool loader,bool profilein
     prefs.setString('username', username);
     prefs.setString('password', password);
     isCollapsed = true;
-    usernamecontroller.text = "";
-    passwordcontroller.text = "";
     if(profileinformation){
       Navigator.pushReplacement(context, PageTransition(child: ProfileInformation(
       ),type: PageTransitionType.rightToLeftWithFade,alignment: Alignment.center, curve: Curves.easeIn,duration: Duration(milliseconds: 500)));
@@ -61,7 +58,7 @@ Future login(String username, String password,context,bool loader,bool profilein
     }
     PushNotification().subscribe(data['client']['id']);
   }else{
-    if (usernamecontroller.text.isNotEmpty && passwordcontroller.text.isNotEmpty){
+    if (user == "" && password == "" ){
       print('NASULOD');
       if (data['message'].toString().contains('Password mismatch'.toString())){
         print(data['message'].toString());
@@ -77,6 +74,7 @@ Future login(String username, String password,context,bool loader,bool profilein
         showSnackBar(context, 'Problème de connexion. Veuillez vérifier à nouveau votre adresse e-mail et votre mot de passe.');
       }
     }
+    showSnackBar(context, "Les informations d'identification invalides. S'il vous plaît, vérifiez et essayez à nouveau !");
     Navigator.of(context).pop(null);
   }
 }

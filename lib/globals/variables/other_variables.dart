@@ -12,6 +12,6 @@ AnimationController drawerController;
 double borderRadius = 0.0;
 final Duration duration = const Duration(milliseconds: 500);
 
-Color kPrimaryColor = Color.fromRGBO(3, 79, 147, 0.9);
+Color kPrimaryColor = Color.fromRGBO(3, 79, 147, 1);
 
 Map adData;

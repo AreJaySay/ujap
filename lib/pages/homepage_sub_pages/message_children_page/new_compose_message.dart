@@ -814,10 +814,10 @@ class _NewComposeMessageState extends State<NewComposeMessage> {
                         child: Text('Envoi',style: TextStyle(fontSize: 12,color: Colors.white),)),
                     Container(
                       padding: EdgeInsets.symmetric(vertical: 5),
-                      child: dateBetween == 0 ? Text(DateFormat('kk:mm').format(DateTime.parse(data['created_at']).toLocal()),style: TextStyle(fontSize: screenwidth < 700 ? 11 : 16,color: Colors.grey, fontFamily: "Google-medium"),textAlign: TextAlign.end,) :
+                      child: dateBetween == 0 ? Text(DateFormat('HH:mm').format(DateTime.parse(data['created_at']).toLocal()),style: TextStyle(fontSize: screenwidth < 700 ? 11 : 16,color: Colors.grey, fontFamily: "Google-medium"),textAlign: TextAlign.end,) :
                       dateBetween == 1 ? Text('Hier',style: TextStyle(fontSize: screenwidth < 700 ? 11 : 16,color: Colors.grey, fontFamily: "Google-medium"),) :
-                      dateBetween > 1 ? Text('${dateBetween.toString()} days ago',style: TextStyle(fontSize: screenwidth < 700 ? 11 : 16,color: Colors.grey, fontFamily: "Google-medium"),) :
-                      dateBetween > 7 ? Text('Il y a une semaine',style: TextStyle(fontSize: screenwidth < 700 ? 11 : 16,color: Colors.grey, fontFamily: "Google-medium"),) :
+                      dateBetween > 1 && dateBetween < 7 ?Text('il y a ${dateBetween.toString()} jours',style: TextStyle(fontSize: screenwidth < 700 ? 11 : 16,color: Colors.grey, fontFamily: "Google-medium"),) :
+                      dateBetween > 7 && dateBetween < 31 ? Text('Il y a une semaine',style: TextStyle(fontSize: screenwidth < 700 ? 11 : 16,color: Colors.grey, fontFamily: "Google-medium"),) :
                       Text(DateFormat("d").format(DateTime.parse(data['created_at']).toLocal()).toString().toUpperCase()+' '+monthDate[int.parse(DateFormat("MM").format(DateTime.parse(data['created_at']).toLocal()).toString())].toString()+'.'+' '+DateFormat("yyyy").format(DateTime.parse(data['created_at']).toLocal()).toString().toUpperCase(),style: TextStyle(fontSize: screenwidth < 700 ? 13 : 16,color: Colors.grey, fontFamily: "Google-medium"),),
                     ),
                   ],

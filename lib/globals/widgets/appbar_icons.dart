@@ -25,19 +25,8 @@ class Appbar_icons extends StatefulWidget {
 }
 
 class _Appbar_iconsState extends State<Appbar_icons> {
-
-  Stream hideAppBar() async* {
-    setState(() {
-      searchPage = searchPage;
-      notificationIndicator = notificationIndicator;
-    });
-  }
-
   @override
   Widget build(BuildContext context) {
-    // return StreamBuilder(
-    //   stream: hideAppBar(),
-    //   builder: (context, snapshot) {
         return Expanded(
           child: searchPage ? Container() :
           Container(

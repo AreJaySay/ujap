@@ -19,10 +19,9 @@ class _ConfirmAttendanceState extends State<ConfirmAttendance> {
   Widget build(BuildContext context) {
     return Container(
       width: double.infinity,
-      margin:  EdgeInsets.symmetric(horizontal: screenwidth < 700 ? 20 : 40),
-      height: screenheight/16,
-      child:
-      widget.status[0]['declined_clients'].toString().contains('client_id: '+userdetails['id'].toString()) &&  widget.status[0]['declined_clients'].toString().contains('ticket_id: '+widget.eventDetails['id'].toString()) ?
+      margin:  EdgeInsets.symmetric(horizontal: screenwidth < 700 ? 20 : 40,vertical: 40),
+      height: 55,
+      child: widget.status[0]['declined_clients'].toString().contains('client_id: '+userdetails['id'].toString()) &&  widget.status[0]['declined_clients'].toString().contains('ticket_id: '+widget.eventDetails['id'].toString()) ?
       Container(
         width: double.infinity,
         height: 60,
@@ -38,9 +37,8 @@ class _ConfirmAttendanceState extends State<ConfirmAttendance> {
                 ),
                 alignment: Alignment.center,
                 child: Builder(
-                  builder:(context)=> FlatButton(
-                      padding: const EdgeInsets.all(0),
-                      onPressed: (){
+                  builder:(context)=> InkWell(
+                      onTap: (){
                         confirmation(context,widget.eventDetails['ticket']['id'].toString(),'0',widget.eventDetails);
                       },
                       child: Text('Indisponible ce jour',
@@ -57,7 +55,7 @@ class _ConfirmAttendanceState extends State<ConfirmAttendance> {
               ),
             ),
             const SizedBox(
-              width: 20,
+              width: 10,
             ),
             Expanded(
                 child: Container(
@@ -69,8 +67,8 @@ class _ConfirmAttendanceState extends State<ConfirmAttendance> {
                     ),
                     alignment: Alignment.center,
                     child: Builder(
-                      builder:(context)=>  FlatButton(
-                        onPressed: (){
+                      builder:(context)=>  InkWell(
+                        onTap: (){
                           confirmation(context,widget.eventDetails['ticket']['id'].toString(),'1',widget.eventDetails);
                         },
                         child: Center(
@@ -92,8 +90,8 @@ class _ConfirmAttendanceState extends State<ConfirmAttendance> {
               border: Border.all(color: Color.fromRGBO(1, 80, 147, 0.9))
           ),
           alignment: Alignment.center,
-          child: FlatButton(
-          onPressed: (){
+          child: InkWell(
+          onTap: (){
           if ( widget.eventDetails['type'].toString().toLowerCase() == "meeting".toString().toLowerCase()){
             print('KUMADI');
             confirmMeeting(widget.eventDetails,context: context,eventID: widget.eventDetails['id'].toString(),clientID: userdetails['id'].toString(),status: '0',localticketID: widget.eventDetails['ticket']['id'].toString());

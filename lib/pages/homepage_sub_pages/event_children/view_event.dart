@@ -94,9 +94,7 @@ class _ViewEventDetailsState extends State<ViewEventDetails> with SingleTickerPr
                                 child: ClipPath(
                                   clipper: CurvedBottom(),
                                   child: Container(
-                                    height: screenwidth < 700
-                                        ? screenheight / 2.8
-                                        : screenheight / 2.7,
+                                    height: 230,
                                     decoration: BoxDecoration(
                                         color: Colors.grey[300],
                                         image: DecorationImage(
@@ -114,110 +112,92 @@ class _ViewEventDetailsState extends State<ViewEventDetails> with SingleTickerPr
                               children: [
                                 Expanded(
                                   child: Column(
+                                    mainAxisAlignment: MainAxisAlignment.start,
+                                    crossAxisAlignment: CrossAxisAlignment.start,
                                     children: [
-                                      Container(
-                                        width: double.infinity,
-                                        child: Text(widget.eventDetail['name'].toString(), style: TextStyle(fontSize: screenwidth < 700 ? screenheight / 40 : 30, fontFamily: 'Google-Bold',
-                                            fontWeight: FontWeight.bold,
-                                            color:  Colors.black87),
-                                          maxLines: 2,
-                                          overflow: TextOverflow.ellipsis,
-                                        ),
+                                      Text(widget.eventDetail['name'].toString(), style: TextStyle(fontSize: 16, fontFamily: 'Google-Bold',
+                                          color:  Colors.black),
                                       ),
-                                      Container(
-                                        margin: EdgeInsets.only(top: 8),
-                                        child: Row(
-                                          children: [
-                                            Icon(Icons.location_on,size: screenwidth < 700 ? screenwidth/25 : screenwidth/30,color: Colors.grey[600],),
-                                            SizedBox(
-                                              width: 8,
-                                            ),
-                                            Expanded(
-                                              child: Text(widget.eventDetail['address'].toString() == "null" ? 'TBA' : widget.eventDetail['address'].toString(), style: TextStyle(
-                                                  fontSize: screenwidth < 700
-                                                      ? screenheight / 65
-                                                      : 20,
-                                                  fontFamily: 'Google-Bold',
-                                                  fontWeight: FontWeight.bold,
-                                                  color: Colors.grey[600]),),
-                                            ),
-                                          ],
-                                        ),
+                                      SizedBox(
+                                        height: 10,
                                       ),
-                                      Container(
-                                        margin: EdgeInsets.symmetric(vertical: 5),
-                                        child: Row(
-                                          children: [
-                                            Container(
-                                              width: screenwidth < 700 ? screenwidth/25 : screenwidth/30,
-                                              height: screenwidth < 700 ? screenwidth/25 : screenwidth/30,
-                                              child: Image(
-                                                color: Colors.grey[600],
-                                                image:  AssetImage('assets/view_events_icons/city.png'),
-                                              ),
-                                            ),
-                                            SizedBox(
-                                              width: 8,
-                                            ),
-                                            Text(widget.eventDetail['city'].toString() == "null" ? 'TBA' : widget.eventDetail['city'].toString() , style: TextStyle(
-                                                fontSize: screenwidth < 700
-                                                    ? screenheight / 65
-                                                    : 20,
-                                                fontFamily: 'Google-Bold',
-                                                fontWeight: FontWeight.bold,
-                                                color:  Colors.grey[600]),),
-                                          ],
-                                        ),
+                                      widget.eventDetail['address'].toString() == "null" ? Container() : Row(
+                                        mainAxisAlignment: MainAxisAlignment.start,
+                                        crossAxisAlignment: CrossAxisAlignment.start,
+                                        children: [
+                                          Icon(Icons.location_on,size: 21,color: kPrimaryColor,),
+                                          SizedBox(
+                                            width: 8,
+                                          ),
+                                          Expanded(
+                                            child: Text(widget.eventDetail['address'].toString(), style: TextStyle(
+                                                fontFamily: 'Google-Medium',
+                                                color: Colors.black),),
+                                          ),
+                                        ],
                                       ),
-                                      Container(
-                                        child: Row(
-                                          children: [
-                                            Container(
-                                              width: screenwidth < 700 ? screenwidth/25 : screenwidth/30,
-                                              height: screenwidth < 700 ? screenwidth/25 : screenwidth/30,
-                                              child: Image(
-                                                color: Colors.grey[600],
-                                                image:  AssetImage('assets/view_events_icons/state.png'),
-                                              ),
-                                            ),
-                                            SizedBox(
-                                              width: 8,
-                                            ),
-                                            Text(widget.eventDetail['state'].toString() == "null" ? 'TBA' : widget.eventDetail['state'].toString() , style: TextStyle(
-                                                fontSize: screenwidth < 700
-                                                    ? screenheight / 65
-                                                    : 20,
-                                                fontFamily: 'Google-Bold',
-                                                fontWeight: FontWeight.bold,
-                                                color:  Colors.grey[600]),),
-                                          ],
-                                        ),
+                                      SizedBox(
+                                        height: 5,
                                       ),
-                                      Container(
-                                        margin: EdgeInsets.symmetric(vertical: 5),
-                                        child: Row(
-                                          children: [
-                                            Container(
-                                              width: screenwidth < 700 ? screenwidth/25 : screenwidth/30,
-                                              height: screenwidth < 700 ? screenwidth/25 : screenwidth/30,
-                                              child: Image(
-                                                color: Colors.grey[600],
-                                                image:  AssetImage('assets/view_events_icons/country.png'),
-                                              ),
+                                      widget.eventDetail['city'].toString() == "null" ? Container() : Row(
+                                        children: [
+                                          Container(
+                                            width: 16,
+                                            height: 16,
+                                            child: Image(
+                                              color: kPrimaryColor,
+                                              image:  AssetImage('assets/view_events_icons/city.png'),
                                             ),
-                                            SizedBox(
-                                              width: 8,
+                                          ),
+                                          SizedBox(
+                                            width: 8,
+                                          ),
+                                          Text(widget.eventDetail['city'].toString() , style: TextStyle(
+                                              fontFamily: 'Google-Medium',
+                                              color: Colors.black),),
+                                        ],
+                                      ),
+                                      SizedBox(
+                                        height: 5,
+                                      ),
+                                      widget.eventDetail['state'].toString() == "null" ? Container() : Row(
+                                        children: [
+                                          Container(
+                                            width: 16,
+                                            height: 16,
+                                            child: Image(
+                                              color: kPrimaryColor,
+                                              image:  AssetImage('assets/view_events_icons/state.png'),
                                             ),
-                                            Text(widget.eventDetail['country'].toString() == "null" ? 'TBA' : widget.eventDetail['country'].toString() , style: TextStyle(
-                                              fontSize: screenwidth < 700
-                                                  ? screenheight / 65
-                                                  : 20,
-                                              fontFamily: 'Google-Bold',
-                                              fontWeight: FontWeight.bold,
-                                              color:  Colors.grey[600],),),
-                                          ],
-                                        ),
-
+                                          ),
+                                          SizedBox(
+                                            width: 8,
+                                          ),
+                                          Text(widget.eventDetail['state'].toString() , style: TextStyle(
+                                              fontFamily: 'Google-Medium',
+                                              color: Colors.black),),
+                                        ],
+                                      ),
+                                      SizedBox(
+                                        height: 5,
+                                      ),
+                                      widget.eventDetail['country'].toString() == "null" ? Container() : Row(
+                                        children: [
+                                          Container(
+                                            width: 16,
+                                            height: 16,
+                                            child: Image(
+                                              color: kPrimaryColor,
+                                              image:  AssetImage('assets/view_events_icons/country.png'),
+                                            ),
+                                          ),
+                                          SizedBox(
+                                            width: 8,
+                                          ),
+                                          Text(widget.eventDetail['country'].toString() , style: TextStyle(
+                                              fontFamily: 'Google-Medium',
+                                              color: Colors.black),),
+                                        ],
                                       )
                                     ],
                                   ),
@@ -295,7 +275,7 @@ class _ViewEventDetailsState extends State<ViewEventDetails> with SingleTickerPr
                           ),
                           Container(
                             width: double.infinity,
-                            height: _tabIndex == 0 ? screenheight/8 : screenheight/3,
+                            height: _tabIndex == 0 ? 150 : screenheight/3,
                             margin: const EdgeInsets.symmetric(horizontal: 20),
                             child: TabBarView(
                               physics: NeverScrollableScrollPhysics(),
@@ -339,9 +319,8 @@ class _ViewEventDetailsState extends State<ViewEventDetails> with SingleTickerPr
                                   ),
                                   alignment: Alignment.center,
                                   child: Builder(
-                                    builder:(context)=> FlatButton(
-                                      padding: const EdgeInsets.all(0),
-                                        onPressed: (){
+                                    builder:(context)=> InkWell(
+                                        onTap: (){
                                         if (widget.eventDetail['type'].toString().toLowerCase() == "meeting".toString().toLowerCase()){
                                           confirmMeeting(widget.eventDetail,context: context,eventID: widget.eventDetail['id'].toString(),clientID: userdetails['id'].toString(),status: '0');
                                           // confirmMeeting(context,widget.eventDetail['id'].toString(),userdetails['id'].toString(),'0');
@@ -364,7 +343,7 @@ class _ViewEventDetailsState extends State<ViewEventDetails> with SingleTickerPr
                                 ),
                               ),
                               const SizedBox(
-                                width: 20,
+                                width: 10,
                               ),
                               Expanded(
                                 child: Container(
@@ -376,8 +355,8 @@ class _ViewEventDetailsState extends State<ViewEventDetails> with SingleTickerPr
                                   ),
                                   alignment: Alignment.center,
                                   child: Builder(
-                                    builder:(context)=>  FlatButton(
-                                      onPressed: (){
+                                    builder:(context)=> InkWell(
+                                      onTap: (){
                                         if (widget.eventDetail['type'].toString().toLowerCase() == "meeting".toString().toLowerCase()){
                                           print('DAPAT HA MEETING :');
                                            confirmMeeting(widget.eventDetail,context: context,eventID: widget.eventDetail['id'].toString(),clientID: userdetails['id'].toString(),status: '1',localticketID: widget.eventDetail['ticket']['id'].toString());
@@ -443,9 +422,8 @@ class _ViewEventDetailsState extends State<ViewEventDetails> with SingleTickerPr
   launchMap(String address) async {
     String query = Uri.encodeComponent(address);
     String googleUrl = "https://www.google.com/maps/search/?api=1&query=$query";
-
-    if (await canLaunch(googleUrl)) {
-      await launch(googleUrl);
+    if (!await launchUrl(Uri.parse(googleUrl))) {
+      throw 'Could not launch $googleUrl';
     }
   }
 }

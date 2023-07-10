@@ -20,6 +20,7 @@ import 'package:ujap/services/notifications.dart';
 import 'package:ujap/services/searches/search_service.dart';
 
 import '../../drawer_page.dart';
+import 'download_pdf 2.dart';
 
 class EventsList extends StatefulWidget {
   @override
@@ -94,7 +95,7 @@ class _EventsListState extends State<EventsList> {
                                   return showsearchBox ? Container() :  Container(
                                     width: screenwidth,
                                     padding: EdgeInsets.symmetric(horizontal: 20,),
-                                    child: Center(child: Text( snapshot.data.length > 1 ? 'évènements et matchs à venir'.toUpperCase() : 'évènements et matchs à venir'.toUpperCase(),style: TextStyle(fontFamily: 'Google-Bold',color: Colors.white,fontSize: screenwidth < 700 ? screenheight/60 : 23),)),
+                                    child: Center(child: Text( snapshot.data.length > 1 ? 'évènements et matchs à venir'.toUpperCase() : 'évènements et matchs à venir'.toUpperCase(),style: TextStyle(fontFamily: 'Google-Bold',color: Colors.white,fontSize: 15),)),
                                   );
                                 }
                               ),
@@ -226,8 +227,7 @@ class _EventsListState extends State<EventsList> {
                                     children: [
                                       GestureDetector(
                                         child: Container(
-                                          margin: EdgeInsets.symmetric(
-                                              horizontal: screenwidth/20,vertical: screenwidth < 700 ? screenwidth/15: screenwidth/10),
+                                          margin: EdgeInsets.symmetric(horizontal: 10,vertical: 15),
                                           decoration: BoxDecoration(
                                               color: Colors.white,
                                               borderRadius: BorderRadius.circular(10)
@@ -246,7 +246,7 @@ class _EventsListState extends State<EventsList> {
                                                   mainAxisAlignment: MainAxisAlignment.center,
                                                   crossAxisAlignment: CrossAxisAlignment.center,
                                                   children: [
-                                                    Text(snapshot.data[index]['name'].toString().toUpperCase(),style: TextStyle(fontSize: 14,fontFamily: 'Google-Bold',color: Colors.grey[800]),maxLines: 1,overflow: TextOverflow.ellipsis,),
+                                                    Text(snapshot.data[index]['name'].toString().toUpperCase(),style: TextStyle(fontFamily: 'Google-Bold',color: Colors.black,fontSize: 13),maxLines: 1,overflow: TextOverflow.ellipsis,),
                                                     SizedBox(
                                                       height: 3,
                                                     ),
@@ -254,72 +254,22 @@ class _EventsListState extends State<EventsList> {
                                                       mainAxisAlignment: MainAxisAlignment.center,
                                                       crossAxisAlignment: CrossAxisAlignment.center,
                                                       children: <Widget>[
-                                                        Text(snapshot.data[index]['sched_date'] == null ? 'TBA' : dayFormateDay_year+' '+monthDate[int.parse(_dateConvertedString.toString())].toString()+'.'+' '+_dateConvertedDayYear.toString().toUpperCase(),style: TextStyle(fontSize: 14,fontFamily: 'Google-Medium',color: Colors.grey[800]),),
+                                                        Text(snapshot.data[index]['sched_date'] == null ? 'TBA' : dayFormateDay_year+' '+monthDate[int.parse(_dateConvertedString.toString())].toString()+'.'+' '+_dateConvertedDayYear.toString().toUpperCase(),style: TextStyle(fontSize: 12,fontFamily: 'Google-Medium',color: Colors.black),),
                                                         SizedBox(
                                                           width: screenwidth < 700 ? 5 : 15,
                                                         ),
-                                                        Text(snapshot.data[index]['sched_time'] == null ? 'TBA' :  _timeConverted.toString()+':'+_timeConvertedString.toString(),style: TextStyle(fontSize: 14,fontFamily: 'Google-Medium',color: Colors.grey[800]),),
+                                                        Text(snapshot.data[index]['sched_time'] == null ? 'TBA' :  _timeConverted.toString()+':'+_timeConvertedString.toString(),style: TextStyle(fontSize: 12,fontFamily: 'Google-Medium',color: Colors.black),),
                                                       ],
                                                     )
                                                   ],
                                                 ),
                                               ),
-                                              SizedBox(
-                                                height: screenwidth/35,
-                                              ),
                                               Container(
                                                 width: screenwidth,
                                                 child: Row(
-                                                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                                  mainAxisAlignment: MainAxisAlignment.start,
                                                   crossAxisAlignment: CrossAxisAlignment.center,
                                                   children: [
-                                                    Expanded(
-                                                      child: Container(
-                                                        width: screenwidth,
-                                                        child: Column(
-                                                          mainAxisAlignment: MainAxisAlignment.start,
-                                                          crossAxisAlignment: CrossAxisAlignment.center,
-                                                          children: [
-                                                            SizedBox(
-                                                              height: screenwidth < 700 ? screenwidth/50 : screenwidth/100,
-                                                            ),
-                                                            Container(
-                                                              height: screenwidth/7,
-                                                              width: screenwidth/7,
-                                                              child: Image(
-                                                                  fit: BoxFit.cover,
-                                                                  image:  _HometeamName == null ?
-                                                                  AssetImage('assets/no_image_available.png') :
-                                                                  NetworkImage('https://ujap.checkmy.dev/storage/teams/'+ _HometeamName[0]['logo'])
-                                                              ),
-                                                            ),
-                                                            SizedBox(
-                                                              height:  screenwidth/50,
-                                                            ),
-                                                            Container(
-                                                              margin: EdgeInsets.symmetric(horizontal: 15),
-                                                              alignment: Alignment.center,
-                                                              child: Text(_HometeamName[0]['name'].toString().toUpperCase(),style: TextStyle(fontSize: screenwidth < 700 ? screenheight/78  : 20,fontFamily: 'Google-Bold',color: Colors.grey[800]),textAlign: TextAlign.center,
-                                                              ),
-                                                            ),
-                                                          ],
-                                                        ),
-                                                      ),
-                                                    ),
-                                                    SizedBox(
-                                                      width: 5,
-                                                    ),
-                                                    Container(
-                                                      height: screenheight/10,
-                                                      margin: EdgeInsets.only(right: 10),
-                                                      child: Column(
-                                                        crossAxisAlignment: CrossAxisAlignment.center,
-                                                        mainAxisAlignment: MainAxisAlignment.center,
-                                                        children: [
-                                                          Text('VS',style: TextStyle(fontSize: screenwidth < 700 ? screenheight/32 : 35,color: Color.fromRGBO(20, 74, 119, 0.9),fontFamily: 'Google-Bold'),),
-                                                        ],
-                                                      ),
-                                                    ),
                                                     Expanded(
                                                       child: Container(
                                                         width: screenwidth,
@@ -330,30 +280,91 @@ class _EventsListState extends State<EventsList> {
                                                             SizedBox(
                                                               height: screenwidth < 700 ? screenwidth/50 : screenwidth/100,
                                                             ),
+                                                            snapshot.data[index]["match"]["home_court"] == 1 ?
                                                             Container(
-                                                              height: screenwidth < 700 ? screenwidth/7 : screenwidth/6,
-                                                              width: screenwidth < 700 ? screenwidth/6 : screenwidth/6,
-                                                              child: Stack(
-                                                                children: [
-                                                                  Center(
-                                                                    child: Image(
-                                                                        fit: BoxFit.contain,
-                                                                        image:  _AwayteamName == null ?
-                                                                        AssetImage('assets/no_image_available.png') :
-                                                                        NetworkImage('https://ujap.checkmy.dev/storage/teams/'+ _AwayteamName[0]['logo'])
-                                                                    ),
-                                                                  ),
-                                                                ],
+                                                              height: 65,
+                                                              width: 65,
+                                                              child: Image(
+                                                                  fit: BoxFit.cover,
+                                                                  image:  _HometeamName == null ?
+                                                                  AssetImage('assets/no_image_available.png') :
+                                                                  NetworkImage('https://ujap.checkmy.dev/storage/teams/'+ _HometeamName[0]['logo'])
+                                                              ),
+                                                            ) :
+                                                            Container(
+                                                              height: 65,
+                                                              width: 65,
+                                                              child: Image(
+                                                                  fit: BoxFit.cover,
+                                                                  image:  _AwayteamName == null ?
+                                                                  AssetImage('assets/no_image_available.png') :
+                                                                  NetworkImage('https://ujap.checkmy.dev/storage/teams/'+ _AwayteamName[0]['logo'])
                                                               ),
                                                             ),
                                                             SizedBox(
                                                               height:  screenwidth/50,
                                                             ),
+                                                            snapshot.data[index]["match"]["home_court"] == 1 ?
+                                                            Container(
+                                                              margin: EdgeInsets.symmetric(horizontal: 15),
+                                                              alignment: Alignment.center,
+                                                              child: Text(_HometeamName[0]['name'].toString().toUpperCase(),style: TextStyle(fontSize: screenwidth < 700 ? screenheight/78  : 20,fontFamily: 'Google-Bold',color: Colors.grey[800]),textAlign: TextAlign.center,overflow: TextOverflow.ellipsis,maxLines: 2,),
+                                                            ) :
+                                                            Container(
+                                                              width: screenwidth/4,
+                                                              alignment: Alignment.center,
+                                                              child: Text( _AwayteamName[0]['name'].toString().toUpperCase(),style: TextStyle(fontSize: screenwidth < 700 ? screenheight/78  : 20,fontFamily: 'Google-Bold',color: Colors.grey[800]),textAlign: TextAlign.center,overflow: TextOverflow.ellipsis,maxLines: 2,),
+                                                            ),
+                                                          ],
+                                                        ),
+                                                      ),
+                                                    ),
+                                                    Text('VS',style: TextStyle(fontSize: screenwidth < 700 ? screenheight/32 : 35,color: Color.fromRGBO(20, 74, 119, 0.9),fontFamily: 'Google-Bold'),),
+                                                    Expanded(
+                                                      child: Container(
+                                                        width: screenwidth,
+                                                        child: Column(
+                                                          mainAxisAlignment: MainAxisAlignment.start,
+                                                          crossAxisAlignment: CrossAxisAlignment.center,
+                                                          children: [
+                                                            SizedBox(
+                                                              height: screenwidth < 700 ? screenwidth/50 : screenwidth/100,
+                                                            ),
+                                                            snapshot.data[index]["match"]["home_court"] == 1 ?
+                                                            Container(
+                                                              height: 65,
+                                                              width: 65,
+                                                              child: Image(
+                                                                  fit: BoxFit.cover,
+                                                                  image:  _AwayteamName == null ?
+                                                                  AssetImage('assets/no_image_available.png') :
+                                                                  NetworkImage('https://ujap.checkmy.dev/storage/teams/'+ _AwayteamName[0]['logo'])
+                                                              ),
+                                                            ) :
+                                                            Container(
+                                                              height: 65,
+                                                              width: 65,
+                                                              child: Image(
+                                                                  fit: BoxFit.cover,
+                                                                  image:  _HometeamName == null ?
+                                                                  AssetImage('assets/no_image_available.png') :
+                                                                  NetworkImage('https://ujap.checkmy.dev/storage/teams/'+ _HometeamName[0]['logo'])
+                                                              ),
+                                                            ),
+                                                            SizedBox(
+                                                              height:  screenwidth/50,
+                                                            ),
+                                                            snapshot.data[index]["match"]["home_court"] == 1 ?
                                                             Container(
                                                               width: screenwidth/4,
                                                               alignment: Alignment.center,
                                                               child: Text( _AwayteamName[0]['name'].toString().toUpperCase(),style: TextStyle(fontSize: screenwidth < 700 ? screenheight/78  : 20,fontFamily: 'Google-Bold',color: Colors.grey[800]),textAlign: TextAlign.center,
-
+                                                              ),
+                                                            ) :
+                                                            Container(
+                                                              margin: EdgeInsets.symmetric(horizontal: 15),
+                                                              alignment: Alignment.center,
+                                                              child: Text(_HometeamName[0]['name'].toString().toUpperCase(),style: TextStyle(fontSize: screenwidth < 700 ? screenheight/78  : 20,fontFamily: 'Google-Bold',color: Colors.grey[800]),textAlign: TextAlign.center,
                                                               ),
                                                             ),
                                                           ],
@@ -367,6 +378,7 @@ class _EventsListState extends State<EventsList> {
                                           ),
                                         ),
                                         onTap: (){
+                                          print(snapshot.data[index]);
                                           setState(() {
                                             if(videoPlayerController != null && chewieController != null && chewieController.isPlaying){
                                               videoPlayerController.pause();
@@ -416,7 +428,13 @@ class _EventsListState extends State<EventsList> {
                                           ),
                                           onTap: (){
                                             setState(() {
-                                              getTicketData(snapshot.data[index]['ticket']['id'].toString());
+                                              print(ticketFilename);
+                                              getTicketData(snapshot.data[index]['ticket']['id'].toString()).then((value){
+                                                setState((){
+                                                  ticketFilename = value[0]['filename'];
+                                                });
+                                                print('TICKET DETAILS :'+value.toString()+ticketdownloadID);
+                                              });
                                               navigateTicket(index,context,snapshot.data[index]);
                                             });
                                           },

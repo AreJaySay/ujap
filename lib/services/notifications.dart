@@ -423,11 +423,9 @@ class _NotificationsState extends State<Notifications> {
                                         ),
                                       ),
                                       onTap: ()async{
-                                        String url = "${StringFormatter().strToObj(adverTisement[0]['content'])['location']}";
-                                        if (await canLaunch(url)) {
-                                        await launch(url);
-                                        } else {
-                                        throw 'Could not launch $url';
+                                        String url = "${adverTisement[0]["link"]}";
+                                        if (!await launchUrl(Uri.parse(url),mode: LaunchMode.externalApplication,)) {
+                                          throw 'Could not launch $url';
                                         }
                                       },
                                     ) :

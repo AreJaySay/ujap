@@ -39,10 +39,8 @@ class BannerDisplay {
           if(_.hasData && _.data['ad_type'] == 1 && position == int.parse(_.data['position'].toString())){
             return GestureDetector(
               onTap: () async {
-                String url = '${StringFormatter().cleaner(StringFormatter().strToObj(_.data['content'])['location'])}';
-                if (await canLaunch(url)) {
-                  await launch(url);
-                } else {
+                String url = '${_.data["link"]}';
+                if (!await launchUrl(Uri.parse(url),mode: LaunchMode.externalApplication,)) {
                   throw 'Could not launch $url';
                 }
               },
@@ -50,7 +48,6 @@ class BannerDisplay {
                 children: [
                   Container(
                       margin: EdgeInsets.symmetric(vertical: 10),
-//           color: position == 1 ? kPrimaryColor.withOpacity(0.83) : Colors.transparent,
                       child: Container(
                         width: double.infinity,
                         height: Percentage().calculate(num: screenheight, percent: 25),
@@ -72,11 +69,12 @@ class BannerDisplay {
                           height: Percentage().calculate(num: screenheight, percent: 30) - 10,
                           padding: const EdgeInsets.all(5),
                           decoration: BoxDecoration(
+                            color: Colors.black54.withOpacity(0.3),
                               borderRadius: BorderRadius.circular(5),
                               image: DecorationImage(
                                   alignment: Alignment.topCenter,
-                                  fit: BoxFit.cover,
-                                  colorFilter: ColorFilter.mode(Colors.black54.withOpacity(0.3),BlendMode.srcOver),
+                                  fit: _.data['content'].toString() == "null" || _.data['content'].toString() == ""  ? BoxFit.contain : BoxFit.cover,
+                                  colorFilter: _.data['content'].toString() == "null" || _.data['content'].toString() == ""  ? null : ColorFilter.mode(Colors.black54.withOpacity(0.3),BlendMode.srcOver),
                                   image: _.data['content'].toString() == "null" || _.data['content'].toString() == ""  ? NetworkImage('https://static.thenounproject.com/png/1529460-200.png'): NetworkImage('${StringFormatter().strToObj(_.data['content'])['location']}')
 
                                 // image: _.data['content'].toString() == "null" || _.data['content'].toString() == ""  ? NetworkImage('https://static.thenounproject.com/png/1529460-200.png'): NetworkImage('${StringFormatter().strToObj(_.data['content'])['location']}')

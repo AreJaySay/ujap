@@ -41,7 +41,7 @@ class _MyAttendedHomepageState extends State<MyAttendedHomepage> {
               width: screenwidth,
               child: Image(
                 fit: BoxFit.cover,
-                color: Colors.grey[700],
+                color: kPrimaryColor,
                 image: AssetImage('assets/no_image_available.png'),
               ),
             ),

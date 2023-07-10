@@ -36,10 +36,6 @@ class RequestTicketState extends State<RequestTicket>
 
   @override
   Widget build(BuildContext context) {
-    SystemChrome.setPreferredOrientations([
-      DeviceOrientation.portraitUp,
-      DeviceOrientation.portraitDown,
-    ]);
     return Center(
             child: Material(
               color: Colors.transparent,

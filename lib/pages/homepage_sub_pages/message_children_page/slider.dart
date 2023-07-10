@@ -224,10 +224,10 @@ class _MySliderState extends State<MySlider> {
                       ),
                     ),
                     widget.data['last_convo'].toString() == "null" ? Container() : Container(
-                      child: dateBetween == 0 ? widget.data['last_convo']['created_at'] == null ? Container() : Text(DateFormat('kk:mm').format(DateTime.parse(widget.data['last_convo']['created_at']).toLocal()),style: TextStyle(fontSize: screenwidth < 700 ? 13 : 16,color: Colors.grey, fontFamily: "Google-medium")) :
+                      child: dateBetween == 0 ? widget.data['last_convo']['created_at'] == null ? Container() : Text(DateFormat('HH:mm').format(DateTime.parse(widget.data['last_convo']['created_at']).toLocal()),style: TextStyle(fontSize: screenwidth < 700 ? 13 : 16,color: Colors.grey, fontFamily: "Google-medium")) :
                       dateBetween == 1 ? Text('Hier',style: TextStyle(fontSize: screenwidth < 700 ? 13 : 16,color: Colors.grey, fontFamily: "Google-medium"),) :
-                      dateBetween > 1 ? Text('${dateBetween.toString()} days ago',style: TextStyle(fontSize: screenwidth < 700 ? 13 : 16,color: Colors.grey, fontFamily: "Google-medium"),) :
-                      dateBetween > 7 ? Text('Il y a une semaine',style: TextStyle(fontSize: screenwidth < 700 ? 13 : 16,color: Colors.grey, fontFamily: "Google-medium"),) :
+                      dateBetween > 1 && dateBetween < 7 ? Text('il y a ${dateBetween.toString()} jours',style: TextStyle(fontSize: screenwidth < 700 ? 13 : 16,color: Colors.grey, fontFamily: "Google-medium"),) :
+                      dateBetween > 7 && dateBetween < 31 ? Text('Il y a une semaine',style: TextStyle(fontSize: screenwidth < 700 ? 13 : 16,color: Colors.grey, fontFamily: "Google-medium"),) :
                       Text(DateFormat("d").format(DateTime.parse(widget.data['last_convo']['created_at']).toLocal()).toString().toUpperCase()+' '+monthDate[int.parse(DateFormat("MM").format(DateTime.parse(widget.data['last_convo']['created_at']).toLocal()).toString())].toString()+'.'+' '+DateFormat("yyyy").format(DateTime.parse(widget.data['last_convo']['created_at']).toLocal()).toString().toUpperCase(),style: TextStyle(fontSize: screenwidth < 700 ? 13 : 16,color: Colors.grey, fontFamily: "Google-medium"),),
                     )
                   ],

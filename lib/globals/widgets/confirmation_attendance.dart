@@ -1,26 +1,20 @@
 import 'dart:convert';
 import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:page_transition/page_transition.dart';
-import 'package:shared_preferences/shared_preferences.dart';
-import 'package:ujap/controllers/home.dart';
 import 'package:ujap/globals/user_data.dart';
 import 'package:ujap/globals/variables/home_sub_pages_variables.dart';
 import 'package:ujap/globals/variables/other_variables.dart';
 import 'package:ujap/globals/widgets/show_loader.dart';
 import 'package:ujap/globals/widgets/show_snackbar.dart';
 import 'package:ujap/globals/widgets/view_events.dart';
-import 'package:ujap/pages/drawer_page.dart';
-import 'package:ujap/pages/homepage.dart';
 import 'package:ujap/pages/homepage_sub_pages/event_children/events_list_data.dart';
 import 'package:ujap/pages/homepage_sub_pages/event_children/view_event.dart';
 import 'package:ujap/services/api.dart';
 import 'package:http/http.dart'as http;
 import 'package:ujap/services/message_controller.dart';
 import 'package:ujap/services/navigate_match_events.dart';
-import 'package:ujap/services/searches/search_service.dart';
 
 var eventType = "";
 var eventID = "";
@@ -79,7 +73,6 @@ confirmation(context,ticketID,attend_or_pass,data){
               borderRadius: BorderRadius.all(Radius.circular(20.0))
           ),
           content: Stack(
-            overflow: Overflow.visible,
             children: <Widget>[
               for (var x = 0; x < 2; x++)
                 Positioned(

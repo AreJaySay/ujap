@@ -24,7 +24,8 @@ class _ParametersState extends State<Parameters> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      width: screenwidth/1.7,
+      width: double.infinity,
+      padding: EdgeInsets.symmetric(horizontal: 9),
       decoration: BoxDecoration(
         color: kPrimaryColor.withOpacity(0.8),
         borderRadius: new BorderRadius.only(
@@ -32,16 +33,19 @@ class _ParametersState extends State<Parameters> {
             bottomRight: const Radius.circular(10.0),
             topRight: const Radius.circular(10.0)),
       ),
-      margin: EdgeInsets.symmetric(horizontal: 40),
       child: Column(
         children: [
-          FlatButton(
+          InkWell(
             child: Container(
+              width: double.infinity,
+              height: 55,
               child: Row(
                 children: [
+                  SizedBox(
+                    width: 3,
+                  ),
                   Container(
-                    width: screenwidth < 700 ? screenwidth/20 : 30,
-                    height: screenwidth < 700 ? screenwidth/20 : 30,
+                    width: 25,
                     child: Image(
                         color: Colors.white,
                         image: AssetImage('assets/messages_icon/no_profile.png')
@@ -50,29 +54,22 @@ class _ParametersState extends State<Parameters> {
                   SizedBox(
                     width: 10,
                   ),
-                  Container(
-                      margin: EdgeInsets.symmetric(horizontal: screenwidth/40),
-                      alignment: Alignment.centerLeft,
-                      child: Text('Editer/voir profil',style: TextStyle(color: Colors.white,fontSize: screenwidth < 700 ? screenheight/60 : 20,fontFamily: 'Google-Medium'),))
+                  Text('Editer/voir profil',style: TextStyle(color: Colors.white,fontFamily: 'Google-Medium'),)
                 ],
               ),
             ),
-            onPressed: (){
+            onTap: (){
               setState(() {
                 if (isCollapsed) {
                   drawerController.forward();
-
                   borderRadius = 30.0;
                 } else {
                   drawerController.reverse();
-
                   view_message_convo = false;
                   view_message_convo_group = false;
-
                   borderRadius = 0.0;
                 }
                 showcalendar = false;
-                events_filter_open = false;
                 message_compose_open = false;
                 view_message_convo = false;
                 floating_action = false;
@@ -84,24 +81,21 @@ class _ParametersState extends State<Parameters> {
               });
             },
           ),
-          FlatButton(
+          InkWell(
             child: Container(
+              width: double.infinity,
+              height: 55,
               child: Row(
                 children: [
-                  Icon(Icons.info_outline,size: screenwidth < 700 ? 25 : 30,color: Colors.white,),
+                  Icon(Icons.info_outline,size: 30,color: Colors.white,),
                   SizedBox(
                     width: 10,
                   ),
-                  Expanded(
-                    child: Container(
-                        margin: EdgeInsets.symmetric(horizontal: screenwidth/40),
-                        alignment: Alignment.centerLeft,
-                        child: Text('Informations sur le profil',style: TextStyle(color: Colors.white,fontSize: screenwidth < 700 ? screenheight/60 : 20,fontFamily: 'Google-Medium'),)),
-                  )
+                  Text('Informations sur le profil',style: TextStyle(color: Colors.white,fontFamily: 'Google-Medium'),)
                 ],
               ),
             ),
-            onPressed: (){
+            onTap: (){
               setState(() {
                 view_message_convo = false;
                 view_message_convo_group = false;

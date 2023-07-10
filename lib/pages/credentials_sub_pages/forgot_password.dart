@@ -67,7 +67,6 @@ class _Forgot_passwordState extends State<Forgot_password> {
 
   @override
   Widget build(BuildContext context) {
-    SystemChrome.setEnabledSystemUIOverlays([]);
     return Scaffold(
       body: Container(
         width: screenwidth,

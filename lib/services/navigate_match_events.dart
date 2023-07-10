@@ -119,7 +119,7 @@ navigateTicket(index,context,Map _tikcetDatas){
   ticketID = _tikcetDatas['ticket']['id'].toString();
 
   Navigator.push(context, PageTransition(child:  Ticket_homepage(
-      _matchID,_image,_visitorID,_homeID,ticketID,_tikcetDatas['name']
+      _matchID,_image,_visitorID,_homeID,ticketID,_tikcetDatas['name'],_tikcetDatas
   ),type: PageTransitionType.rightToLeftWithFade,alignment: Alignment.center, curve: Curves.easeIn,duration: Duration(milliseconds: 500)));
 
 

@@ -379,11 +379,11 @@ class _ProfilePageState extends State<ProfilePage> {
                                           color: Color.fromRGBO(1, 81, 147, 0.9),
                                           borderRadius: BorderRadius.circular(10)
                                       ),
-                                      child: FlatButton(
+                                      child: InkWell(
                                         child: Container(
                                             alignment: Alignment.center,
                                             child: Text('Changer mot de passe', style: TextStyle(fontSize: screenwidth < 700 ? screenheight / 55 : 25, color: Colors.white, fontFamily: 'Google-Medium'),)),
-                                        onPressed: () {
+                                        onTap: () {
                                           setState(() {
                                             Navigator.push(context, PageTransition(child: UpdatePassword(
                                             ),type: PageTransitionType.rightToLeftWithFade,alignment: Alignment.center, curve: Curves.easeIn,duration: Duration(milliseconds: 500)));
@@ -405,12 +405,12 @@ class _ProfilePageState extends State<ProfilePage> {
                                           borderRadius: BorderRadius.circular(10),
                                           border: Border.all(color: kPrimaryColor)
                                       ),
-                                      child: FlatButton(
+                                      child: InkWell(
                                         child: Container(
                                             alignment: Alignment.center,
                                             child: Text('Déconnexion', style: TextStyle(fontSize: screenwidth < 700 ? screenheight / 55 : 25, color: kPrimaryColor, fontFamily: 'Google-Medium'),)
                                         ),
-                                        onPressed: () {
+                                        onTap: () {
                                           setState(() {
                                             PushNotification().unsubscribe(userdetails["id"]);
                                             _logout();
@@ -442,7 +442,7 @@ class _ProfilePageState extends State<ProfilePage> {
                                   duration: Duration(milliseconds: 300),
                                   width: screenwidth,
                                   height: !showProfilePict ? 0 : screenwidth < 700 ? screenwidth/1.8 : screenwidth/3.5,
-                                  padding: EdgeInsets.symmetric(vertical: 20),
+                                  padding: EdgeInsets.symmetric(vertical: 20,horizontal: 20),
                                   decoration: BoxDecoration(
                                     color: Colors.white,
                                     borderRadius: BorderRadius.only(
@@ -453,8 +453,10 @@ class _ProfilePageState extends State<ProfilePage> {
                                   child: Column(
                                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                     children: <Widget>[
-                                      FlatButton(
+                                      InkWell(
                                         child: Container(
+                                          width: double.infinity,
+                                          height: 55,
                                           padding: EdgeInsets.symmetric(vertical: 7),
                                           child: Row(
                                             children: <Widget>[
@@ -473,14 +475,16 @@ class _ProfilePageState extends State<ProfilePage> {
                                             ],
                                           ),
                                         ),
-                                        onPressed: (){
+                                        onTap: (){
                                           Navigator.push(context, PageTransition(child:  ViewMessageImages(
                                               userdetails['filename'].toString() == "null" || userdetails['filename'].toString() == "" ? "null" : "https://ujap.checkmy.dev/storage/clients/${userdetails['filename']}"
                                           ),type: PageTransitionType.leftToRightWithFade,alignment: Alignment.center, curve: Curves.easeIn,duration: Duration(milliseconds: 500)));
                                         },
                                       ),
-                                      FlatButton(
+                                      InkWell(
                                         child: Container(
+                                          width: double.infinity,
+                                          height: 55,
                                           padding: EdgeInsets.symmetric(vertical: 7),
                                           child: Row(
                                             children: <Widget>[
@@ -499,7 +503,7 @@ class _ProfilePageState extends State<ProfilePage> {
                                             ],
                                           ),
                                         ),
-                                        onPressed: (){
+                                        onTap: (){
                                           setState(() {
                                             Navigator.push(context, PageTransition(child: UpdatePicture(
                                               "TakePhoto","profilepage"
@@ -507,8 +511,10 @@ class _ProfilePageState extends State<ProfilePage> {
                                           });
                                         },
                                       ),
-                                      FlatButton(
+                                      InkWell(
                                         child: Container(
+                                          width: double.infinity,
+                                          height: 55,
                                           padding: EdgeInsets.symmetric(vertical: 7),
                                           child: Row(
                                             children: <Widget>[
@@ -527,7 +533,7 @@ class _ProfilePageState extends State<ProfilePage> {
                                             ],
                                           ),
                                         ),
-                                        onPressed: (){
+                                        onTap: (){
                                           setState(() {
                                             Navigator.push(context, PageTransition(child: UpdatePicture(
                                                 "UploadPhoto","profilepage"

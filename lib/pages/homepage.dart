@@ -131,7 +131,6 @@ class _HomepageState extends State<Homepage> {
       }
       showcalendar = false;
       hideFloatingbutton = false;
-      events_filter_open = false;
       message_compose_open = false;
       view_message_convo = false;
       floating_action = false;
@@ -161,12 +160,6 @@ class _HomepageState extends State<Homepage> {
   Widget build(BuildContext context) {
     double screenheight = MediaQuery.of(context).size.height;
     double screenwidth = MediaQuery.of(context).size.width;
-    SystemChrome.setPreferredOrientations([
-      DeviceOrientation.portraitUp,
-      DeviceOrientation.portraitDown,
-    ]);
-
-    SystemChrome.setEnabledSystemUIOverlays([]);
     return StreamBuilder(
       stream: indexListener.stream,
       builder: (context, snapshot) {
@@ -198,10 +191,8 @@ class _HomepageState extends State<Homepage> {
 
                           onTap: ()async{
                             print(get_ads.toString());
-                            String url = '${StringFormatter().cleaner(StringFormatter().strToObj(get_ads[0]['content'])['location'])}';
-                            if (await canLaunch(url)) {
-                              await launch(url);
-                            } else {
+                            String url = '${get_ads[0]["link"]}';
+                            if (!await launchUrl(Uri.parse(url),mode: LaunchMode.externalApplication,)) {
                               throw 'Could not launch $url';
                             }
                           },
@@ -213,7 +204,6 @@ class _HomepageState extends State<Homepage> {
                 bottomNavigationBar:  StreamBuilder<int>(
                   stream: nMessageCounter.stream$,
                   builder: (context, snapshot) {
-
                     return BottomNavigationBar(
                       currentIndex: itemindex,
                       onTap: (index) {
@@ -222,11 +212,6 @@ class _HomepageState extends State<Homepage> {
                           indexListener.update(data: index);
                           itemindex = index;
                           showsearchBox = false;
-                          // if(_chewieController != null && _videoPlayerController != null && _chewieController.isPlaying){
-                          //   _videoPlayerController.pause();
-                          //   _chewieController?.dispose();
-                          //   show_ads = false;
-                          // }
                           if (currentindex == 2){
                             print('INDEX'+currentindex.toString());
                             notificationIndicatiorMessages = false;
@@ -237,16 +222,11 @@ class _HomepageState extends State<Homepage> {
                           videoPlayerController.pause();
                           chewieController.pause();
                           adListener.update(false);
-//                          setState(() {
-//                            show_ads = false;
-//                          });
                         }
                       },
                       items: <BottomNavigationBarItem>[
                         BottomNavigationBarItem(
-                          title: Text(
-                            '',
-                          ),
+                          label:  '',
                           icon: Container(
                             width: screenwidth < 700 ? screenwidth/17 : screenwidth/25,
                             height: screenwidth < 700 ?  screenwidth/17 :  screenwidth/25,
@@ -257,15 +237,11 @@ class _HomepageState extends State<Homepage> {
                           ),
                         ),
                         BottomNavigationBarItem(
-                          title: Text(
-                            '',
-                          ),
+                          label:  '',
                           icon: !isCollapsed ? Container() : Icon(Icons.favorite,),
                         ),
                         BottomNavigationBarItem(
-                          title: Text(
-                            '',
-                          ),
+                          label:  '',
                           icon: Container(
                             width: screenwidth < 700 ? screenwidth/17 : screenwidth/25,
                             height: screenwidth < 700 ?  screenwidth/17 :  screenwidth/25,
@@ -315,7 +291,6 @@ class _HomepageState extends State<Homepage> {
                         indexListener.update(data: 1);
                         hideFloatingbutton = false;
                         showcalendar = false;
-                        events_filter_open = false;
                         message_compose_open = false;
                         view_message_convo = false;
                         floating_action = false;
@@ -337,7 +312,7 @@ class _HomepageState extends State<Homepage> {
                   ),
                 ),
               ),
-              !events_filter_open && !message_compose_open ? Container() :
+              !message_compose_open ? Container() :
               GestureDetector(
                 child: Container(
                   width: screenwidth,
@@ -346,7 +321,6 @@ class _HomepageState extends State<Homepage> {
                 ),
                 onTap: (){
                   setState(() {
-                    events_filter_open = false;
                     message_compose_open = false;
                     myEvents = "";
                     fromDate = "";
@@ -356,7 +330,6 @@ class _HomepageState extends State<Homepage> {
                   });
                 },
               ),
-              Events_filter(),
             ],
           ),
           onTap: (){

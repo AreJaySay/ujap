@@ -64,7 +64,7 @@ class _UpdatePictureState extends State<UpdatePicture> {
     });
   }
   Future crop() async {
-    File cropped = await ImageCropper.cropImage(sourcePath: _file.path);
+    File cropped = await ImageCropper().cropImage(sourcePath: _file.path);
     if(cropped != null){
       final g = await cropped.readAsBytes();
       setState(() {
@@ -87,7 +87,6 @@ class _UpdatePictureState extends State<UpdatePicture> {
 
   @override
   Widget build(BuildContext context) {
-    SystemChrome.setEnabledSystemUIOverlays([]);
     return Stack(
       children: <Widget>[
         Scaffold(
@@ -101,44 +100,6 @@ class _UpdatePictureState extends State<UpdatePicture> {
           body: Container(
             width: double.infinity,
             child:
-            // _file == null ? Container(
-            //   padding: const EdgeInsets.all(20),
-            //   child: Column(
-            //     children: <Widget>[
-            //       Expanded(
-            //         child: GestureDetector(
-            //           onTap: () => _choosecamera(),
-            //           child: Container(
-            //             decoration: BoxDecoration(
-            //               borderRadius: BorderRadius.circular(10),
-            //               border: Border.all(color: kPrimaryColor, width: 2)
-            //             ),
-            //             child: Center(
-            //               child: Icon(Icons.camera_alt,color: kPrimaryColor, size: screenheight/8,),
-            //             ),
-            //           ),
-            //         ),
-            //       ),
-            //       SizedBox(
-            //         height: 20,
-            //       ),
-            //       Expanded(
-            //         child: GestureDetector(
-            //           onTap: () => _choosegallery(),
-            //           child: Container(
-            //             decoration: BoxDecoration(
-            //                 borderRadius: BorderRadius.circular(10),
-            //                 border: Border.all(color: kPrimaryColor, width: 2)
-            //             ),
-            //             child: Center(
-            //               child: Icon(Icons.photo,color: kPrimaryColor, size: screenheight/8,),
-            //             ),
-            //           ),
-            //         ),
-            //       ),
-            //     ],
-            //   ),
-            // ) :
             Column(
               children: <Widget>[
                 Expanded(
@@ -184,10 +145,9 @@ class _UpdatePictureState extends State<UpdatePicture> {
                                       currentindex = 1;
                                       indexListener.update(data: 1);
                                     });
-                                    login(user, pass, context, true, widget.pagechecker == "profileinformation" ? true : false);
+                                    login(username: user, password: pass, context: context,loader: true,profileinformation: widget.pagechecker == "profileinformation" ? true : false);
                                     changeProfilePict = true;
                                   }else{
-                                    // showSnackBar_download(context, 'Please check your internet connection', Icon(Icons.network_check));
                                     setState(() {
                                       _file = null;
                                       binaryImage = null;

@@ -15,8 +15,6 @@ File pdfFile;
 var message_id = "";
 
 final imgUrl = "https://ujap.checkmy.dev/api/client/documents/download-pdf?filename=$ticketFilename&ticket_id=$ticketdownloadID";
-final messageUrl = "https://ujap.checkmy.dev/api/client/chat/download-pdf?filename=$ticketFilename&message_id=$message_id";
-//final imgUrl = "http://www.pdf995.com/samples/pdf.pdf";
 var dio = Dio();
 
 
@@ -26,7 +24,6 @@ getPermission()async{
 }
 
 Future download2(Dio dio, String url, String savePath)async{
-  print(url.toString());
   try {
     Response response = await dio.post(
         url,
@@ -43,12 +40,10 @@ Future download2(Dio dio, String url, String savePath)async{
             }
         ),
     );
-
     pdfFile = File (savePath);
     var raf = pdfFile.openSync(mode: FileMode.write);
     raf.writeFromSync(response.data);
     await raf.close();
-
     print('FILE RESULT :'+raf.toString());
 
   }catch (e){
@@ -72,10 +67,11 @@ uploadPDF()async{
       path = await ExternalPath.getExternalStoragePublicDirectory(
           ExternalPath.DIRECTORY_DOWNLOADS);
     } else {
-      Directory tempDir = await getTemporaryDirectory();
+      Directory tempDir = await getApplicationDocumentsDirectory();
       path = tempDir.path;
     }
-    String fullpath = "$path/ticket.pdf";
+    String fullpath = path + "/ticket.pdf";
+    print(fullpath.toString());
     download2(dio, imgUrl, fullpath);
 }
 
@@ -90,6 +86,6 @@ showSnackBar_download(BuildContext context, msg, Icon msgIcon) {
       msgIcon
     ],
   ));
-  Scaffold.of(context).showSnackBar(snackBar);
+  ScaffoldMessenger.of(context).showSnackBar(snackBar);
 }
 

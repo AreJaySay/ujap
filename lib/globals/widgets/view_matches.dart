@@ -96,279 +96,174 @@ class _View_matchesState extends State<View_matches> {
       stream: filterSearchService.search$,
       builder: (context, snapshot) {
         return Scaffold(
-                body: Container(
-                  width: screenwidth,
-                  height: screenheight,
-                  alignment: Alignment.bottomCenter,
-                  child: Container(
-                    height: screenheight,
-                    color: Colors.white,
-                    child: Stack(
-                      children: [
-                        ListView(
-                          shrinkWrap: true,
-                          physics: NeverScrollableScrollPhysics(),
-                          padding: EdgeInsets.all(0),
-                          children: [
-                            Container(
-                              width: screenwidth,
-                              height: screenwidth < 700 ? screenheight/3 : screenheight/3,
-                              decoration: BoxDecoration(
-                              ),
-                              child: Stack(
-                                children: [
-                                  Container(
-                                      width: screenwidth,
-                                      child: Padding(
-                                          padding: const EdgeInsets.only(bottom: 2.0),
-                                          child:ClipPath(
-                                            clipper: CurvedBottom(),
-                                            child: Container(
-                                              height: screenwidth < 700 ? screenheight/2.8 :   screenheight/2.7,
-                                              decoration: BoxDecoration(
-                                                  image: DecorationImage(
-                                                    fit:  BoxFit.cover,
-                                                    image: AssetImage('assets/home_icons/match_default.jpg')
-
-                                                  )
-                                              ),
-                                            ),
-
-                                          ))),
-                                  Container(
-                                      width: screenwidth,
-                                      padding: EdgeInsets.only(left: screenwidth/25),
-                                      margin: EdgeInsets.only(top: 40),
-                                      child: Padding(
-                                          padding: const EdgeInsets.only(bottom: 2.0,),
-                                          child:ClipPath(
-                                            clipper: CurvedTop(),
-
-                                          ))),
-
-                                ],
-                              ),
-                            ),
-
-                            Container(
-                              width: screenwidth,
-                              height: screenheight/4,
-                              decoration: BoxDecoration(
-                                  border: Border(bottom: BorderSide(color: Colors.grey[300]))
-                              ),
-                              child: Column(
-                                children: [
-                                  Expanded(
-                                    child: Container(
-                                      child: Row(
-                                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                        children: [
-                                          Expanded(
-                                            child: Container(
-                                              width: 300,
-                                              child: Column(
-                                                mainAxisAlignment: MainAxisAlignment.start,
-                                                children: [
-                                                  Container(
-                                                    width : screenwidth/4,
-                                                    height: screenheight/9,
-                                                    child: _homeNameandlogo == null ? Container() :
-                                                    Image(
-                                                    fit: BoxFit.contain ,
-                                                    image: NetworkImage('https://ujap.checkmy.dev/storage/teams/'+_homeNameandlogo[0]['logo'].toString()),
-                                                  )
-                                                  ),
-
-                                                  Container(
-                                                     margin: EdgeInsets.symmetric(horizontal: 15),
-                                                      child: Text(_homeNameandlogo[0]['name'].toString().toUpperCase(),style: TextStyle(fontSize: screenwidth < 700 ? screenheight/70  : 20,fontFamily: 'Google-Bold',color: Colors.grey[800]),textAlign: TextAlign.center,)),
-                                                ],
-                                              ),
-                                            ),
-                                          ),
-                                          Container(
-                                            padding: EdgeInsets.only(bottom: screenwidth/12),
-                                            height: screenheight,
-                                            width: screenwidth < 700 ? screenwidth/4 : screenwidth/6,
-                                            child: Column(
-                                              crossAxisAlignment: CrossAxisAlignment.center,
-                                              mainAxisAlignment: MainAxisAlignment.center,
-                                              children: [
-                                                Text('VS',style: TextStyle(fontSize: screenwidth < 700 ? screenheight/30 : 35,color: Color.fromRGBO(20, 74, 119, 0.9),fontFamily: 'Google-Bold'),),
-                                            ],
-                                            ),
-                                          ),
-                                          Expanded(
-                                            child: Container(
-                                              width: 300,
-                                              child: Column(
-                                                mainAxisAlignment: MainAxisAlignment.start,
-                                                children: [
-                                                  Container(
-                                                      width : screenwidth/6,
-                                                      height: screenheight/9,
-                                                      child: Image(
-                                                        fit: BoxFit.contain ,
-                                                        image: NetworkImage(_teamNameandlogo.toString() == "[]" ? "https://static.thenounproject.com/png/340719-200.png" : 'https://ujap.checkmy.dev/storage/teams/'+_teamNameandlogo[0]['logo'].toString()),
-                                                      )
-                                                  ),
-                                                  Container(
-                                                      margin: EdgeInsets.symmetric(horizontal: 15),
-                                                      child: Text( _teamNameandlogo.toString() == "[]" ? "Pas de nom d'équipe adverse".toUpperCase() : _teamNameandlogo[0]['name'].toString().toUpperCase(),style: TextStyle(fontSize: screenwidth < 700 ? screenheight/70  : 20,fontFamily: 'Google-Bold',color: Colors.grey[800]),textAlign: TextAlign.center,)),
-                                                ],
-                                              ),
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-                                    ),
-                                  ),
-                                  Container(
-                                    padding: EdgeInsets.only(bottom: screenwidth/40),
-                                    width: screenwidth,
-                                    child: Row(
-                                      mainAxisAlignment: MainAxisAlignment.center,
-                                      children: [
-                                        SizedBox(
-                                          width: 15,
-                                        ),
-                                        // GestureDetector(
-                                        //   child: Container(
-                                        //     width: screenwidth/2,
-                                        //     child: Text(_teamNameandlogo[0]['address'].toString(),
-                                        //     textAlign: TextAlign.center,
-                                        //     style: TextStyle(fontSize: screenwidth < 700 ? screenheight/60  : 20,fontFamily: 'Google-Medium',color: Colors.grey[700]),
-                                        //     ),
-                                        //   ),
-                                        //   onTap: (){
-                                        //     setState(() {
-                                        //       // print(_teamNameandlogo[0]['address'].toString().replaceAll('/N', ''));
-                                        //       launchMap(_teamNameandlogo[0]['address'].toString());
-                                        //     });
-                                        //   },
-                                        // ),
-                                        SizedBox(
-                                          width: 15,
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                  SizedBox(
-                                    height: 10,
-                                  )
-                                ],
-                              ),
-                            ),
-                            View_events_tabbar(widget.eventDetail,widget._matchID,widget._type,[],widget.matchName,eventStatusmatch),
-                          ],
-                        ),
-                        currentindex == 0 ? Container() :
-                        Container(
-                          child:
-                          pastTicketMatches ? Container () :
-                          Container(
-                            child: events_tabbarview_index == "1" ?
-                            Container() :
-                            Container(
-                            child: events_allocationmatch == 0 ?
-                            Container(
-                              height: screenheight,
-                              width: screenwidth,
-                              alignment: Alignment.bottomLeft,
-                              child: Container(
-                                  height: screenwidth/3,
-                                  alignment: Alignment.centerLeft,
-                                  // child: Row(
-                                  //   mainAxisAlignment: MainAxisAlignment.center,
-                                  //   crossAxisAlignment: CrossAxisAlignment.center,
-                                  //   children: [
-                                  //     Container(
-                                  //       height: screenwidth <700 ? 25 : 50,
-                                  //       width: screenwidth <700 ? 25 : 50,
-                                  //       child: Image(
-                                  //         color: Colors.grey,
-                                  //         image:  AssetImage('assets/home_icons/green_ticket.png'),
-                                  //       ),
-                                  //     ),
-                                  //     SizedBox(
-                                  //       width: 10,
-                                  //     ),
-                                  //     Text('Pas de ticket disponible!'.toUpperCase(),style: TextStyle(fontSize: screenwidth < 700 ? screenheight/50  : 30,fontFamily: 'Google-Bold',color: Colors.grey[600]),),
-                                  //   ],
-                                  // )
-                              ),
-                            ) :
-                            eventStatusmatch[0]['accepted_clients'].toString().contains('client_id: '+userdetails['id'].toString()) ?
-                            Container(
-                                height: screenheight,
-                                alignment: Alignment.bottomCenter,
-                                child: ConfirmAttendance(widget.eventDetail,null,eventStatusmatch)
-                            ) :
-                            events_attendedmatch >= events_allocationmatch ?
-                              Container(
-                                padding: EdgeInsets.symmetric(horizontal: 20,vertical: 20),
-                                height: screenheight,
-                                alignment: Alignment.bottomCenter,
-                                child: SafeArea(child: Text("Désolé, il n’y a plus de ticket disponible pour ce match.Veuillez attendre qu’il y en ait de nouveau.".toUpperCase(),style: TextStyle(fontSize: screenwidth < 700 ? screenheight/62  : 22,fontFamily: 'Google-Medium',color: Colors.grey),textAlign: TextAlign.center,)),
-                              ) :
-                            eventStatusmatch[0]['declined_clients'].toString().contains('client_id: '+userdetails['id'].toString()) ?
-                            Container(
-                              padding: EdgeInsets.symmetric(horizontal: 20,vertical: 20),
-                              width: screenwidth,
-                              height: screenheight,
-                              alignment: Alignment.bottomCenter,
-                              child: SafeArea(child: Text("Vous avez annulé votre participation à ce match, vous ne pouvez donc plus y assister.".toUpperCase(),style: TextStyle(fontSize: screenwidth < 700 ? screenheight/62  : 22,fontFamily: 'Google-Bold',color: Colors.grey[500]),textAlign: TextAlign.center,)),
-                            ) :
-                            Container(
-                              width: screenwidth,
-                              height: screenheight,
-                              alignment: Alignment.bottomCenter,
-                              padding: EdgeInsets.only(bottom: screenheight/25),
-                              child: _buttonActions(),
-                            ),
-                            ),
-                          ),
-                        ),
-                        SafeArea(
+          body: ListView(
+            children: [
+              Stack(
+                children: [
+                  Container(
+                      width: screenwidth,
+                      child: Padding(
+                        padding: const EdgeInsets.only(bottom: 2.0),
+                        child:ClipPath(
+                          clipper: CurvedBottom(),
                           child: Container(
-                            margin: EdgeInsets.only(top: screenwidth/15,left: screenwidth/30),
-                            height: screenwidth < 700 ? screenheight/2.8 : screenheight/2.7,
-                            alignment: Alignment.topLeft,
-                            child: GestureDetector(
-                              child: Container(
-                                  decoration: BoxDecoration(
-                                    color: kPrimaryColor,
-                                    borderRadius: BorderRadius.circular(1000.0)
-                                  ),
-                                  padding: EdgeInsets.all(screenwidth < 700 ? 2 : 3),
-                                  child: Icon(Icons.arrow_back_rounded,color: Colors.white,size: 26,)),
-                              onTap: (){
-                                setState(() {
-                                  attend_pass = "";
-                                  eventsSearch = false;
-                                  pastTicketMatches = false;
-                                  filterSearchService.filter(past: pastTicketMatches);
-                                  indexListener.update(data: 1);
-                                  currentindex = 1;
-                                  if (notifPage){
-                                    Navigator.of(context).pop(null);
-                                  }else{
-                                    if (taskList.toString() != "[]"){
-                                      taskList.clear();
-                                    }
-                                    Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=>MainScreen(false)));
-                                  }
-                                  SystemChannels.textInput.invokeMethod('TextInput.hide');
-                                });
-                              },
+                            height: screenwidth < 700 ? screenheight/2.8 :   screenheight/2.7,
+                            decoration: BoxDecoration(
+                              color: Colors.grey[300],
+                                image: DecorationImage(
+                                    fit: BoxFit.cover,
+                                    image: widget.eventDetail['filename'].toString() == "null" || widget.eventDetail['filename'].toString() == "" ? AssetImage("assets/home_icons/match_default.jpg") : NetworkImage("https://ujap.checkmy.dev/storage/events/${widget.eventDetail['id']}/${widget.eventDetail['filename']}")
+                                )
                             ),
                           ),
+
+                        ))),
+                  GestureDetector(
+                    child: Container(
+                        margin: EdgeInsets.all(20),
+                        decoration: BoxDecoration(
+                            color: kPrimaryColor,
+                            borderRadius: BorderRadius.circular(1000.0)
                         ),
-                      ],
+                        padding: EdgeInsets.all(3),
+                        child: Icon(Icons.arrow_back_rounded,color: Colors.white,size: 26,)),
+                    onTap: (){
+                      setState(() {
+                        attend_pass = "";
+                        eventsSearch = false;
+                        pastTicketMatches = false;
+                        filterSearchService.filter(past: pastTicketMatches);
+                        indexListener.update(data: 1);
+                        currentindex = 1;
+                        if (notifPage){
+                          Navigator.of(context).pop(null);
+                        }else{
+                          if (taskList.toString() != "[]"){
+                            taskList.clear();
+                          }
+                          Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=>MainScreen(false)));
+                        }
+                        SystemChannels.textInput.invokeMethod('TextInput.hide');
+                      });
+                    },
+                  ),
+                ],
+              ),
+              Container(
+                height: 130,
+                width: double.infinity,
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    widget.eventDetail["match"]["home_court"] == 1 ?
+                    Expanded(
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.end,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          _homeNameandlogo == null ? Container() :
+                          Image(
+                            fit: BoxFit.contain ,
+                            width: 76,
+                            image: NetworkImage('https://ujap.checkmy.dev/storage/teams/'+_homeNameandlogo[0]['logo'].toString()),
+                          ),
+                          Text(_homeNameandlogo[0]['name'].toString().toUpperCase(),style: TextStyle(fontSize: 12,fontFamily: 'Google-Bold',color: Colors.grey[800]),textAlign: TextAlign.center,),
+                        ],
+                      ),
+                    ) :
+                    Expanded(
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.end,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          Image(
+                            fit: BoxFit.contain ,
+                            width: 80,
+                            image: NetworkImage(_teamNameandlogo.toString() == "[]" ? "https://static.thenounproject.com/png/340719-200.png" : 'https://ujap.checkmy.dev/storage/teams/'+_teamNameandlogo[0]['logo'].toString()),
+                          ),
+                          SizedBox(
+                            height: 10,
+                          ),
+                          Container(
+                            width: 120,
+                            child:Text( _teamNameandlogo.toString() == "[]" ? "Pas de nom d'équipe adverse".toUpperCase() : _teamNameandlogo[0]['name'].toString().toUpperCase(),style: TextStyle(fontSize: 12,fontFamily: 'Google-Bold',color: Colors.grey[800]),maxLines: 1,overflow: TextOverflow.ellipsis,),
+                          )
+                        ],
+                      ),
                     ),
+                    Text('VS',style: TextStyle(fontSize: 25,color: Color.fromRGBO(20, 74, 119, 0.9),fontFamily: 'Google-Bold'),),
+                    widget.eventDetail["match"]["home_court"] == 1 ?
+                    Expanded(
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.end,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          Image(
+                            fit: BoxFit.contain ,
+                            width: 80,
+                            image: NetworkImage(_teamNameandlogo.toString() == "[]" ? "https://static.thenounproject.com/png/340719-200.png" : 'https://ujap.checkmy.dev/storage/teams/'+_teamNameandlogo[0]['logo'].toString()),
+                          ),
+                          SizedBox(
+                            height: 10,
+                          ),
+                          Container(
+                            width: 120,
+                            child:Text( _teamNameandlogo.toString() == "[]" ? "Pas de nom d'équipe adverse".toUpperCase() : _teamNameandlogo[0]['name'].toString().toUpperCase(),style: TextStyle(fontSize: 12,fontFamily: 'Google-Bold',color: Colors.grey[800]),maxLines: 1,overflow: TextOverflow.ellipsis,),
+                          )
+                        ],
+                      ),
+                    ) :
+                    Expanded(
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.end,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          _homeNameandlogo == null ? Container() :
+                          Image(
+                            fit: BoxFit.contain ,
+                            width: 76,
+                            image: NetworkImage('https://ujap.checkmy.dev/storage/teams/'+_homeNameandlogo[0]['logo'].toString()),
+                          ),
+                          Text(_homeNameandlogo[0]['name'].toString().toUpperCase(),style: TextStyle(fontSize: 12,fontFamily: 'Google-Bold',color: Colors.grey[800]),textAlign: TextAlign.center,),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              SizedBox(
+                height: 20,
+              ),
+              View_events_tabbar(widget.eventDetail,widget._matchID,widget._type,[],widget.matchName,eventStatusmatch),
+              currentindex == 0 ? Container() :
+              Container(
+                child:
+                pastTicketMatches ? Container () :
+                Container(
+                  child: events_tabbarview_index == "1" ?
+                  Container() :
+                  Container(
+                    child: events_allocationmatch == 0 ?
+                    Container(
+                      height: screenwidth/3,
+                      alignment: Alignment.centerLeft,
+                    ) :
+                    eventStatusmatch[0]['accepted_clients'].toString().contains('client_id: '+userdetails['id'].toString()) ?
+                    ConfirmAttendance(widget.eventDetail,null,eventStatusmatch) :
+                    events_attendedmatch >= events_allocationmatch ?
+                    SafeArea(child: Text("Désolé, il n’y a plus de ticket disponible pour ce match.Veuillez attendre qu’il y en ait de nouveau.".toUpperCase(),style: TextStyle(fontSize: screenwidth < 700 ? screenheight/62  : 22,fontFamily: 'Google-Medium',color: Colors.grey),textAlign: TextAlign.center,)) :
+                    eventStatusmatch[0]['declined_clients'].toString().contains('client_id: '+userdetails['id'].toString()) ?
+                    SafeArea(child: Text("Vous avez annulé votre participation à ce match, vous ne pouvez donc plus y assister.".toUpperCase(),style: TextStyle(fontSize: screenwidth < 700 ? screenheight/62  : 22,fontFamily: 'Google-Bold',color: Colors.grey[500]),textAlign: TextAlign.center,)) :
+                    _buttonActions(),
                   ),
                 ),
-              );
+              ),
+              SizedBox(
+                height: 30,
+              )
+            ],
+          )
+        );
       }
     );
 
@@ -378,7 +273,7 @@ class _View_matchesState extends State<View_matches> {
     return Container(
       padding: EdgeInsets.symmetric(horizontal: 20),
       width: screenwidth,
-      height: screenheight/16,
+      height: 55,
       child: Row(
         children: [
           Expanded(
@@ -388,6 +283,7 @@ class _View_matchesState extends State<View_matches> {
                       child: Stack(
                         children: [
                           Container(
+                            padding: EdgeInsets.symmetric(horizontal: 10),
                             width: screenwidth/2,
                             decoration: BoxDecoration(
                                 color:  attend_pass  == "No" || eventStatusmatch[0]['declined_clients'].toString().contains('client_id: '+userdetails['id'].toString()) ? Color.fromRGBO(1, 80, 147, 0.9) : Colors.white,
@@ -395,7 +291,7 @@ class _View_matchesState extends State<View_matches> {
                                 border: Border.all(color: Color.fromRGBO(1, 80, 147, 0.9))
                             ),
                             alignment: Alignment.center,
-                            child:  Text('Indisponible ce jour',style: TextStyle(fontSize: screenwidth < 700 ? screenheight/53 : 25,fontFamily: 'Google-Bold',fontWeight: FontWeight.bold,color: attend_pass  == "No" || eventStatusmatch[0]['declined_clients'].toString().contains('client_id: '+userdetails['id'].toString()) ? Colors.white : Colors.black54),),
+                            child:  Text('Indisponible ce jour',style: TextStyle(fontFamily: 'Google-Bold',fontWeight: FontWeight.bold,color: attend_pass  == "No" || eventStatusmatch[0]['declined_clients'].toString().contains('client_id: '+userdetails['id'].toString()) ? Colors.white : Colors.black54),),
                           ),
                         ],
                       ),
@@ -414,7 +310,7 @@ class _View_matchesState extends State<View_matches> {
               )
           ),
           SizedBox(
-            width: screenwidth/30,
+            width: 10,
           ),
           Expanded(
             child: Builder(
@@ -423,6 +319,7 @@ class _View_matchesState extends State<View_matches> {
                     child: Stack(
                       children: [
                         Container(
+                          padding: EdgeInsets.symmetric(horizontal: 10),
                           width: screenwidth/2,
                           decoration: BoxDecoration(
                               color: attend_pass  == "Yes" || eventStatusmatch[0]['accepted_clients'].toString().contains('client_id: '+userdetails['id'].toString()) ? Color.fromRGBO(1, 80, 147, 0.9) : Colors.white,
@@ -430,7 +327,7 @@ class _View_matchesState extends State<View_matches> {
                               border: Border.all(color: Color.fromRGBO(1, 80, 147, 0.9))
                           ),
                           alignment: Alignment.center,
-                          child: Text('Confirmer ma présence',style: TextStyle(fontSize: screenwidth < 700 ? screenheight/53 : 25,fontFamily: 'Google-Bold',fontWeight: FontWeight.bold,color:  attend_pass  == "Yes" || eventStatusmatch[0]['accepted_clients'].toString().contains('client_id: '+userdetails['id'].toString()) ? Colors.white : Colors.black54),textAlign: TextAlign.center,),
+                          child: Text('Confirmer ma présence',style: TextStyle(fontFamily: 'Google-Bold',fontWeight: FontWeight.bold,color:  attend_pass  == "Yes" || eventStatusmatch[0]['accepted_clients'].toString().contains('client_id: '+userdetails['id'].toString()) ? Colors.white : Colors.black54),textAlign: TextAlign.center,),
                         )
                       ],
                     ),
@@ -456,9 +353,8 @@ class _View_matchesState extends State<View_matches> {
   launchMap(String address) async {
     String query = Uri.encodeComponent(address);
     String googleUrl = "https://www.google.com/maps/search/?api=1&query=$query";
-
-    if (await canLaunch(googleUrl)) {
-      await launch(googleUrl);
+    if (!await launchUrl(Uri.parse(googleUrl))) {
+      throw 'Could not launch $googleUrl';
     }
   }
 

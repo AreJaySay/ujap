@@ -40,7 +40,7 @@ class _EventsHomepageState extends State<EventsHomepage> {
               width: screenwidth,
               child: Image(
                 fit: BoxFit.cover,
-                color: Colors.grey[700],
+                color: kPrimaryColor,
                 image: AssetImage('assets/no_image_available.png'),
               ),
             ),
